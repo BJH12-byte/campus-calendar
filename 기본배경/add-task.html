@@ -9,72 +9,48 @@
       href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css"
     />
     <style>
-      :root {
-        --primary-bg: #f3f4f6;
-        --section-bg: #ffffff;
-        --header-bg: #d1d5db;
-        --highlight-bg: #e5e7eb;
-        --border-color: #ccc;
-        --font-main: Arial, sans-serif;
-      }
-
       body {
-        font-family: var(--font-main);
-        background-color: var(--primary-bg);
+        font-family: Arial, sans-serif;
+        background-color: #f3f4f6;
         margin: 0;
         padding: 0;
       }
-
       .header {
-        background-color: var(--header-bg);
+        background-color: #d1d5db;
         padding: 1rem;
         display: flex;
         justify-content: space-between;
         align-items: center;
       }
-
       .title {
         font-weight: bold;
         font-size: 1.25rem;
       }
-
       .container {
         padding: 1rem;
         padding-bottom: 120px;
       }
-
       .section {
-        background: var(--section-bg);
+        background: white;
         border-radius: 12px;
         padding: 1rem;
         margin-bottom: 1rem;
-        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
       }
-
       .section-title {
         font-weight: bold;
-        border-bottom: 1px solid var(--border-color);
+        border-bottom: 1px solid #ccc;
         margin-bottom: 0.5rem;
-        padding-bottom: 0.25rem;
       }
-
       .list-item {
         padding: 0.5rem 0;
         border-bottom: 1px solid #eee;
         cursor: pointer;
-        transition: background 0.2s ease-in-out;
       }
-
-      .list-item:hover {
-        background-color: #f1f5f9;
-      }
-
       .selected {
-        background-color: var(--highlight-bg);
+        background-color: #e5e7eb;
       }
-
       .footer {
-        background: var(--header-bg);
+        background: #d1d5db;
         text-align: center;
         padding: 1rem;
         position: fixed;
@@ -82,24 +58,17 @@
         width: 100%;
         font-weight: bold;
         cursor: pointer;
-        transition: background 0.3s;
       }
-
-      .footer:hover {
-        background: #cbd5e1;
-      }
-
       #date-picker {
         width: 100%;
         padding: 0.75rem;
         font-size: 1rem;
         border-radius: 8px;
-        border: 1px solid var(--border-color);
+        border: 1px solid #ccc;
         box-sizing: border-box;
         margin-top: 0.5rem;
         display: block;
       }
-
       .flatpickr-calendar {
         z-index: 9999 !important;
       }
@@ -245,6 +214,7 @@
           icon,
         });
         localStorage.setItem('schedules', JSON.stringify(schedules));
+
         alert(isEditMode ? '일정이 수정되었습니다.' : '일정이 등록되었습니다.');
         window.location.href = 'home.html';
       }

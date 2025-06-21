@@ -25,17 +25,6 @@
         flex-direction: column;
         align-items: center;
       }
-      .header,
-      .container-wrapper,
-      .bottom-nav,
-      .calendar-box,
-      .slide-up-panel,
-      .schedule-item,
-      .alert-banner,
-      .card,
-      .today-task-card {
-        box-sizing: border-box;
-      }
       .header {
         background-color: #d1d5db;
         padding: 1rem;
@@ -44,6 +33,7 @@
         align-items: center;
         width: 100%;
         max-width: 500px;
+        box-sizing: border-box;
       }
       .title {
         font-weight: bold;
@@ -63,6 +53,7 @@
         overflow-y: auto;
         height: calc(100vh - 64px);
         padding: 1rem 0 100px;
+        box-sizing: border-box;
         width: 100%;
         max-width: 500px;
       }
@@ -75,17 +66,13 @@
         width: 100%;
         font-size: 1rem;
         position: relative;
+        box-sizing: border-box;
         display: flex;
         flex-direction: column;
         align-items: center;
       }
       .calendar-box input[type='text'] {
         text-align: center;
-        width: 100%;
-        padding: 0.5rem;
-        border-radius: 0.5rem;
-        border: 1px solid #ccc;
-        margin-bottom: 0.5rem;
       }
       .flatpickr-calendar {
         margin-top: 0.5rem;
@@ -109,6 +96,7 @@
         transform: translateX(-50%);
         width: 100%;
         max-width: 500px;
+        margin: 0 auto;
         overflow-y: auto;
         background: #ffffff;
         border-top-left-radius: 20px;
@@ -117,6 +105,7 @@
         transition: bottom 0.3s ease-in-out;
         z-index: 1000;
         padding: 1rem;
+        box-sizing: border-box;
       }
       .slide-up-panel.active {
         bottom: 80px;
@@ -131,6 +120,26 @@
         align-items: center;
         flex-wrap: wrap;
         gap: 0.5rem;
+      }
+      .schedule-item-buttons {
+        display: flex;
+        gap: 0.5rem;
+      }
+      .schedule-item-buttons button {
+        padding: 0.4rem 0.8rem;
+        font-size: 0.85rem;
+        border-radius: 6px;
+        border: none;
+        font-weight: bold;
+        cursor: pointer;
+      }
+      .edit-button {
+        background-color: #3b82f6;
+        color: white;
+      }
+      .delete-button {
+        background-color: #ef4444;
+        color: white;
       }
       .close-button {
         margin-top: 1rem;
@@ -148,6 +157,7 @@
       .schedule-info {
         width: 100%;
         max-width: 500px;
+        box-sizing: border-box;
         display: flex;
         align-items: center;
         justify-content: flex-start;
@@ -159,26 +169,14 @@
         height: 32px;
         margin-left: 0.5rem;
       }
-      .card,
-      .today-task-card {
+      .card {
         background-color: #d1d5db;
-        padding: 0.75rem 1rem;
+        padding: 0.75rem;
         border-radius: 0.5rem;
+        margin-bottom: 0.5rem;
         font-size: 0.95rem;
         width: 100%;
-      }
-      .card {
-        margin: 0.5rem auto;
-        max-width: 480px;
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-      }
-      .today-task-card {
-        margin-bottom: 0.5rem;
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
+        box-sizing: border-box;
       }
       .bottom-nav {
         position: fixed;
@@ -193,6 +191,7 @@
         justify-content: space-around;
         padding: 0.5rem 0;
         z-index: 999;
+        box-sizing: border-box;
       }
       .nav-btn {
         display: flex;
@@ -223,8 +222,11 @@
         color: #b45309;
         font-weight: bold;
         padding: 0.75rem 1rem;
+        text-align: left;
         border-bottom: 1px solid #fcd34d;
+        width: 100%;
         max-width: 500px;
+        box-sizing: border-box;
         display: flex;
         justify-content: space-between;
         align-items: center;
@@ -235,6 +237,31 @@
         font-size: 1.25rem;
         cursor: pointer;
         color: #b45309;
+      }
+      .card {
+        background-color: #d1d5db;
+        padding: 0.75rem 1rem;
+        border-radius: 0.5rem;
+        margin: 0.5rem auto;
+        font-size: 0.95rem;
+        width: calc(100% - 2rem);
+        max-width: 480px;
+        box-sizing: border-box;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+      }
+      .today-task-card {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        background-color: #d1d5db;
+        padding: 0.75rem 1rem;
+        border-radius: 0.5rem;
+        margin-bottom: 0.5rem;
+        font-size: 0.95rem;
+        width: 100%;
+        box-sizing: border-box;
       }
       #todayTasksContainer {
         display: flex;
