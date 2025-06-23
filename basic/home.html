@@ -450,12 +450,12 @@
         <span>피드</span>
       </div>
       <div class="nav-btn">
-        <div class="circle">🌿</div>
+        <div class="circle">📢</div>
         <span>공지</span>
       </div>
       <a class="nav-btn">
-        <div class="circle">➕</div>
-        <span>일정</span>
+        <div class="circle">⏲️</div>
+        <span>알람</span>
       </a>
       <div class="nav-btn">
         <div class="circle">👤</div>
@@ -643,6 +643,14 @@
       function handleTeamCreate() {
         window.location.href = 'create-team.html';
       }
+      document.addEventListener('DOMContentLoaded', () => {
+        const navButtons = document.querySelectorAll('.bottom-nav .nav-btn');
+        if (navButtons.length >= 3) {
+          navButtons[2].addEventListener('click', () => {
+            window.location.href = '../notification/notification.html';
+          });
+        }
+      });
     </script>
   </body>
 </html>
