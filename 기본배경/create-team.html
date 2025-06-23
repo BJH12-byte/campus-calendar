@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>팀 생성</title>
+    <style>
+      body {
+        margin: 0;
+        font-family: Arial, sans-serif;
+        background-color: #f3f4f6;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+      }
+
+      .header {
+        background-color: #d1d5db;
+        width: 100%;
+        max-width: 500px;
+        padding: 1rem;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        box-sizing: border-box;
+      }
+
+      .container {
+        width: 100%;
+        max-width: 500px;
+        padding: 2rem 1rem;
+        box-sizing: border-box;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+      }
+
+      .card {
+        background: #ffffff;
+        border-radius: 1rem;
+        width: 100%;
+        padding: 2rem 1rem;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        text-align: center;
+      }
+
+      .card input {
+        width: 80%;
+        padding: 0.75rem;
+        font-size: 1rem;
+        border: none;
+        border-bottom: 2px solid #ccc;
+        background: transparent;
+        text-align: center;
+        outline: none;
+      }
+
+      .card button {
+        background: #efefef;
+        border: none;
+        padding: 0.8rem 1.5rem;
+        font-weight: bold;
+        margin-top: 2rem;
+        border-radius: 0.5rem;
+        cursor: pointer;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="header">
+      <div>로고</div>
+      <button onclick="window.location.href='home.html'">TEAM</button>
+    </div>
+
+    <div class="container">
+      <div class="card">
+        <div style="margin-bottom: 1rem; font-weight: bold">000님</div>
+        <input type="text" id="teamNameInput" placeholder="팀 이름 지정하기" />
+        <button onclick="createTeam()">완료하기</button>
+      </div>
+    </div>
+
+    <script>
+      const myEmail = '현삣삐@example.com';
+
+      function createTeam() {
+        const teamName = document.getElementById('teamNameInput').value.trim();
+        if (!teamName) {
+          alert('팀 이름을 입력하세요.');
+          return;
+        }
+
+        const teams = JSON.parse(localStorage.getItem('teams') || '[]');
+
+        teams.push({
+          name: teamName,
+          createdBy: myEmail,
+          members: [myEmail],
+        });
+
+        localStorage.setItem('teams', JSON.stringify(teams));
+
+        alert(`'${teamName}' 팀이 생성되었습니다.`);
+        window.location.href = 'team-list.html';
+      }
+    </script>
+  </body>
+</html>

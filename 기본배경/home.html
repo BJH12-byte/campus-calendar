@@ -268,16 +268,146 @@
         flex-direction: column;
         gap: 0.5rem;
         width: 100%;
+        max-width: 500px;
+        box-sizing: border-box;
+        padding: 1rem;
+        background-color: #ffffff;
+        border-radius: 0.75rem;
+        box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+        margin: 1rem auto 100px auto;
+      }
+      .team-dropdown {
+        position: absolute;
+        top: 100%;
+        left: 0;
+        width: 100%; /* 부모(team-container)의 width를 그대로 따라감 */
+        background-color: #ffffff;
+        border-radius: 0.75rem;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        padding: 0.5rem 0;
+        opacity: 0;
+        transform: translateY(-10px);
+        transition: opacity 0.3s ease, transform 0.3s ease;
+        z-index: 999;
+      }
+      .team-dropdown button {
+        width: 100%;
+        padding: 0.6rem 1rem;
+        text-align: left;
+        font-size: 0.95rem;
+        font-weight: 500;
+        background-color: transparent;
+        border: none;
+        color: #111827;
+        cursor: pointer;
+      }
+
+      .team-dropdown button:hover {
+        background-color: #f3f4f6;
+      }
+
+      .team-dropdown.show {
+        opacity: 1;
+        transform: translateY(0);
+      }
+      .hidden {
+        display: none;
+      }
+      .team-container {
+        position: relative; /* 기준점 */
+      }
+      .modal {
+        position: fixed;
+        top: 0;
+        left: 0;
+        display: none;
+        width: 100%;
+        height: 100%;
+        background: rgba(0, 0, 0, 0.4);
+        justify-content: center;
+        align-items: center;
+        z-index: 10000;
+      }
+      .modal-content {
+        background: white;
+        padding: 2rem;
+        border-radius: 16px;
+        text-align: center;
+        max-width: 300px;
+        width: 80%;
+        box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+        animation: fadeIn 0.2s ease-in-out;
+      }
+      .modal-title {
+        font-size: 1.2rem;
+        font-weight: bold;
+        margin-bottom: 1rem;
+      }
+      #alertMessage {
+        font-size: 0.95rem;
+        margin-bottom: 1.5rem;
+        color: #111827;
+      }
+      .select-btn {
+        background-color: #3b82f6;
+        color: white;
+        border: none;
+        padding: 0.6rem 1.2rem;
+        font-size: 0.9rem;
+        border-radius: 8px;
+        cursor: pointer;
+        font-weight: bold;
+      }
+
+      .select-btn:hover {
+        background-color: #2563eb;
+      }
+
+      .delete-button {
+        background-color: #ef4444;
+        color: white;
+        border: none;
+        padding: 0.5rem 1rem;
+        font-size: 0.85rem;
+        border-radius: 6px;
+        font-weight: bold;
+        cursor: pointer;
+        margin-left: 0.5rem;
+      }
+
+      .delete-button:hover {
+        background-color: #dc2626;
+      }
+
+      @keyframes fadeIn {
+        from {
+          opacity: 0;
+          transform: scale(0.95);
+        }
+        to {
+          opacity: 1;
+          transform: scale(1);
+        }
       }
     </style>
   </head>
   <body>
-    <div id="alertContainer"></div>
     <div class="header">
       <span class="title">캠퍼스 캘린더</span>
-      <button class="team-btn">TEAM</button>
+      <div
+        class="team-container"
+        style="position: relative; display: inline-block"
+      >
+        <button class="team-btn" style="width: 100%; min-width: 100px">
+          TEAM
+        </button>
+        <div id="teamMenu" class="team-dropdown hidden">
+          <button onclick="handleTeamSelect()">선택하기</button>
+          <button onclick="handleTeamCreate()">생성하기</button>
+        </div>
+      </div>
     </div>
-
+    <div id="alertContainer"></div>
     <div class="container-wrapper">
       <div class="calendar-box">
         <input
@@ -332,9 +462,30 @@
         <span>MY</span>
       </div>
     </div>
-
+    <div id="alertModal" class="modal">
+      <div class="modal-content">
+        <div class="modal-title">알림</div>
+        <div id="alertMessage">삭제되었습니다.</div>
+        <button class="select-btn" onclick="closeAlertModal()">확인</button>
+      </div>
+    </div>
     <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
     <script>
+      function showAlertModal(message, callback) {
+        document.getElementById('alertMessage').textContent = message;
+        document.getElementById('alertModal').style.display = 'flex';
+        document.getElementById('alertModal').dataset.callback = callback
+          ? '1'
+          : '';
+      }
+
+      function closeAlertModal() {
+        document.getElementById('alertModal').style.display = 'none';
+        if (document.getElementById('alertModal').dataset.callback === '1') {
+          location.reload(); // 또는 callback(); 사용도 가능
+        }
+      }
+
       function closePanel() {
         const panel = document.getElementById('schedulePanel');
         panel.classList.remove('active');
@@ -355,8 +506,7 @@
         if (targetIndex > -1) {
           schedules.splice(targetIndex, 1);
           localStorage.setItem('schedules', JSON.stringify(schedules));
-          alert('삭제되었습니다.');
-          location.reload();
+          showAlertModal('삭제되었습니다.', true);
         }
       }
 
@@ -364,6 +514,12 @@
         window.location.href = `add-task.html?edit=${date}&index=${index}`;
       }
       window.onload = () => {
+        const today = new Date().setHours(0, 0, 0, 0);
+        let schedules = JSON.parse(localStorage.getItem('schedules') || '[]');
+        schedules = schedules.filter(
+          (s) => new Date(s.date).getTime() >= today
+        );
+        localStorage.setItem('schedules', JSON.stringify(schedules));
         renderTodayTasks();
         renderUpcomingSchedules();
       };
@@ -443,11 +599,11 @@
         );
 
         // 상단 배너용 D-1 알림만 필터링
-        const d1Alerts = sorted.filter((s) => {
-          const diff = Math.ceil(
-            (new Date(s.date) - today) / (1000 * 60 * 60 * 24)
-          );
-          return diff === 1;
+        const d1Alerts = schedules.filter((s) => {
+          const taskDate = new Date(s.date);
+          taskDate.setHours(0, 0, 0, 0);
+          const diff = (taskDate - today) / (1000 * 60 * 60 * 24);
+          return diff === 1; // 정확히 하루 뒤인 경우만
         });
 
         if (d1Alerts.length > 0) {
@@ -468,6 +624,24 @@
         // 메인에서는 더 이상 D-1 ~ D-3 일정 박스 출력 안 함
         const upcomingContainer = document.getElementById('upcomingDdays');
         if (upcomingContainer) upcomingContainer.innerHTML = '';
+      }
+      document.querySelector('.team-btn').addEventListener('click', () => {
+        const menu = document.getElementById('teamMenu');
+        if (menu.classList.contains('hidden')) {
+          menu.classList.remove('hidden');
+          setTimeout(() => menu.classList.add('show'), 10); // animation trigger
+        } else {
+          menu.classList.remove('show');
+          setTimeout(() => menu.classList.add('hidden'), 300); // wait for animation
+        }
+      });
+
+      function handleTeamSelect() {
+        window.location.href = 'team-list.html';
+      }
+
+      function handleTeamCreate() {
+        window.location.href = 'create-team.html';
       }
     </script>
   </body>

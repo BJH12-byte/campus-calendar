@@ -72,6 +72,49 @@
       .flatpickr-calendar {
         z-index: 9999 !important;
       }
+      #warningBox {
+        display: none;
+        color: #b91c1c;
+        background: #fee2e2;
+        padding: 0.75rem 1rem;
+        border-radius: 8px;
+        margin: 1rem;
+        font-weight: bold;
+        text-align: center;
+      }
+      .modal {
+        position: fixed;
+        top: 0;
+        left: 0;
+        display: none;
+        width: 100%;
+        height: 100%;
+        background: rgba(0, 0, 0, 0.5);
+        justify-content: center;
+        align-items: center;
+        z-index: 9999;
+      }
+      .modal-content {
+        background: white;
+        padding: 2rem;
+        border-radius: 12px;
+        max-width: 300px;
+        text-align: center;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+      }
+      .modal-title {
+        font-weight: bold;
+        margin-bottom: 1rem;
+      }
+      .select-btn {
+        background-color: #d1d5db;
+        border: none;
+        padding: 0.5rem 1rem;
+        border-radius: 8px;
+        font-weight: bold;
+        cursor: pointer;
+        margin-top: 1rem;
+      }
     </style>
   </head>
   <body>
@@ -81,6 +124,8 @@
     </div>
 
     <div class="container">
+      <div id="warningBox"></div>
+
       <div class="section">
         <div class="section-title">과목 선택</div>
         <div id="subject-list">
@@ -107,7 +152,13 @@
     </div>
 
     <div class="footer" onclick="registerSchedule()">일정 등록</div>
-
+    <div id="alertModal" class="modal">
+      <div class="modal-content">
+        <div class="modal-title">알림</div>
+        <div id="alertMessage">메시지</div>
+        <button class="select-btn" onclick="closeAlertModal()">확인</button>
+      </div>
+    </div>
     <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
     <script>
       let selectedSubject = null;
@@ -183,10 +234,38 @@
         document.getElementById('date-section').style.display = 'block';
       }
 
+      function showWarning(message) {
+        const warningBox = document.getElementById('warningBox');
+        warningBox.textContent = message;
+        warningBox.style.display = 'block';
+        setTimeout(() => {
+          warningBox.style.display = 'none';
+        }, 3000);
+      }
+
       function registerSchedule() {
-        const selectedDate = document.getElementById('date-picker').value;
-        if (!selectedSubject || !selectedType || !selectedDate) {
-          alert('과목, 일정, 날짜를 선택하세요.');
+        const selectedDateStr = document
+          .getElementById('date-picker')
+          .value.trim();
+
+        if (!selectedSubject || !selectedType || !selectedDateStr) {
+          showWarning('과목, 일정, 날짜를 모두 선택하세요.');
+          return;
+        }
+
+        // 날짜 유효성 검사
+        const selectedDate = new Date(selectedDateStr + 'T00:00:00');
+        if (isNaN(selectedDate.getTime())) {
+          showWarning('날짜 형식이 올바르지 않습니다.');
+          return;
+        }
+
+        const today = new Date();
+        today.setHours(0, 0, 0, 0);
+        selectedDate.setHours(0, 0, 0, 0);
+
+        if (selectedDate.getTime() < today.getTime()) {
+          showWarning('지난 날짜에는 일정을 등록할 수 없습니다.');
           return;
         }
 
@@ -208,15 +287,38 @@
         }
 
         schedules.push({
-          date: selectedDate,
+          date: selectedDateStr,
           type: selectedType,
           subject: selectedSubject,
           icon,
         });
         localStorage.setItem('schedules', JSON.stringify(schedules));
 
-        alert(isEditMode ? '일정이 수정되었습니다.' : '일정이 등록되었습니다.');
-        window.location.href = 'home.html';
+        showAlertModal(
+          isEditMode ? '일정이 수정되었습니다.' : '일정이 등록되었습니다.',
+          () => (window.location.href = 'home.html')
+        );
+      }
+      flatpickr('#date-picker', {
+        defaultDate: originalDate || new Date(),
+        dateFormat: 'Y-m-d',
+        minDate: 'today', // 오늘 이전 선택 자체를 막을 수도 있음 (선택사항)
+        position: 'auto left',
+      });
+      let alertCallback = null;
+
+      function showAlertModal(message, callback) {
+        document.getElementById('alertMessage').textContent = message;
+        document.getElementById('alertModal').style.display = 'flex';
+        alertCallback = typeof callback === 'function' ? callback : null;
+      }
+
+      function closeAlertModal() {
+        document.getElementById('alertModal').style.display = 'none';
+        if (alertCallback) {
+          alertCallback();
+          alertCallback = null;
+        }
       }
     </script>
   </body>
