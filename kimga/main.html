@@ -1,51 +1,75 @@
-<!-- main.html 일부 예시 -->
-<body>
-	<!-- [과목 리스트 화면] -->
-	<!-- 기존 subject 섹션 교체 또는 수정 -->
-	<section id="subject" class="screen">
-		<header>
-			<span class="logo">로고</span>
-			<div class="user-info">
-				<div class="profile-circle"></div>
-				<span>000님 ~학과</span>
+<!DOCTYPE html>
+<html lang="ko">
+	<head>
+		<meta charset="UTF-8" />
+		<meta name="viewport" content="width=393, initial-scale=1.0" />
+		<title>과목 선택</title>
+		<link rel="stylesheet" href="main.css" />
+	</head>
+	<body>
+		<div class="screen">
+			<div class="header-box"></div>
+			<div class="logo">로고</div>
+			<div class="profile-circle"></div>
+			<div class="username">000님</div>
+			<div class="department">~학과</div>
+
+			<div class="filters">
+				<div>전공</div>
+				<div>교양</div>
+				<div>학년</div>
+				<div>검색</div>
 			</div>
-		</header>
 
-		<!-- 필터 버튼들 유지 -->
-		<div class="filters">
-			<button>전공</button>
-			<button>교양</button>
-			<button>학번</button>
-			<button>검색</button>
+			<div class="subject-section section-1">
+				<div class="subject-box">
+					<div class="subject-title">과목 1</div>
+					<div class="subject-time">요일, 시간</div>
+				</div>
+				<div class="subject-box">
+					<div class="subject-title">과목 2</div>
+					<div class="subject-time">요일, 시간</div>
+				</div>
+				<div class="subject-box">
+					<div class="subject-title">과목 3</div>
+					<div class="subject-time">요일, 시간</div>
+				</div>
+			</div>
+
+			<div class="subject-section section-2">
+				<div class="subject-box">
+					<div class="subject-title">과목 4</div>
+					<div class="subject-time">요일, 시간</div>
+				</div>
+				<div class="subject-box">
+					<div class="subject-title">과목 5</div>
+					<div class="subject-time">요일, 시간</div>
+				</div>
+				<div class="subject-box">
+					<div class="subject-title">과목 6</div>
+					<div class="subject-time">요일, 시간</div>
+				</div>
+			</div>
+
+			<div class="subject-section section-3">
+				<div class="subject-box">
+					<div class="subject-title">과목 7</div>
+					<div class="subject-time">요일, 시간</div>
+				</div>
+				<div class="subject-box">
+					<div class="subject-title">과목 8</div>
+					<div class="subject-time">요일, 시간</div>
+				</div>
+				<div class="subject-box">
+					<div class="subject-title">과목 9</div>
+					<div class="subject-time">요일, 시간</div>
+				</div>
+			</div>
+
+			<div class="register-footer"></div>
+			<div class="register-label">과목 등록</div>
 		</div>
 
-		<!-- ✅ 선택 가능한 과목 버튼들 -->
-		<div class="subject-options">
-			<button class="subject-btn" data-subject="과목 1">과목 1</button>
-			<button class="subject-btn" data-subject="과목 2">과목 2</button>
-			<button class="subject-btn" data-subject="과목 3">과목 3</button>
-			<button class="subject-btn" data-subject="과목 4">과목 4</button>
-			<button class="subject-btn" data-subject="과목 5">과목 5</button>
-		</div>
-
-		<!-- ✅ 나의 과목 리스트 출력 -->
-		<h3>📋 나의 과목 리스트</h3>
-		<ul id="mySubjectList"></ul>
-
-		<!-- 등록 버튼은 그대로 두어도 OK -->
-		<button class="register-btn next-btn" data-target="auto-import">
-			과목 등록 완료
-		</button>
-	</section>
-
-	<!-- [일정 자동 담기 화면] -->
-	<section id="auto-import" class="screen" style="display: none">
-		...
-		<button class="next-btn" data-target="calendar-main">네</button>
-	</section>
-
-	<!-- [캘린더 화면] -->
-	<section id="calendar-main" class="screen" style="display: none">...</section>
-
-	<script src="main.js"></script>
-</body>
+		<script src="main.js"></script>
+	</body>
+</html>

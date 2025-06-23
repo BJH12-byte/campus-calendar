@@ -1,0 +1,149 @@
+/* main.css */
+
+:root {
+	--gray-light: #d9d9d9;
+	--gray-medium: #b9b9b9;
+	--font-main: 'Pretendard', sans-serif;
+	--text-color: black;
+}
+
+body {
+	margin: 0;
+	font-family: var(--font-main);
+	background: white;
+	color: var(--text-color);
+}
+
+.screen {
+	width: 393px;
+	height: 852px;
+	position: relative;
+	margin: 0 auto;
+	overflow: hidden;
+	background: white;
+}
+
+.header-box {
+	width: 393px;
+	height: 312px;
+	position: absolute;
+	top: -4px;
+	left: 0;
+	background: var(--gray-light);
+}
+
+.logo {
+	position: absolute;
+	top: 14px;
+	left: 21px;
+	font-size: 26.9px;
+	font-weight: 500;
+}
+
+.profile-circle {
+	position: absolute;
+	top: 89px;
+	left: 32px;
+	width: 40px;
+	height: 40px;
+	background: white;
+	border-radius: 50%;
+}
+
+.username {
+	position: absolute;
+	top: 93px;
+	left: 77px;
+	font-size: 26.9px;
+	font-weight: 500;
+}
+
+.department {
+	position: absolute;
+	top: 129px;
+	left: 77px;
+	font-size: 20px;
+	font-weight: 500;
+}
+
+.filters {
+	position: absolute;
+	top: 245px;
+	left: 22px;
+	display: inline-flex;
+	gap: 4px;
+	padding: 5px;
+}
+
+.filters div {
+	height: 35px;
+	background: var(--gray-medium);
+	border-radius: 50px;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	font-size: 14px;
+	font-weight: 600;
+	padding: 6px 26px;
+	color: var(--text-color);
+}
+
+.subject-section {
+	position: absolute;
+	left: 27px;
+	width: 351px;
+	display: inline-flex;
+	flex-direction: column;
+	justify-content: center;
+	align-items: flex-start;
+}
+
+.subject-section.section-1 {
+	top: 324px;
+}
+.subject-section.section-2 {
+	top: 483px;
+}
+.subject-section.section-3 {
+	top: 642px;
+}
+
+.subject-box {
+	width: 100%;
+	padding: 10px 7px;
+	display: flex;
+	flex-direction: column;
+	align-items: flex-start;
+	overflow: hidden;
+}
+
+.subject-title {
+	font-size: 16px;
+	font-weight: 600;
+	text-align: center;
+}
+
+.subject-time {
+	font-size: 12px;
+	font-weight: 500;
+	text-align: center;
+}
+
+.register-footer {
+	width: 406px;
+	height: 62px;
+	background: var(--gray-light);
+	position: absolute;
+	top: 791px;
+	left: 0;
+}
+
+.register-label {
+	position: absolute;
+	top: 810px;
+	left: 158px;
+	font-size: 20px;
+	font-weight: 700;
+	text-align: center;
+	color: var(--text-color);
+}
