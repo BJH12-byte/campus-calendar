@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>알림</title>
+    <style>
+        body {
+  font-family: Arial, sans-serif;
+  background-color: #f3f4f6;
+  margin: 0;
+  padding: 0;
+}
+
+.page-wrapper {
+  max-width: 500px;
+  margin: 0 auto;
+  padding: 1rem;
+  box-sizing: border-box;
+  background-color: #f3f4f6;
+  min-height: 100vh;
+  padding-bottom: 100px; /* 하단 네비와 겹치지 않게 */
+}
+
+.header-title {
+  font-weight: bold;
+  margin-top: 1rem;
+  font-size: 1rem;
+}
+
+.main-title {
+  font-size: 1.5rem;
+  font-weight: bold;
+  margin: 0.75rem 0;
+}
+
+.notification-box {
+  background-color: white;
+  border-radius: 0.75rem;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
+  padding: 1rem;
+}
+
+.notification-item {
+  display: flex;
+  align-items: center;
+  padding: 0.75rem 1rem;
+  margin-bottom: 0.75rem;
+  background-color: #f3f4f6;
+  border-radius: 0.75rem;
+  font-size: 0.95rem;
+  font-weight: 500;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+}
+
+.notification-item::before {
+  content: '🔔';
+  margin-right: 0.75rem;
+  font-size: 1.1rem;
+}
+
+.notification-item span {
+  color: #111827;
+  line-height: 1.4;
+}
+      .bottom-nav {
+        position: fixed;
+        bottom: 0;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 100%;
+        max-width: 500px;
+        height: 64px;
+        background-color: #d1d5db;
+        display: flex;
+        justify-content: space-around;
+        padding: 0.5rem 0;
+        z-index: 999;
+        box-sizing: border-box;
+      }
+
+      .nav-btn {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        font-size: 0.75rem;
+      }
+
+      .nav-btn .circle {
+        width: 50px;
+        height: 50px;
+        border-radius: 50%;
+        background-color: #cfcfcf;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        margin-bottom: 0.25rem;
+      }
+
+      .nav-btn.active .circle {
+        background-color: #9ca3af;
+      }
+      .notification-item {
+        display: flex;
+        align-items: center;
+        padding: 0.75rem 1rem;
+        margin-bottom: 0.75rem;
+        background-color: #f3f4f6;
+        border-radius: 0.75rem;
+        font-size: 0.95rem;
+        font-weight: 500;
+        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+      }
+
+      .notification-item::before {
+        content: '🔔';
+        margin-right: 0.75rem;
+        font-size: 1.1rem;
+      }
+
+      .notification-item span {
+        color: #111827;
+        line-height: 1.4;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="page-wrapper">
+      <div class="header-title">로고</div>
+      <h1 class="main-title">알림</h1>
+      <div class="notification-box" id="notificationList"></div>
+    </div>
+
+      <div class="bottom-nav">
+    <div class="nav-btn">
+      <div class="circle">🏠</div>
+      <span>피드</span>
+    </div>
+    <div class="nav-btn">
+      <div class="circle">📢</div>
+      <span>공지</span>
+    </div>
+    <div class="nav-btn active">
+      <div class="circle">⏲️</div>
+      <span>알림</span>
+    </div>
+    <div class="nav-btn">
+      <div class="circle">👤</div>
+      <span>MY</span>
+    </div>
+  </div>
+</body>
+    <script>
+      document.addEventListener('DOMContentLoaded', () => {
+        const listContainer = document.getElementById('notificationList');
+        const today = new Date();
+        today.setHours(0, 0, 0, 0);
+
+        function getDday(taskDateStr) {
+          const taskDate = new Date(taskDateStr);
+          taskDate.setHours(0, 0, 0, 0);
+          return Math.floor((taskDate - today) / (1000 * 60 * 60 * 24));
+        }
+
+        function filterUpcoming(tasks) {
+          return tasks.filter((t) => {
+            const d = getDday(t.date);
+            return d >= 1 && d <= 7;
+          });
+        }
+
+        function loadSchedules() {
+          let notifications = [];
+
+          // 개인 일정
+          const personal = JSON.parse(
+            localStorage.getItem('schedules') || '[]'
+          );
+          const personalUpcoming = filterUpcoming(personal).map((task) => {
+            const dday = getDday(task.date);
+            return `📣 '${task.subject}' ${task.type} (D-${dday})`;
+          });
+
+          notifications.push(...personalUpcoming);
+
+          // 팀 일정들
+          for (let i = 0; i < localStorage.length; i++) {
+            const key = localStorage.key(i);
+            if (key.endsWith('-schedules') && key !== 'schedules') {
+              const teamId = key.replace('-schedules', '');
+              const teamTasks = JSON.parse(localStorage.getItem(key) || '[]');
+              const teamUpcoming = filterUpcoming(teamTasks).map((task) => {
+                const dday = getDday(task.date);
+                const project = task.project ? ` / ${task.project}` : '';
+                return `📣 ${teamId}${project} / ${task.subject} ${task.type} (D-${dday})`;
+              });
+              notifications.push(...teamUpcoming);
+            }
+          }
+
+          if (notifications.length === 0) {
+            listContainer.innerHTML = '<p>예정된 알림이 없습니다.</p>';
+          } else {
+            listContainer.innerHTML = notifications
+              .map(
+                (msg) =>
+                  `<div class="notification-item"><span>${msg}</span></div>`
+              )
+              .join('');
+          }
+        }
+
+        loadSchedules();
+      });
+      document.addEventListener('DOMContentLoaded', () => {
+        const navButtons = document.querySelectorAll('.bottom-nav .nav-btn');
+        navButtons[0].addEventListener('click', () => {
+          window.location.href = '../basic/home.html';
+        });
+        navButtons[1].addEventListener('click', () => {
+          window.location.href = 'notice.html'; // 공지 페이지명 정확히 바꿔
+        });
+        navButtons[2].addEventListener('click', () => {
+          window.location.href = 'notification.html';
+        });
+        navButtons[3].addEventListener('click', () => {
+          window.location.href = 'my.html'; // MY 페이지명 정확히 바꿔
+        });
+      });
+    </script>
+  </body>
+</html>
