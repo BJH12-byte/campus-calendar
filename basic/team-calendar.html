@@ -342,10 +342,11 @@
         <div class="circle">📢</div>
         <span>공지</span>
       </div>
-      <a class="nav-btn">
+      <div class="nav-btn" id="notificationTab">
         <div class="circle">⏲️</div>
-        <span>알람</span>
-      </a>
+        <span>알림</span>
+      </div>
+
       <div class="nav-btn">
         <div class="circle">👤</div>
         <span>MY</span>
@@ -485,9 +486,9 @@
         window.location.href = `add-team-task.html?edit=${date}&index=${index}&team=${teamId}`;
       }
       document.addEventListener('DOMContentLoaded', () => {
-        const navButtons = document.querySelectorAll('.bottom-nav .nav-btn');
-        if (navButtons.length >= 3) {
-          navButtons[2].addEventListener('click', () => {
+        const notificationTab = document.getElementById('notificationTab');
+        if (notificationTab) {
+          notificationTab.addEventListener('click', () => {
             window.location.href = '../notification/notification.html';
           });
         }
