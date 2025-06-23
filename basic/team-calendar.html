@@ -342,10 +342,11 @@
         <div class="circle">📢</div>
         <span>공지</span>
       </div>
-      <a class="nav-btn">
-        <div class="circle">➕</div>
-        <span>일정</span>
-      </a>
+      <div class="nav-btn" id="notificationTab">
+        <div class="circle">⏲️</div>
+        <span>알림</span>
+      </div>
+
       <div class="nav-btn">
         <div class="circle">👤</div>
         <span>MY</span>
@@ -484,6 +485,14 @@
       function editSchedule(date, index) {
         window.location.href = `add-team-task.html?edit=${date}&index=${index}&team=${teamId}`;
       }
+      document.addEventListener('DOMContentLoaded', () => {
+        const notificationTab = document.getElementById('notificationTab');
+        if (notificationTab) {
+          notificationTab.addEventListener('click', () => {
+            window.location.href = '../notification/notification.html';
+          });
+        }
+      });
     </script>
   </body>
 </html>
