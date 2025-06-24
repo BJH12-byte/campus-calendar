@@ -119,9 +119,7 @@
   <body>
     <div class="header">
       <span class="title">팀 일정 추가</span>
-      <button onclick="window.location.href='team-calendar.html'">
-        ← 뒤로
-      </button>
+      <button onclick="window.location.href='team-calendar.html'">홈</button>
     </div>
 
     <div class="container">
@@ -138,15 +136,14 @@
           <div class="list-item" onclick="selectSubject(this)">과목 5</div>
         </div>
       </div>
-
-      <div class="section" id="schedule-section" style="display: none">
+      <div class="section" id="schedule-section">
         <div class="section-title">일정 종류</div>
         <div class="list-item" onclick="selectType(this, '기타')">기타</div>
         <div class="list-item" onclick="selectType(this, '과제')">과제</div>
         <div class="list-item" onclick="selectType(this, '시험')">시험</div>
       </div>
 
-      <div class="section" id="date-section" style="display: none">
+      <div class="section" id="date-section">
         <div class="section-title">날짜 선택</div>
         <input type="text" id="date-picker" />
       </div>
@@ -230,18 +227,21 @@
         document.getElementById('schedule-section').style.display = 'block';
       }
 
-      function selectType(el, type) {
+      function selectSubject(el) {
         document
-          .querySelectorAll('#schedule-section .list-item')
+          .querySelectorAll('#subject-list .list-item')
           .forEach((item) => item.classList.remove('selected'));
         el.classList.add('selected');
-        selectedType = type;
-        document.getElementById('date-section').style.display = 'block';
+        selectedSubject = el.textContent;
+        // 제거: schedule-section을 표시하는 코드
       }
-
       function registerSchedule() {
         const project = document.getElementById('project-input').value;
         const selectedDate = document.getElementById('date-picker').value;
+        if (!project.trim()) {
+          showAlertModal('프로젝트명을 입력하세요.');
+          return;
+        }
         if (!selectedSubject || !selectedType || !selectedDate) {
           alert('프로젝트명, 과목, 일정 종류, 날짜를 모두 입력하세요.');
           return;
