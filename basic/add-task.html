@@ -138,14 +138,13 @@
         </div>
       </div>
 
-      <div class="section" id="schedule-section" style="display: none">
+      <div class="section" id="schedule-section">
         <div class="section-title">일정 종류</div>
         <div class="list-item" onclick="selectType(this, '기타')">기타</div>
         <div class="list-item" onclick="selectType(this, '과제')">과제</div>
         <div class="list-item" onclick="selectType(this, '시험')">시험</div>
       </div>
-
-      <div class="section" id="date-section" style="display: none">
+      <div class="section" id="date-section">
         <div class="section-title">날짜 선택</div>
         <input type="text" id="date-picker" />
       </div>
@@ -222,7 +221,7 @@
           .forEach((item) => item.classList.remove('selected'));
         el.classList.add('selected');
         selectedSubject = el.textContent;
-        document.getElementById('schedule-section').style.display = 'block';
+        // 제거: schedule-section을 표시하는 코드
       }
 
       function selectType(el, type) {
@@ -231,9 +230,8 @@
           .forEach((item) => item.classList.remove('selected'));
         el.classList.add('selected');
         selectedType = type;
-        document.getElementById('date-section').style.display = 'block';
+        // 제거: date-section을 표시하는 코드
       }
-
       function showWarning(message) {
         const warningBox = document.getElementById('warningBox');
         warningBox.textContent = message;
