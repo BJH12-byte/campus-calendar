@@ -1,0 +1,367 @@
+<!DOCTYPE html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=393, initial-scale=1.0" />
+    <title>Uni MY Page</title>
+    <style>
+      * {
+        box-sizing: border-box;
+      }
+
+      html,
+      body {
+        margin: 0;
+        padding: 0;
+        height: 100%;
+        font-family: 'Pretendard', sans-serif;
+        background-color: #ffffff;
+      }
+
+      .container {
+        width: 393px;
+        height: 852px;
+        flex-shrink: 0;
+
+        border: 1px solid #000;
+        background: #fff;
+        box-shadow: 0px 4px 4px 0px rgba(0, 0, 0, 0.25);
+
+        margin: 0 auto;
+        display: flex;
+        flex-direction: column;
+        position: relative;
+      }
+
+      .header {
+        width: 393px;
+        height: 312px;
+        flex-shrink: 0;
+        background: #b7b7f9;
+
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+
+        padding: 2rem 1rem 2rem;
+        border-bottom-left-radius: 24px;
+        border-bottom-right-radius: 24px;
+      }
+html, body, .container {
+  scrollbar-width: none;     /* 파이어폭스 */
+  -ms-overflow-style: none;  /* IE, Edge */
+}
+html::-webkit-scrollbar,
+body::-webkit-scrollbar,
+.container::-webkit-scrollbar {
+  display: none;             /* 크롬, 사파리, 오페라 */
+}
+      .header-logo svg {
+        display: block;
+        margin-bottom: 1.5rem;
+      }
+
+      .profile-box {
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+      }
+
+      .profile-img {
+        width: 60px;
+        height: 60px;
+        border-radius: 50%;
+        background: #ffffff;
+      }
+
+      .profile-info {
+        color: white;
+      }
+
+      .nickname {
+        font-size: 1.2rem;
+        font-weight: bold;
+      }
+
+      .userid {
+        font-size: 0.8rem;
+        opacity: 0.9;
+      }
+
+      .menu-list {
+        margin-top: 2rem;
+      }
+      a.menu-item {
+  text-decoration: none;
+}
+      .menu-item {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 1rem 1.25rem;
+        font-size: 1rem;
+        font-weight: bold;
+        color: white;
+        cursor: pointer;
+      }
+
+      .menu-item {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 1rem 1.25rem;
+        font-size: 1rem;
+        font-weight: bold;
+        color: white;
+        cursor: pointer;
+      }
+
+      .menu-arrow svg {
+        width: 24px;
+        height: 24px;
+        flex-shrink: 0;
+        text-decoration: none; 
+      }
+      .menu-arrow {
+        display: flex;
+        align-items: center;
+        text-decoration: none;
+        
+      }
+      .main {
+        display: flex;
+        justify-content: center;
+        align-items: flex-start;
+        padding-top: 1.5rem;
+        padding-bottom: 80px; /* 하단바 공간 확보 */
+      }
+
+.bottom-nav {
+  width: 393px;
+  height: 65px;
+  background: #b7b7f9;
+  display: flex;
+  justify-content: space-around;
+  align-items: flex-start;
+  padding-top: 16px;
+  position: fixed;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  border-top-left-radius: 16px;
+  border-top-right-radius: 16px;
+  z-index: 10;
+}
+      .nav-item {
+        position: relative;
+      }
+
+      .nav-circle {
+        width: 63px;
+        height: 63px;
+        background: #c5c1f9;
+        border-radius: 50%;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+
+        position: relative;
+        top: -40px; /* 하단 바 위로 반쯤 올라오게 */
+        z-index: 11;
+      }
+
+      .nav-item.active .nav-circle {
+        background: #8b85f9;
+        border: 3px solid white;
+      }
+      .nav-circle img {
+        width: 24px;
+        height: 24px;
+        margin-bottom: 2px;
+      }
+
+      .circle-label {
+        font-size: 11px;
+        color: white;
+        font-family: 'Pretendard', sans-serif;
+        line-height: 1;
+      }
+      .nav-icon {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        color: white;
+        font-size: 0.75rem;
+      }
+
+      .nav-icon.active {
+        background-color: #a998ff;
+        border-radius: 50%;
+        padding: 0.5rem;
+      }
+
+      .nav-icon img {
+        width: 24px;
+        height: 24px;
+        margin-bottom: 4px;
+      }
+      .nickname {
+        color: #fff;
+        font-family: 'Pretendard', sans-serif;
+        font-size: 32px;
+        font-style: normal;
+        font-weight: 500;
+        line-height: normal;
+        letter-spacing: -0.48px;
+      }
+      .active .nav-circle {
+        background: #8b85f9;
+        border: 3px solid white;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+                <div class="bottom-nav">
+      <div class="nav-item" onclick="location.href='../basic/home.html'">
+        <div class="nav-circle">
+          <img
+            src="https://img.icons8.com/ios-filled/50/ffffff/home.png"
+            alt="피드"
+          />
+          <span class="circle-label">피드</span>
+        </div>
+      </div>
+      <div class="nav-item">
+        <div class="nav-circle">
+          <img
+            src="https://img.icons8.com/ios-filled/50/ffffff/leaf.png"
+            alt="공지"
+          />
+          <span class="circle-label">공지</span>
+        </div>
+      </div>
+      <div class="nav-item">
+        <div class="nav-circle" onclick="location.href='../notification/notification.html'">
+          <img
+            src="https://img.icons8.com/ios-filled/50/ffffff/appointment-reminders.png"
+            alt="알림"
+          />
+          <span class="circle-label">알림</span>
+        </div>
+      </div>
+      <div class="nav-item active">
+        <div class="nav-circle active-circle" onclick="location.href='mypage.html'">
+          <img
+            src="https://img.icons8.com/ios-filled/50/ffffff/user.png"
+            alt="MY"
+          />
+          <span class="circle-label">MY</span>
+        </div>
+      </div>
+    </div>
+      <div class="header">
+        <div class="header-logo">
+          <!-- ✅ SVG 로고 전체 삽입 -->
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            width="82"
+            height="28"
+            viewBox="0 0 82 28"
+            fill="none"
+          >
+            <path
+              d="M17.0274 20.3462V22.7291H7.5361C2.95003 22.7291 0 19.9273 0 15.7391V3.17456H2.75739V15.5456C2.75739 18.4774 4.64932 20.3462 7.5361 20.3462C10.4229 20.3462 12.3148 18.4774 12.3148 15.5456V3.17456H15.0722V15.7391C15.0722 17.8015 14.3333 19.3468 13.3729 20.3462H17.0274Z"
+              fill="#8B85F9"
+            />
+            <path
+              d="M16.706 22.7314V20.3485L16.9619 20.3167C18.02 20.1867 18.4685 19.5744 18.4685 18.3179V9.04033H21.1627V10.3603C22.1259 9.26563 23.5664 8.68506 25.3318 8.68506C28.8598 8.68506 31.137 11.0045 31.137 14.6439V18.315C31.137 19.5715 31.5856 20.1838 32.6437 20.3138L32.8996 20.3456V22.7285H32.5459C29.7253 22.7285 28.44 20.9897 28.44 18.315V14.8345C28.44 12.4833 26.9017 11.1287 24.7855 11.1287C22.6693 11.1287 21.1627 12.6739 21.1627 14.8345V18.315C21.1627 20.9897 19.8803 22.7285 17.0568 22.7285H16.7031L16.706 22.7314Z"
+              fill="#8B85F9"
+            />
+            <path
+              d="M38.8002 20.3448V22.7277H32.5781V20.3448H34.3407V9.03662H37.0348V20.3448H38.7974H38.8002Z"
+              fill="#8B85F9"
+            />
+            <path
+              d="M52.3977 21.1986V22.6832H52.0785C51.2591 22.6832 50.4396 22.3828 49.9623 21.4181C49.4218 22.1806 48.1653 22.6832 46.926 22.6832H41.5723V21.1986H43.631C42.9524 20.4765 42.593 19.5146 42.593 18.3708C42.593 15.9041 44.3498 14.096 46.8887 14.096C47.527 14.096 48.1279 14.1769 48.6253 14.3964V15.881C48.0848 15.7019 47.6075 15.6211 46.9663 15.6211C45.4079 15.6211 44.2693 16.7851 44.2693 18.3911C44.2693 19.997 45.3676 21.1986 46.926 21.1986C48.4844 21.1986 49.623 20.0346 49.623 18.4488V10.1013H51.3022V19.9335C51.3022 20.7162 51.5811 21.0975 52.2395 21.1784L52.4006 21.1986H52.3977Z"
+              fill="#8B85F9"
+            />
+            <path
+              d="M52.2012 22.6859V21.2012H54.2771C53.5784 20.4589 53.219 19.4971 53.219 18.3937C53.219 15.8866 55.0362 14.0986 57.5521 14.0986C58.0926 14.0986 58.59 14.1795 59.0501 14.3586V15.8837C58.5699 15.7046 58.0322 15.6237 57.5923 15.6237C55.9735 15.6237 54.8953 16.7473 54.8953 18.3937C54.8953 20.0401 55.9937 21.2012 57.5923 21.2012C59.191 21.2012 60.2491 20.0979 60.2491 18.4312V14.1564H61.9282V19.5346C61.9282 20.5773 62.2071 21.1001 62.8656 21.181L63.0266 21.2012V22.6859H62.7074C61.6493 22.6859 60.9104 22.2237 60.5912 21.4208C60.0708 22.1429 58.8143 22.6859 57.5952 22.6859H52.2012Z"
+              fill="#8B85F9"
+            />
+            <path
+              d="M63.9801 24.1294V24.0081C63.9801 23.1849 63.6006 22.6852 62.9824 22.6852V21.2006C64.6788 21.1804 65.6794 22.1826 65.6794 24.0486V24.1294C65.6794 25.4928 66.657 26.4979 68.017 26.4979C69.377 26.4979 70.3546 25.4957 70.3546 24.1294V21.0388C69.8745 21.5414 68.8767 21.9025 67.9566 21.9025C65.619 21.9025 64.0233 20.3572 64.0233 18.0898V14.1558H65.7024V18.1071C65.7024 19.4704 66.6599 20.4149 67.9998 20.4149C69.3397 20.4149 70.3575 19.4733 70.3575 18.1273V14.1558H72.0367V21.5385C72.2753 21.3392 72.7354 21.1977 73.1753 21.1977V22.6823C72.4363 22.7026 72.0367 23.1445 72.0367 23.8262V24.1266C72.0367 26.3737 70.3403 27.9999 68.0228 27.9999C65.7053 27.9999 63.9888 26.3737 63.9888 24.1266L63.9801 24.1294Z"
+              fill="#8B85F9"
+            />
+            <path
+              d="M81.6167 21.1985V22.6831H73.1289V21.1985H77.8616C78.9398 21.1985 79.2791 20.7565 79.2791 20.1962C79.2791 19.6358 78.799 19.0928 76.7633 18.7722C74.5665 18.4314 73.7873 17.4869 73.7873 16.2448C73.7873 14.8613 74.7074 13.937 76.4844 13.937H80.32V15.4217H76.4642C75.7857 15.4217 75.4665 15.722 75.4665 16.2448C75.4665 16.8081 75.8863 17.1691 77.9622 17.5504C80.1388 17.9519 80.9985 18.934 80.9985 20.1384C80.9985 20.5399 80.9382 20.8808 80.8001 21.2014H81.6196L81.6167 21.1985Z"
+              fill="#8B85F9"
+            />
+            <g opacity="0.99">
+              <path
+                d="M39.5051 3.75493C36.095 3.93113 35.9484 4.07843 35.7673 7.50409C35.5919 4.07843 35.4452 3.93112 32.0352 3.74915C35.4452 3.57296 35.5919 3.42565 35.773 0C35.9484 3.42565 36.095 3.57296 39.5051 3.75493Z"
+                fill="#8B85F9"
+              />
+            </g>
+          </svg>
+        </div>
+
+        <div class="profile-box">
+          <div class="profile-img"></div>
+          <div class="profile-info">
+            <div class="nickname">000님</div>
+            <div class="userid">아이디</div>
+          </div>
+        </div>
+
+        <div class="menu-list">
+          <div class="menu-item">
+            My Uni
+            <span class="menu-arrow">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="21"
+                height="24"
+                viewBox="0 0 21 24"
+                fill="none"
+              >
+                <path
+                  d="M9 5L15 12L9 19"
+                  stroke="#757575"
+                  stroke-width="2.5"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                />
+              </svg>
+            </span>
+          </div>
+          <a href="mymonth.html" class="menu-item">
+  Uni Month
+  <span class="menu-arrow">
+    <svg
+      class="icon-arrow"
+      xmlns="http://www.w3.org/2000/svg"
+      width="21"
+      height="24"
+      viewBox="0 0 21 24"
+      fill="none"
+    >
+      <path
+        d="M9 5L15 12L9 19"
+        stroke="#757575"
+        stroke-width="2.5"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+      />
+    </svg>
+  </span>
+</a>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </body>
+</html>

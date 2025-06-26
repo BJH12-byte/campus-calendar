@@ -1,0 +1,432 @@
+<!DOCTYPE html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <title>My Uni Timetable</title>
+    <style>
+      html,
+      body {
+        margin: 0;
+        padding: 0;
+        width: 393px;
+        height: 852px;
+        background: #e6e6f2;
+        font-family: 'Pretendard', Arial, sans-serif;
+        box-sizing: border-box;
+        overflow: hidden;
+      }
+      body {
+        width: 393px;
+        height: 852px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        flex-shrink: 0;
+        position: relative;
+      }
+      .header {
+        width: 393px;
+        height: 56px;
+        background: #e6e6f2;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 0 24px 0 16px;
+        box-sizing: border-box;
+        flex-shrink: 0;
+      }
+      .logo {
+        color: #7e7ee6;
+        font-weight: bold;
+        font-size: 1.2rem;
+        letter-spacing: -1px;
+        font-family: 'Pretendard', Arial, sans-serif;
+      }
+      .setting-icon {
+        font-size: 1.3rem;
+        color: #8d8da3;
+        cursor: pointer;
+      }
+      .title {
+        width: 393px;
+        text-align: center;
+        font-size: 1.25rem;
+        font-weight: 700;
+        margin-top: 8px;
+        margin-bottom: 0px;
+        flex-shrink: 0;
+      }
+      .container {
+        width: 393px;
+        flex: 1;
+        margin: 0 auto;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        box-sizing: border-box;
+        overflow-y: auto;
+      }
+      .timetable-box {
+        background: #fff;
+        border-radius: 20px;
+        box-shadow: 0 0 16px 2px rgba(0, 0, 0, 0.08);
+        width: 344px;
+        margin-top: 24px;
+        padding: 18px 14px 14px 14px;
+        flex-shrink: 0;
+      }
+      .semester-label {
+        font-size: 0.85rem;
+        color: #8d8da3;
+        font-weight: 700;
+        margin-bottom: 2px;
+        margin-left: 2px;
+      }
+      .timetable-title {
+        font-size: 1.05rem;
+        font-weight: bold;
+        color: #222;
+        margin-bottom: 10px;
+        margin-left: 2px;
+      }
+      .timetable-table {
+        width: 100%;
+        border-collapse: collapse;
+        background: #fff;
+      }
+      .timetable-table th,
+      .timetable-table td {
+        border: 1px solid #e6e6f2;
+        width: 16.5%;
+        height: 38px;
+        text-align: center;
+        font-size: 0.98rem;
+        font-weight: 400;
+        color: #444;
+        background: #fff;
+      }
+      .timetable-table th {
+        background: #f6f6ff;
+        font-weight: bold;
+        color: #7e7ee6;
+      }
+      .timetable-table .time-label {
+        background: #f6f6ff;
+        color: #7e7ee6;
+        font-weight: 700;
+        width: 30px;
+      }
+      /* 버튼 스타일 */
+      .filters {
+        display: flex;
+        justify-content: space-between;
+        gap: 16px;
+        margin: 18px 0 12px 0;
+        width: 85%;
+        flex-shrink: 0;
+      }
+      .filter-btn {
+        background: #b7b7f9;
+        border-radius: 16px;
+        border: none;
+        color: #fff;
+        font-size: 1rem;
+        font-weight: 600;
+        padding: 7px 18px;
+        cursor: pointer;
+        transition: background 0.15s;
+        flex-shrink: 0;
+      }
+      .filter-btn:hover,
+      .filter-btn.active {
+        background: #7e7ee6;
+      }
+      /* 과목리스트 */
+      .subject-list {
+        width: 88%;
+        margin-bottom: 60px;
+        flex-shrink: 0;
+      }
+      .subject-item {
+        font-weight: bold;
+        font-size: 1.05rem;
+        margin-top: 8px;
+        margin-bottom: 4px;
+        color: #222;
+      }
+      .subject-detail {
+        color: #888;
+        font-size: 0.96rem;
+        margin-bottom: 6px;
+        margin-left: 4px;
+      }
+      /* 과목 추가 모달 */
+      .modal-bg {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100vw;
+        height: 100vh;
+        background: rgba(0, 0, 0, 0.13);
+        z-index: 10;
+        display: none;
+        justify-content: center;
+        align-items: center;
+      }
+      .modal {
+        background: #fff;
+        border-radius: 20px;
+        padding: 32px 24px 22px 24px;
+        box-shadow: 0 0 18px 2px rgba(0, 0, 0, 0.14);
+        width: 320px;
+        display: flex;
+        flex-direction: column;
+        align-items: stretch;
+      }
+      .modal label {
+        font-weight: bold;
+        margin-bottom: 6px;
+        font-size: 1rem;
+      }
+      .modal input,
+      .modal select {
+        margin-bottom: 15px;
+        border-radius: 10px;
+        border: 1px solid #ccc;
+        padding: 8px;
+        font-size: 1rem;
+      }
+      .modal button {
+        background: #7e7ee6;
+        border: none;
+        border-radius: 12px;
+        color: #fff;
+        padding: 12px 0;
+        font-weight: 600;
+        font-size: 1.1rem;
+        cursor: pointer;
+        margin-top: 8px;
+      }
+      /* 추가 버튼 */
+      .add-btn {
+        display: block;
+        width: 100%;
+        background: #7e7ee6;
+        color: #fff;
+        border-radius: 12px;
+        border: none;
+        padding: 10px 0;
+        font-size: 1.12rem;
+        font-weight: bold;
+        margin: 16px 0 8px 0;
+        cursor: pointer;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="header">
+      <span class="logo">Uni <span style="color: #b7b7f9">days</span></span>
+      <span></span>
+      <span class="setting-icon">&#9881;</span>
+    </div>
+    <div class="title">My Uni</div>
+    <div class="container">
+      <div class="timetable-box">
+        <div class="semester-label">2025 1학기</div>
+        <div class="timetable-title" style="margin-bottom: 6px">
+          시간표 추가
+        </div>
+        <table class="timetable-table">
+          <thead>
+            <tr>
+              <th></th>
+              <th>M</th>
+              <th>T</th>
+              <th>W</th>
+              <th>T</th>
+              <th>F</th>
+            </tr>
+          </thead>
+          <tbody id="timetable-body">
+            <tr>
+              <td class="time-label">9</td>
+              <td data-day="월" data-time="9"></td>
+              <td data-day="화" data-time="9"></td>
+              <td data-day="수" data-time="9"></td>
+              <td data-day="목" data-time="9"></td>
+              <td data-day="금" data-time="9"></td>
+            </tr>
+            <tr>
+              <td class="time-label">10</td>
+              <td data-day="월" data-time="10"></td>
+              <td data-day="화" data-time="10"></td>
+              <td data-day="수" data-time="10"></td>
+              <td data-day="목" data-time="10"></td>
+              <td data-day="금" data-time="10"></td>
+            </tr>
+            <tr>
+              <td class="time-label">11</td>
+              <td data-day="월" data-time="11"></td>
+              <td data-day="화" data-time="11"></td>
+              <td data-day="수" data-time="11"></td>
+              <td data-day="목" data-time="11"></td>
+              <td data-day="금" data-time="11"></td>
+            </tr>
+            <tr>
+              <td class="time-label">12</td>
+              <td data-day="월" data-time="12"></td>
+              <td data-day="화" data-time="12"></td>
+              <td data-day="수" data-time="12"></td>
+              <td data-day="목" data-time="12"></td>
+              <td data-day="금" data-time="12"></td>
+            </tr>
+            <tr>
+              <td class="time-label">1</td>
+              <td data-day="월" data-time="13"></td>
+              <td data-day="화" data-time="13"></td>
+              <td data-day="수" data-time="13"></td>
+              <td data-day="목" data-time="13"></td>
+              <td data-day="금" data-time="13"></td>
+            </tr>
+          </tbody>
+        </table>
+        <button class="add-btn" onclick="openModal()">과목 추가</button>
+      </div>
+      <div class="filters">
+        <button class="filter-btn active" onclick="filterSubjects('전공')">
+          전공
+        </button>
+        <button class="filter-btn" onclick="filterSubjects('교양')">
+          교양
+        </button>
+        <button class="filter-btn" onclick="filterSubjects('학년')">
+          학년
+        </button>
+        <button class="filter-btn" onclick="filterSubjects('전체')">
+          검색
+        </button>
+      </div>
+      <div class="subject-list" id="subjectList"></div>
+    </div>
+    <!-- 과목 추가 모달 -->
+    <div class="modal-bg" id="modalBg">
+      <div class="modal">
+        <label>과목명</label>
+        <input type="text" id="subjectName" placeholder="ex. 자료구조" />
+        <label>요일</label>
+        <select id="subjectDay">
+          <option value="월">월</option>
+          <option value="화">화</option>
+          <option value="수">수</option>
+          <option value="목">목</option>
+          <option value="금">금</option>
+        </select>
+        <label>시작 시간</label>
+        <select id="subjectStart">
+          <option value="9">9</option>
+          <option value="10">10</option>
+          <option value="11">11</option>
+          <option value="12">12</option>
+          <option value="13">13</option>
+        </select>
+        <label>종료 시간</label>
+        <select id="subjectEnd">
+          <option value="9">9</option>
+          <option value="10">10</option>
+          <option value="11">11</option>
+          <option value="12">12</option>
+          <option value="13">13</option>
+        </select>
+        <label>유형</label>
+        <select id="subjectType">
+          <option value="전공">전공</option>
+          <option value="교양">교양</option>
+          <option value="학년">학년</option>
+        </select>
+        <button onclick="addSubject()">추가</button>
+        <button
+          style="background: #b7b7f9; margin-top: 3px"
+          onclick="closeModal()"
+        >
+          닫기
+        </button>
+      </div>
+    </div>
+    <script>
+      // 과목 데이터 저장 (localStorage)
+      let subjects = JSON.parse(localStorage.getItem('subjects') || '[]');
+      let filterType = '전체';
+
+      function renderSubjects() {
+        const list = document.getElementById('subjectList');
+        list.innerHTML = '';
+        let filtered = subjects;
+        if (filterType !== '전체') {
+          filtered = subjects.filter((s) => s.type === filterType);
+        }
+        if (filtered.length === 0) {
+          list.innerHTML = '<div style="color:#aaa;">등록된 과목 없음</div>';
+        } else {
+          filtered.forEach((s, i) => {
+            list.innerHTML += `<div class="subject-item">과목 ${
+              i + 1
+            }<div class="subject-detail">${s.name} (${s.day}요일, ${s.start}~${
+              s.end
+            }시)</div></div>`;
+          });
+        }
+      }
+
+      function renderTimetable() {
+        // 시간표 칸 전부 초기화
+        document
+          .querySelectorAll('.timetable-table td')
+          .forEach((td) => (td.innerText = ''));
+        subjects.forEach((s) => {
+          for (let t = Number(s.start); t <= Number(s.end); t++) {
+            let cell = document.querySelector(
+              `td[data-day='${s.day}'][data-time='${t}']`
+            );
+            if (cell) cell.innerText = s.name;
+          }
+        });
+      }
+
+      function filterSubjects(type) {
+        filterType = type;
+        document
+          .querySelectorAll('.filter-btn')
+          .forEach((btn) => btn.classList.remove('active'));
+        let idx =
+          type === '전공' ? 0 : type === '교양' ? 1 : type === '학년' ? 2 : 3;
+        document.querySelectorAll('.filter-btn')[idx].classList.add('active');
+        renderSubjects();
+      }
+
+      function openModal() {
+        document.getElementById('modalBg').style.display = 'flex';
+      }
+      function closeModal() {
+        document.getElementById('modalBg').style.display = 'none';
+      }
+      function addSubject() {
+        let name = document.getElementById('subjectName').value.trim();
+        let day = document.getElementById('subjectDay').value;
+        let start = document.getElementById('subjectStart').value;
+        let end = document.getElementById('subjectEnd').value;
+        let type = document.getElementById('subjectType').value;
+        if (!name) return alert('과목명을 입력하세요!');
+        if (Number(end) < Number(start))
+          return alert('종료 시간이 시작 시간보다 빠름');
+        subjects.push({ name, day, start, end, type });
+        localStorage.setItem('subjects', JSON.stringify(subjects));
+        closeModal();
+        renderSubjects();
+        renderTimetable();
+      }
+      // 페이지 진입 시 렌더링
+      renderSubjects();
+      renderTimetable();
+    </script>
+  </body>
+</html>
