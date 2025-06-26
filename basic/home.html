@@ -721,7 +721,7 @@
           const iconHtml = getSvgIcon(s.type);
           item.innerHTML = `
       <div class="schedule-item-icon">${iconHtml}</div>
-      <span>${s.subject} ${s.type}</span>
+      <span>${s.title ? '(' + s.title + ') ' : ''}${s.subject} ${s.type}</span>
       <div class="schedule-item-buttons">
       </div>`;
           listEl.appendChild(item);
@@ -850,7 +850,9 @@
                 .map(
                   (s) =>
                     `<div class='today-task-card'>
-                 <span>${s.subject} ${s.type}</span>
+                 <span>${s.title ? '(' + s.title + ') ' : ''}${s.subject} ${
+                      s.type
+                    }</span>
                </div>`
                 )
                 .join('')
