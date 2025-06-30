@@ -184,6 +184,23 @@
         font-weight: bold;
         margin-top: 1rem;
       }
+      /* flatpickr의 월 드롭다운 셀렉터 완전 숨김 */
+      .flatpickr-current-month .flatpickr-monthDropdown-months,
+      .flatpickr-current-month
+        .flatpickr-monthDropdown-months
+        + .numInputWrapper {
+        display: none !important;
+      }
+
+      /* 월 텍스트만 보이도록 처리 */
+      .flatpickr-current-month .cur-month {
+        font-size: 1.5rem;
+        font-weight: bold;
+        pointer-events: none;
+        background: none !important;
+        color: #333;
+      }
+
       .today-info img {
         width: 32px;
         height: 32px;
@@ -220,7 +237,7 @@
       .nav-circle {
         width: 63px;
         height: 63px;
-        background: #c5c1f9;
+        background: #b7b7f9;
         border-radius: 50%;
         display: flex;
         flex-direction: column;
@@ -238,10 +255,10 @@
       .nav-circle img {
         width: 24px;
         height: 24px;
-        margin-bottom: 2px;
+        margin-bottom: 5px;
       }
       .circle-label {
-        font-size: 11px;
+        font-size: 9.5px;
         color: white;
         line-height: 1;
       }
@@ -493,7 +510,7 @@
       .schedule-item-icon svg {
         width: 14px;
         height: 14px;
-        margin-top: 7px;
+        margin-top: 20px;
       }
       .drag-handle {
         position: absolute;
@@ -529,6 +546,10 @@
         justify-content: center;
         font-weight: bold;
         margin-bottom: 0.5rem;
+      }
+      #scheduleDate,
+      #scheduleList {
+        margin-top: 40px; /* 원하는 만큼만 내려! 40~56px 추천 */
       }
     </style>
   </head>
@@ -582,7 +603,10 @@
         </div>
 
         <div class="team-container">
-          <button class="team-btn">TEAM</button>
+          <button class="team-btn">
+            <img src="mdi_cached.png" width="24" height="24" alt="icon" />
+            TEAM
+          </button>
           <div id="teamMenu" class="team-dropdown hidden">
             <button onclick="handleTeamSelect()">선택하기</button>
             <button onclick="handleTeamCreate()">생성하기</button>
@@ -607,20 +631,6 @@
       <div id="alertContainer"></div>
       <div class="container-wrapper">
         <div class="slide-up-panel" id="schedulePanel">
-          <div class="drag-handle" id="dragHandle">
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              viewBox="0 0 103 6"
-              fill="none"
-            >
-              <path d="M3 3H100" stroke-linecap="round" />
-            </svg>
-          </div>
-          <div
-            id="scheduleDate"
-            style="margin-bottom: 0.5rem; font-weight: bold"
-          ></div>
-          <div id="scheduleList"></div>
           <button class="close-button" onclick="closePanel()">
             <svg
               xmlns="http://www.w3.org/2000/svg"
@@ -637,6 +647,22 @@
               />
             </svg>
           </button>
+          <div class="slide-up-panel-inner">
+            <div class="drag-handle" id="dragHandle">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                viewBox="0 0 103 6"
+                fill="none"
+              >
+                <path d="M3 3H100" stroke-linecap="round" />
+              </svg>
+            </div>
+            <div
+              id="scheduleDate"
+              style="margin-bottom: 0.5rem; font-weight: bold"
+            ></div>
+            <div id="scheduleList"></div>
+          </div>
         </div>
         <div class="today-info">Today</div>
         <div class="schedule-info" id="todayTasksContainer"></div>
@@ -656,7 +682,7 @@
         <div class="nav-item" onclick="location.href='notice.html'">
           <div class="nav-circle">
             <img
-              src="https://img.icons8.com/ios-filled/50/ffffff/leaf.png"
+              src="https://img.icons8.com/ios-filled/50/ffffff/compass--v1.png"
               alt="공지"
             />
             <span class="circle-label">공지</span>
@@ -704,7 +730,12 @@
           return `<svg xmlns="http://www.w3.org/2000/svg" width="11" height="11" viewBox="0 0 11 11" fill="none">
             <circle cx="5.5" cy="5.5" r="5.5" fill="#B7B7F9"/>
           </svg>`;
+        } else if (type === '기타') {
+          return `<svg xmlns="http://www.w3.org/2000/svg" width="11" height="11" viewBox="0 0 11 11" fill="none">
+            <circle cx="5.5" cy="5.5" r="5.5" fill="#B7B7F9"/>
+          </svg>`;
         }
+
         return '';
       }
       function openPanelWithSchedules(date) {
@@ -786,12 +817,6 @@
         window.location.href = `add-task.html?edit=${date}&index=${index}`;
       }
       window.onload = () => {
-        const today = new Date().setHours(0, 0, 0, 0);
-        let schedules = JSON.parse(localStorage.getItem('schedules') || '[]');
-        schedules = schedules.filter(
-          (s) => new Date(s.date).getTime() >= today
-        );
-        localStorage.setItem('schedules', JSON.stringify(schedules));
         renderTodayTasks();
         renderUpcomingSchedules();
       };
@@ -802,6 +827,7 @@
       flatpickr('#calendar', {
         defaultDate: new Date(),
         inline: true,
+        monthSelectorType: 'static',
         onDayCreate: function (_, __, fp, dayElem) {
           const date = fp.formatDate(dayElem.dateObj, 'Y-m-d');
           const schedules = JSON.parse(
@@ -821,14 +847,22 @@
             daySchedules.forEach((s) => {
               let svgIcon = '';
               if (s.type === '시험') {
-                svgIcon = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 9 9" style="width:8.051px;height:8.05px;flex-shrink:0;aspect-ratio:8.05/8.05;" fill="none"><path fill-rule="evenodd" clip-rule="evenodd" d="M5.25699 2.79265L4.02536 0L2.79374 2.79265L0 4.02427L2.79374 5.25589L4.02536 8.05L5.25699 5.25589L8.05073 4.02427L5.25699 2.79265Z" fill="#574AD3"/></svg>`;
+                svgIcon = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 9 9" style="width:8.051px;height:8.05px;flex-shrink:0;aspect-ratio:8.05/8.05;transform:translateY(4px);" fill="none"><path fill-rule="evenodd" clip-rule="evenodd" d="M5.25699 2.79265L4.02536 0L2.79374 2.79265L0 4.02427L2.79374 5.25589L4.02536 8.05L5.25699 5.25589L8.05073 4.02427L5.25699 2.79265Z" fill="#574AD3"/></svg>`;
               } else if (s.type === '과제') {
                 // 기존 style 뒤에 transform 추가
                 svgIcon = `
     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 3 3"
-         style="width:3px;height:3px;aspect-ratio:1/1;transform: translateY(2px);"
+         style="width:4px;height:4px;aspect-ratio:1/1;transform: translateY(1px);"
          fill="none">
       <circle cx="1.5" cy="1.5" r="1.5" fill="#574AD3"/>
+    </svg>`;
+              } else if (s.type === '기타') {
+                // 기존 style 뒤에 transform 추가
+                svgIcon = `
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 3 3"
+         style="width:4px;height:4px;aspect-ratio:1/1;transform: translateY(-2px);"
+         fill="none">
+      <circle cx="1.5" cy="1.5" r="1.8" fill="#574AD3"/>
     </svg>`;
               }
               if (svgIcon) iconContainer.innerHTML += svgIcon;

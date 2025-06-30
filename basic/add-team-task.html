@@ -267,12 +267,16 @@
       }
       #project-input {
         width: 100%;
-        padding: 0.75rem;
-        font-size: 1rem;
-        border-radius: 8px;
-        border: 1px solid #ccc;
-        margin-bottom: 1rem;
+        height: 40px;
+        padding: 0 1rem;
+        font-size: 16px;
+        border: none;
+        border-bottom: 1px solid #ccc;
         box-sizing: border-box;
+        margin-bottom: 1rem;
+      }
+      #project-input::placeholder {
+        color: #ccc;
       }
       #warningBox {
         display: none;
@@ -340,6 +344,14 @@
       }
       #date-section.visible {
         display: block;
+      }
+      .select-box {
+        background: #fff;
+        border-radius: 12px;
+        box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+        padding: 0.5rem 1rem;
+        margin-bottom: 1rem;
+        flex: none;
       }
       .user-info {
         display: flex;
@@ -414,6 +426,7 @@
       </button>
       <div class="team-container">
         <button class="team-btn" onclick="location.href='team-calendar.html'">
+          <img src="mdi_cached.png" width="24" height="24" alt="icon" />
           TEAM
         </button>
       </div>
@@ -421,16 +434,20 @@
 
     <div class="container">
       <div id="warningBox"></div>
-      <input id="project-input" type="text" placeholder="프로젝트명" />
-      <div class="section">
-        <div class="section-title">과목 선택</div>
-        <div id="subject-list">
-          <div class="list-item" onclick="selectSubject(this)">없음(기타)</div>
-          <div class="list-item" onclick="selectSubject(this)">과목 1</div>
-          <div class="list-item" onclick="selectSubject(this)">과목 2</div>
-          <div class="list-item" onclick="selectSubject(this)">과목 3</div>
-          <div class="list-item" onclick="selectSubject(this)">과목 4</div>
-          <div class="list-item" onclick="selectSubject(this)">과목 5</div>
+      <div class="select-box">
+        <input id="project-input" type="text" placeholder="프로젝트명" />
+        <div class="section">
+          <div class="section-title">과목 선택</div>
+          <div id="subject-list">
+            <div class="list-item" onclick="selectSubject(this)">
+              없음(기타)
+            </div>
+            <div class="list-item" onclick="selectSubject(this)">과목 1</div>
+            <div class="list-item" onclick="selectSubject(this)">과목 2</div>
+            <div class="list-item" onclick="selectSubject(this)">과목 3</div>
+            <div class="list-item" onclick="selectSubject(this)">과목 4</div>
+            <div class="list-item" onclick="selectSubject(this)">과목 5</div>
+          </div>
         </div>
       </div>
       <div class="section" id="schedule-section" style="display: none">
@@ -535,7 +552,6 @@
       flatpickr('#date-picker', {
         defaultDate: initialDate,
         dateFormat: 'Y-m-d',
-        minDate: 'today',
         position: 'auto left',
       });
 

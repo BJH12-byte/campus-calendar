@@ -430,7 +430,9 @@
         </svg>
       </div>
       <div class="team-container">
-        <button class="team-btn" onclick="window.location.href='home.html'">MY</button>
+        <button class="team-btn" onclick="window.location.href='home.html'">
+           <img src="mdi_cached.png" width="24" height="24" alt="icon" />
+          MY</button>
       </div>
     </div>
 
@@ -532,11 +534,30 @@
       flatpickr('#date-picker', {
         defaultDate: originalDate || new Date(),
         dateFormat: 'Y-m-d',
-        minDate: 'today',
         position: 'auto left',
       });
 
       window.onload = () => {
+          const subjectListDiv = document.getElementById('subject-list');
+  subjectListDiv.innerHTML = "";
+    const etcItem = document.createElement('div');
+  etcItem.className = 'list-item';
+  etcItem.innerText = '없음(기타)';
+  etcItem.onclick = function() { selectSubject(this); };
+  subjectListDiv.appendChild(etcItem);
+
+  // localStorage에서 subjects 읽기
+  let subjects = [];
+  try {
+    subjects = JSON.parse(localStorage.getItem('subjects')) || [];
+  } catch(e) {}
+  subjects.forEach(subj => {
+    const item = document.createElement('div');
+    item.className = 'list-item';
+    item.innerText = subj.name; // 과목명만 출력, 필요하면 상세 추가
+    item.onclick = function() { selectSubject(this); };
+    subjectListDiv.appendChild(item);
+  });
           if (!isEditMode) {
     document.getElementById('date-picker').setAttribute('disabled', true);
   } else {

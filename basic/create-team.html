@@ -194,6 +194,73 @@
         line-height: normal;
         letter-spacing: -0.1px;
       }
+      .input-label-row {
+        width: 100%;
+        display: flex;
+        align-items: center;
+        gap: 14px;
+        margin-top: 24px;
+        margin-left: 14px;
+      }
+      .input-label {
+        font-size: 16px;
+        font-weight: 500;
+        color: #333;
+        white-space: nowrap;
+        padding-left: 2px;
+      }
+      .input-wrap {
+        position: relative;
+        flex: 1;
+        display: flex;
+        align-items: center;
+        min-width: 0;
+      }
+      #teamNameInput {
+        width: 100%;
+        height: 44px;
+        font-size: 18px;
+        border: none;
+        border-bottom: 2px solid #bcbcbc;
+        background: transparent;
+        outline: none;
+        padding: 0 44px 0 12px; /* 오른쪽 X버튼 공간 확보, 좌측여백 */
+        box-sizing: border-box;
+        color: #8a8a8a;
+        font-weight: 500;
+        text-align: left;
+      }
+      #teamNameInput::placeholder {
+        color: #bcbcbc;
+        font-weight: 400;
+      }
+      .clear-btn {
+        position: absolute;
+        right: 6px;
+        top: 50%;
+        transform: translateY(-50%);
+        background: none;
+        border: none;
+        padding: 0;
+        margin: 0;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 30px;
+        height: 30px;
+      }
+      .clear-btn svg {
+        display: block;
+      }
+      .input-row {
+        width: 100%;
+        position: relative;
+        margin-top: 32px;
+        margin-bottom: 32px;
+        display: flex;
+        align-items: center;
+      }
     </style>
   </head>
   <body>
@@ -247,15 +314,58 @@
       </div>
       <div class="team-container">
         <button onclick="window.location.href='home.html'" class="select-btn">
-          MY
+          <img src="mdi_cached.png" width="24" height="24" alt="icon" />
+          ME
         </button>
       </div>
     </div>
     <div class="card">
-      <input type="text" id="teamNameInput" placeholder="팀 이름 지정하기" />
+      <div class="input-row">
+        <input
+          type="text"
+          id="teamNameInput"
+          placeholder="팀 이름 지정하기"
+          autocomplete="off"
+        />
+        <button
+          id="clearBtn"
+          class="clear-btn"
+          type="button"
+          tabindex="-1"
+          style="display: none"
+        >
+          <svg width="30" height="30" viewBox="0 0 30 30" fill="none">
+            <circle cx="15" cy="15" r="15" fill="#C1C1C1" />
+            <path
+              d="M10 10L20 20"
+              stroke="#333"
+              stroke-width="2.8"
+              stroke-linecap="round"
+            />
+            <path
+              d="M20 10L10 20"
+              stroke="#333"
+              stroke-width="2.8"
+              stroke-linecap="round"
+            />
+          </svg>
+        </button>
+      </div>
     </div>
+
     <div class="footer" onclick="createTeam()">완료하기</div>
     <script>
+      const input = document.getElementById('teamNameInput');
+      const clearBtn = document.getElementById('clearBtn');
+      input.addEventListener('input', () => {
+        clearBtn.style.display = input.value ? 'flex' : 'none';
+      });
+      clearBtn.addEventListener('click', () => {
+        input.value = '';
+        clearBtn.style.display = 'none';
+        input.focus();
+      });
+
       const myEmail = '현삣삐@example.com';
 
       function createTeam() {
