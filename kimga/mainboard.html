@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="ko">
+	<head>
+		<meta charset="UTF-8" />
+		<meta name="viewport" content="width=393, user-scalable=no" />
+		<title>전공 게시판</title>
+		<link rel="stylesheet" href="mainboard.css" />
+	</head>
+	<body>
+		<div class="container">
+			<div class="header">
+				<div class="profile-circle"></div>
+				<div class="username">000님</div>
+				<div class="major">~학과</div>
+			</div>
+
+			<div class="menu-buttons">
+				<div class="search-box" style="display: none">
+					<input
+						type="text"
+						class="search-input"
+						placeholder="과목명 검색..."
+					/>
+				</div>
+
+				<div class="menu-btn">전공</div>
+				<div class="menu-btn">교양</div>
+				<div class="menu-btn">학년</div>
+				<div class="menu-btn">검색</div>
+			</div>
+
+			<div class="subject-list">
+				<div class="subject" data-name="과목1">
+					<div class="subject-title">과목 1</div>
+					<div class="subject-info">요일, 시간</div>
+				</div>
+				<div class="subject" data-name="과목2">
+					<div class="subject-title">과목 2</div>
+					<div class="subject-info">요일, 시간</div>
+				</div>
+				<div class="subject" data-name="과목3">
+					<div class="subject-title">과목 3</div>
+					<div class="subject-info">요일, 시간</div>
+				</div>
+			</div>
+
+			<div class="footer">
+				<button class="register-btn">과목 등록</button>
+			</div>
+		</div>
+		<script src="mainboard.js"></script>
+	</body>
+</html>

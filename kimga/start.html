@@ -2,21 +2,27 @@
 <html lang="ko">
 	<head>
 		<meta charset="UTF-8" />
-		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-		<title>시작 페이지</title>
+		<meta name="viewport" content="width=393, user-scalable=no" />
+		<title>Start</title>
 		<link rel="stylesheet" href="start.css" />
 	</head>
 	<body>
-		<div class="screen" id="start-screen">
-			<div class="logo-circle">
-				<div>로고</div>
-				<div>슬로건</div>
+		<div class="Iphone1415Pro3">
+			<!-- 로딩 단계 표시 -->
+			<div class="loading-indicators">
+				<img src="loading.svg" alt="로딩 단계" class="loading-svg" />
 			</div>
-			<button class="next-button" onclick="location.href='main.html'">
-				다음
-			</button>
+
+			<!-- 시작하기 버튼 -->
+			<div class="start-button">
+				<div class="start-button-text">시작하기</div>
+			</div>
 		</div>
 
-		<script src="main.js"></script>
+		<script>
+			document.querySelector('.start-button').addEventListener('click', () => {
+				window.location.href = 'startwithgoogle.html'; // 다음 페이지로 연결
+			});
+		</script>
 	</body>
 </html>
