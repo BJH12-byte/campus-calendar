@@ -2,82 +2,95 @@
 <html lang="ko">
   <head>
     <meta charset="UTF-8" />
-    <title>My Uni Timetable</title>
+    <meta name="viewport" content="width=393, initial-scale=1.0" />
+    <title>My Uni</title>
     <style>
-      html,
-      body {
+      :root {
+        --color-main: #574ad3;
+        --color-sub: #8b85f9;
+        --color-card: #b7b7f9;
+        --color-point: #e6e6f2;
+      }
+      * {
+        box-sizing: border-box;
         margin: 0;
         padding: 0;
-        width: 393px;
-        height: 852px;
-        background: #e6e6f2;
-        font-family: 'Pretendard', Arial, sans-serif;
-        box-sizing: border-box;
-        overflow: hidden;
       }
+      html,
       body {
-        width: 393px;
-        height: 852px;
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        flex-shrink: 0;
-        position: relative;
-      }
-      .header {
-        width: 393px;
-        height: 56px;
-        background: #e6e6f2;
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        padding: 0 24px 0 16px;
-        box-sizing: border-box;
-        flex-shrink: 0;
-      }
-      .logo {
-        color: #7e7ee6;
-        font-weight: bold;
-        font-size: 1.2rem;
-        letter-spacing: -1px;
+        width: 100%;
+        height: 100%;
         font-family: 'Pretendard', Arial, sans-serif;
-      }
-      .setting-icon {
-        font-size: 1.3rem;
-        color: #8d8da3;
-        cursor: pointer;
-      }
-      .title {
-        width: 393px;
-        text-align: center;
-        font-size: 1.25rem;
-        font-weight: 700;
-        margin-top: 8px;
-        margin-bottom: 0px;
-        flex-shrink: 0;
+        background-color: white;
       }
       .container {
         width: 393px;
-        flex: 1;
+        min-height: 852px;
         margin: 0 auto;
+        background: #e6e6f2;
         display: flex;
         flex-direction: column;
+        border: 1px solid #ccc;
+        box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+      }
+      .header {
+        padding: 16px;
+        display: flex;
         align-items: center;
-        box-sizing: border-box;
-        overflow-y: auto;
+        background-color: #e6e6f2;
+      }
+      .logo-text {
+        font-size: 16px;
+        color: #8b85f9;
+        font-weight: bold;
+      }
+      .top-header {
+        width: 100%;
+        background: #e6e6f2;
+        padding: 0 0 8px 0;
+      }
+      .header-row {
+        width: 100%;
+        max-width: 393px;
+        margin: 0 auto;
+        display: flex;
+        justify-content: space-between;
+        padding: 0 40px 0 40px;
+        align-items: flex-end;
+        height: 44px;
+        margin-top: 40px;
+      }
+      .header-title {
+        font-size: 1.12rem;
+        font-weight: 700;
+        color: #222;
+        flex: 1;
+        text-align: center;
+        letter-spacing: -0.5px;
+      }
+      .icon-btn {
+        background: none;
+        border: none;
+        padding: 0;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
       }
       .timetable-box {
-        background: #fff;
-        border-radius: 20px;
+        background: #ffffff;
+        border-radius: 15px;
+        width: 331px;
+        height: 550px;
+        margin: 30px auto;
+        padding: 18px 12px 12px 12px;
         box-shadow: 0 0 16px 2px rgba(0, 0, 0, 0.08);
-        width: 344px;
-        margin-top: 24px;
-        padding: 18px 14px 14px 14px;
-        flex-shrink: 0;
+        display: flex;
+        flex-direction: column;
+        justify-content: flex-start;
       }
       .semester-label {
         font-size: 0.85rem;
-        color: #8d8da3;
+        color: #574ad3;
         font-weight: 700;
         margin-bottom: 2px;
         margin-left: 2px;
@@ -93,149 +106,389 @@
         width: 100%;
         border-collapse: collapse;
         background: #fff;
+        table-layout: fixed;
       }
       .timetable-table th,
       .timetable-table td {
         border: 1px solid #e6e6f2;
-        width: 16.5%;
-        height: 38px;
+        height: 42px !important;
         text-align: center;
         font-size: 0.98rem;
-        font-weight: 400;
         color: #444;
         background: #fff;
+        padding: 0;
+      }
+      .timetable-table td.subject-cell {
+        color: #000 !important;
+        font-family: Pretendard, Arial, sans-serif !important;
+        font-size: 10px !important;
+        font-style: normal !important;
+        font-weight: 600 !important;
+        line-height: normal !important;
+        letter-spacing: -0.15px !important;
+        border-radius: 0 !important;
+        padding: 4px 0 0 0 !important;
+        text-align: center !important;
+        vertical-align: top !important;
+        height: 100% !important;
+      }
+      .timetable-table td.subject-bg {
+        border-radius: 0 !important;
+        padding: 0 !important;
       }
       .timetable-table th {
         background: #f6f6ff;
         font-weight: bold;
         color: #7e7ee6;
+        height: 38px;
       }
       .timetable-table .time-label {
         background: #f6f6ff;
-        color: #7e7ee6;
-        font-weight: 700;
-        width: 30px;
+        width: 38px;
+        min-width: 38px;
+        max-width: 38px;
+        text-align: center;
+        vertical-align: middle;
+        border-right: 1px solid #e6e6f2;
+        padding: 0;
       }
-      /* 버튼 스타일 */
-      .filters {
+      .circle-time {
         display: flex;
-        justify-content: space-between;
-        gap: 16px;
-        margin: 18px 0 12px 0;
-        width: 85%;
-        flex-shrink: 0;
-      }
-      .filter-btn {
-        background: #b7b7f9;
-        border-radius: 16px;
-        border: none;
-        color: #fff;
-        font-size: 1rem;
-        font-weight: 600;
-        padding: 7px 18px;
-        cursor: pointer;
-        transition: background 0.15s;
-        flex-shrink: 0;
-      }
-      .filter-btn:hover,
-      .filter-btn.active {
-        background: #7e7ee6;
-      }
-      /* 과목리스트 */
-      .subject-list {
-        width: 88%;
-        margin-bottom: 60px;
-        flex-shrink: 0;
-      }
-      .subject-item {
-        font-weight: bold;
-        font-size: 1.05rem;
-        margin-top: 8px;
-        margin-bottom: 4px;
-        color: #222;
-      }
-      .subject-detail {
-        color: #888;
-        font-size: 0.96rem;
-        margin-bottom: 6px;
-        margin-left: 4px;
-      }
-      /* 과목 추가 모달 */
-      .modal-bg {
-        position: fixed;
-        top: 0;
-        left: 0;
-        width: 100vw;
-        height: 100vh;
-        background: rgba(0, 0, 0, 0.13);
-        z-index: 10;
-        display: none;
-        justify-content: center;
         align-items: center;
+        justify-content: center;
+        height: 38px;
       }
-      .modal {
-        background: #fff;
-        border-radius: 20px;
-        padding: 32px 24px 22px 24px;
-        box-shadow: 0 0 18px 2px rgba(0, 0, 0, 0.14);
-        width: 320px;
+      .circle-bg {
+        background: #b7b7f9;
+        width: 27px;
+        height: 27px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-weight: 400;
+        color: #fff;
+        font-size: 0.85rem;
+        border: 2px solid #d3d2ef;
+      }
+      .timetable-table td:not(.time-label) {
+        height: 38px;
+      }
+      /* 네비 */
+      .bottom-nav {
+        width: 393px;
+        height: 65px;
+        background: #b7b7f9;
+        display: flex;
+        justify-content: space-around;
+        align-items: flex-start;
+        padding-top: 16px;
+        position: fixed;
+        bottom: 0;
+        left: 50%;
+        transform: translateX(-50%);
+        border-top-left-radius: 16px;
+        border-top-right-radius: 16px;
+        z-index: 10;
+      }
+      .nav-item {
+        position: relative;
+      }
+      .nav-circle {
+        width: 63px;
+        height: 63px;
+        background: #b7b7f9;
+        border-radius: 50%;
         display: flex;
         flex-direction: column;
-        align-items: stretch;
+        align-items: center;
+        justify-content: center;
+        position: relative;
+        top: -40px;
+        z-index: 11;
       }
-      .modal label {
-        font-weight: bold;
-        margin-bottom: 6px;
-        font-size: 1rem;
+      .nav-item.active .nav-circle {
+        background: #8b85f9;
+        border: 3px solid white;
       }
-      .modal input,
-      .modal select {
-        margin-bottom: 15px;
-        border-radius: 10px;
-        border: 1px solid #ccc;
-        padding: 8px;
-        font-size: 1rem;
+      .nav-circle img {
+        width: 24px;
+        height: 24px;
+        margin-bottom: 2px;
       }
-      .modal button {
-        background: #7e7ee6;
-        border: none;
-        border-radius: 12px;
-        color: #fff;
-        padding: 12px 0;
+      .circle-label {
+        font-size: 11px;
+        color: white;
+        font-family: 'Pretendard', Arial, sans-serif;
+        line-height: 1;
+      }
+      #settingsOverlay {
+        position: fixed;
+        z-index: 99;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        transition: opacity 0.25s;
+      }
+      .slide-panel {
+        position: fixed;
+        left: 50%;
+        bottom: -350px;
+        transform: translateX(-50%);
+        width: 393px;
+        height: 350px;
+        flex-shrink: 0;
+        border-radius: 30px 30px 0 0;
+        background: #fff;
+        box-shadow: 0px 0px 16px 0px rgba(0, 0, 0, 0.16);
+        z-index: 100;
+        transition: bottom 0.32s cubic-bezier(0.4, 0, 0.2, 1);
+        opacity: 1;
+      }
+      .slide-panel.active {
+        bottom: 0;
+        opacity: 1;
+      }
+      .grab-bar-wrap {
+        width: 103px;
+        height: 25px;
+        margin: 9px auto 0 auto;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        user-select: none;
+        z-index: 101;
+      }
+      .panel-btn-list {
+        display: flex;
+        flex-direction: column;
+        gap: 18px;
+        margin-top: 38px;
+        padding: 0 32px;
+      }
+      .panel-btn {
+        background: #f5f5fb;
+        border-radius: 15px;
+        font-size: 18px;
         font-weight: 600;
-        font-size: 1.1rem;
-        cursor: pointer;
-        margin-top: 8px;
-      }
-      /* 추가 버튼 */
-      .add-btn {
-        display: block;
+        color: #58589b;
+        padding: 20px 0;
+        text-align: center;
+        margin: 0 auto;
         width: 100%;
-        background: #7e7ee6;
-        color: #fff;
-        border-radius: 12px;
-        border: none;
-        padding: 10px 0;
-        font-size: 1.12rem;
-        font-weight: bold;
-        margin: 16px 0 8px 0;
+        max-width: 320px;
+        box-shadow: 0 0 7px 0 rgba(0, 0, 0, 0.04);
         cursor: pointer;
+        user-select: none;
+        transition: background 0.14s;
+      }
+      .panel-btn:active {
+        background: #e0e0ff;
+      }
+      #subjectListItems::-webkit-scrollbar {
+        width: 6px;
+        background: #ececff;
+        border-radius: 6px;
+      }
+      #subjectListItems::-webkit-scrollbar-thumb {
+        background: #d6d6fa;
+        border-radius: 6px;
+      }
+      #subjectListPanel {
+        scrollbar-width: thin;
+      }
+      .subject-tab-btn {
+        flex: 1;
+        background: #e6e6f2;
+        border: none;
+        border-radius: 16px;
+        color: #5b44c0;
+        font-weight: 600;
+        font-size: 16px;
+        padding: 7px 0;
+        margin: 0;
+        cursor: pointer;
+        transition: background 0.15s;
+      }
+      .subject-tab-btn.active {
+        background: #b7b7f9;
+        color: #fff;
+      }
+      .subject-tab-btn[disabled] {
+        opacity: 0.6;
+        cursor: not-allowed;
+      }
+      .theme-choice-box {
+        width: 60px;
+        height: 85px;
+        border: 2.4px solid transparent;
+        border-radius: 16px;
+        background: #f7f7fc;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: flex-start;
+        cursor: pointer;
+        padding-top: 2px;
+        transition: border 0.18s, box-shadow 0.18s;
+        box-sizing: border-box;
+      }
+      .theme-choice-box.selected {
+        border: 2.4px solid #574ad3;
+        box-shadow: 0 2px 10px #b7b7f930;
+        background: #e8e8fc;
+      }
+      .theme-choice-label {
+        font-size: 13px;
+        font-weight: 700;
+        color: #6767a6;
+        margin-top: 5px;
+        letter-spacing: -0.5px;
+        text-align: center;
       }
     </style>
   </head>
   <body>
-    <div class="header">
-      <span class="logo">Uni <span style="color: #b7b7f9">days</span></span>
-      <span></span>
-      <span class="setting-icon">&#9881;</span>
-    </div>
-    <div class="title">My Uni</div>
     <div class="container">
+      <div class="header">
+        <div class="logo-text">
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            width="82"
+            height="28"
+            viewBox="0 0 82 28"
+            fill="none"
+          >
+            <path
+              d="M17.0274 20.3462V22.7291H7.5361C2.95003 22.7291 0 19.9273 0 15.7391V3.17456H2.75739V15.5456C2.75739 18.4774 4.64932 20.3462 7.5361 20.3462C10.4229 20.3462 12.3148 18.4774 12.3148 15.5456V3.17456H15.0722V15.7391C15.0722 17.8015 14.3333 19.3468 13.3729 20.3462H17.0274Z"
+              fill="#8B85F9"
+            />
+            <path
+              d="M16.706 22.7314V20.3485L16.9619 20.3167C18.02 20.1867 18.4685 19.5744 18.4685 18.3179V9.04033H21.1627V10.3603C22.1259 9.26563 23.5664 8.68506 25.3318 8.68506C28.8598 8.68506 31.137 11.0045 31.137 14.6439V18.315C31.137 19.5715 31.5856 20.1838 32.6437 20.3138L32.8996 20.3456V22.7285H32.5459C29.7253 22.7285 28.44 20.9897 28.44 18.315V14.8345C28.44 12.4833 26.9017 11.1287 24.7855 11.1287C22.6693 11.1287 21.1627 12.6739 21.1627 14.8345V18.315C21.1627 20.9897 19.8803 22.7285 17.0568 22.7285H16.7031L16.706 22.7314Z"
+              fill="#8B85F9"
+            />
+            <path
+              d="M38.8002 20.3448V22.7277H32.5781V20.3448H34.3407V9.03662H37.0348V20.3448H38.7974H38.8002Z"
+              fill="#8B85F9"
+            />
+            <path
+              d="M52.3977 21.1986V22.6832H52.0785C51.2591 22.6832 50.4396 22.3828 49.9623 21.4181C49.4218 22.1806 48.1653 22.6832 46.926 22.6832H41.5723V21.1986H43.631C42.9524 20.4765 42.593 19.5146 42.593 18.3708C42.593 15.9041 44.3498 14.096 46.8887 14.096C47.527 14.096 48.1279 14.1769 48.6253 14.3964V15.881C48.0848 15.7019 47.6075 15.6211 46.9663 15.6211C45.4079 15.6211 44.2693 16.7851 44.2693 18.3911C44.2693 19.997 45.3676 21.1986 46.926 21.1986C48.4844 21.1986 49.623 20.0346 49.623 18.4488V10.1013H51.3022V19.9335C51.3022 20.7162 51.5811 21.0975 52.2395 21.1784L52.4006 21.1986H52.3977Z"
+              fill="#8B85F9"
+            />
+            <path
+              d="M52.2012 22.6859V21.2012H54.2771C53.5784 20.4589 53.219 19.4971 53.219 18.3937C53.219 15.8866 55.0362 14.0986 57.5521 14.0986C58.0926 14.0986 58.59 14.1795 59.0501 14.3586V15.8837C58.5699 15.7046 58.0322 15.6237 57.5923 15.6237C55.9735 15.6237 54.8953 16.7473 54.8953 18.3937C54.8953 20.0401 55.9937 21.2012 57.5923 21.2012C59.191 21.2012 60.2491 20.0979 60.2491 18.4312V14.1564H61.9282V19.5346C61.9282 20.5773 62.2071 21.1001 62.8656 21.181L63.0266 21.2012V22.6859H62.7074C61.6493 22.6859 60.9104 22.2237 60.5912 21.4208C60.0708 22.1429 58.8143 22.6859 57.5952 22.6859H52.2012Z"
+              fill="#8B85F9"
+            />
+            <path
+              d="M63.9801 24.1294V24.0081C63.9801 23.1849 63.6006 22.6852 62.9824 22.6852V21.2006C64.6788 21.1804 65.6794 22.1826 65.6794 24.0486V24.1294C65.6794 25.4928 66.657 26.4979 68.017 26.4979C69.377 26.4979 70.3546 25.4957 70.3546 24.1294V21.0388C69.8745 21.5414 68.8767 21.9025 67.9566 21.9025C65.619 21.9025 64.0233 20.3572 64.0233 18.0898V14.1558H65.7024V18.1071C65.7024 19.4704 66.6599 20.4149 67.9998 20.4149C69.3397 20.4149 70.3575 19.4733 70.3575 18.1273V14.1558H72.0367V21.5385C72.2753 21.3392 72.7354 21.1977 73.1753 21.1977V22.6823C72.4363 22.7026 72.0367 23.1445 72.0367 23.8262V24.1266C72.0367 26.3737 70.3403 27.9999 68.0228 27.9999C65.7053 27.9999 63.9888 26.3737 63.9888 24.1266L63.9801 24.1294Z"
+              fill="#8B85F9"
+            />
+            <path
+              d="M81.6167 21.1985V22.6831H73.1289V21.1985H77.8616C78.9398 21.1985 79.2791 20.7565 79.2791 20.1962C79.2791 19.6358 78.799 19.0928 76.7633 18.7722C74.5665 18.4314 73.7873 17.4869 73.7873 16.2448C73.7873 14.8613 74.7074 13.937 76.4844 13.937H80.32V15.4217H76.4642C75.7857 15.4217 75.4665 15.722 75.4665 16.2448C75.4665 16.8081 75.8863 17.1691 77.9622 17.5504C80.1388 17.9519 80.9985 18.934 80.9985 20.1384C80.9985 20.5399 80.9382 20.8808 80.8001 21.2014H81.6196L81.6167 21.1985Z"
+              fill="#8B85F9"
+            />
+            <g opacity="0.99">
+              <path
+                d="M39.5051 3.75493C36.095 3.93113 35.9484 4.07843 35.7673 7.50409C35.5919 4.07843 35.4452 3.93112 32.0352 3.74915C35.4452 3.57296 35.5919 3.42565 35.773 0C35.9484 3.42565 36.095 3.57296 39.5051 3.75493Z"
+                fill="#8B85F9"
+              />
+            </g>
+          </svg>
+        </div>
+      </div>
+      <div class="bottom-nav">
+        <div class="nav-item">
+          <div class="nav-circle" onclick="location.href='../basic/home.html'">
+            <img
+              src="https://img.icons8.com/ios-filled/50/ffffff/home.png"
+              alt="피드"
+            />
+            <span class="circle-label">피드</span>
+          </div>
+        </div>
+        <div class="nav-item">
+          <div class="nav-circle">
+            <img
+              src="https://img.icons8.com/ios-filled/50/ffffff/compass--v1.png"
+              alt="공지"
+            />
+            <span class="circle-label">공지</span>
+          </div>
+        </div>
+        <div class="nav-item">
+          <div
+            class="nav-circle"
+            onclick="location.href='../notification/notification.html'"
+          >
+            <img
+              src="https://img.icons8.com/ios-filled/50/ffffff/appointment-reminders.png"
+              alt="알림"
+            />
+            <span class="circle-label">알림</span>
+          </div>
+        </div>
+        <div class="nav-item active">
+          <div
+            class="nav-circle active-circle"
+            onclick="location.href='mypage.html'"
+          >
+            <img
+              src="https://img.icons8.com/ios-filled/50/ffffff/user.png"
+              alt="MY"
+            />
+            <span class="circle-label">MY</span>
+          </div>
+        </div>
+      </div>
+      <div class="top-header">
+        <div class="header-row">
+          <button
+            class="icon-btn"
+            style="margin-right: 12px"
+            onclick="location.href='mypage.html'"
+          >
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="24"
+              height="24"
+              fill="none"
+            >
+              <path
+                d="M15 5L9 12L15 19"
+                stroke="#757575"
+                stroke-width="2.5"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              />
+            </svg>
+          </button>
+          <span class="header-title">My Uni</span>
+          <button class="icon-btn" style="margin-left: 12px">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="20"
+              height="20"
+              fill="none"
+            >
+              <path
+                fill-rule="evenodd"
+                clip-rule="evenodd"
+                d="M15.2077 5.83325C15.2077 6.24363 15.1269 6.65 14.9698 7.02914C14.8128 7.40828 14.5826 7.75278 14.2924 8.04296C14.0022 8.33314 13.6577 8.56333 13.2786 8.72038C12.8994 8.87742 12.4931 8.95825 12.0827 8.95825C11.6723 8.95825 11.2659 8.87742 10.8868 8.72038C10.5077 8.56333 10.1632 8.33314 9.87297 8.04296C9.58279 7.75278 9.3526 7.40828 9.19556 7.02914C9.03851 6.65 8.95768 6.24363 8.95768 5.83325C8.95768 5.00445 9.28692 4.20959 9.87297 3.62354C10.459 3.03749 11.2539 2.70825 12.0827 2.70825C12.9115 2.70825 13.7063 3.03749 14.2924 3.62354C14.8784 4.20959 15.2077 5.00445 15.2077 5.83325ZM12.0827 7.70825C12.3289 7.70825 12.5727 7.65975 12.8002 7.56553C13.0277 7.4713 13.2344 7.33319 13.4085 7.15908C13.5826 6.98497 13.7207 6.77827 13.815 6.55078C13.9092 6.3233 13.9577 6.07948 13.9577 5.83325C13.9577 5.58702 13.9092 5.34321 13.815 5.11572C13.7207 4.88824 13.5826 4.68154 13.4085 4.50743C13.2344 4.33332 13.0277 4.19521 12.8002 4.10098C12.5727 4.00675 12.3289 3.95825 12.0827 3.95825C11.5854 3.95825 11.1085 4.1558 10.7569 4.50743C10.4052 4.85906 10.2077 5.33597 10.2077 5.83325C10.2077 6.33053 10.4052 6.80745 10.7569 7.15908C11.1085 7.51071 11.5854 7.70825 12.0827 7.70825ZM4.79102 14.1666C4.79102 14.9954 5.12026 15.7902 5.70631 16.3763C6.29236 16.9623 7.08721 17.2916 7.91602 17.2916C8.74482 17.2916 9.53967 16.9623 10.1257 16.3763C10.7118 15.7902 11.041 14.9954 11.041 14.1666C11.041 13.3378 10.7118 12.5429 10.1257 11.9569C9.53967 11.3708 8.74482 11.0416 7.91602 11.0416C7.08721 11.0416 6.29236 11.3708 5.70631 11.9569C5.12026 12.5429 4.79102 13.3378 4.79102 14.1666ZM7.91602 16.0416C7.41873 16.0416 6.94182 15.844 6.59019 15.4924C6.23856 15.1408 6.04102 14.6639 6.04102 14.1666C6.04102 13.6693 6.23856 13.1924 6.59019 12.8408C6.94182 12.4891 7.41873 12.2916 7.91602 12.2916C8.4133 12.2916 8.89021 12.4891 9.24184 12.8408C9.59347 13.1924 9.79102 13.6693 9.79102 14.1666C9.79102 14.6639 9.59347 15.1408 9.24184 15.4924C8.89021 15.844 8.4133 16.0416 7.91602 16.0416Z"
+                fill="#757575"
+              />
+              <path
+                d="M11.8743 14.1324C11.8743 13.9666 11.9402 13.8077 12.0574 13.6905C12.1746 13.5733 12.3336 13.5074 12.4993 13.5074H18.3327C18.4984 13.5074 18.6574 13.5733 18.7746 13.6905C18.8918 13.8077 18.9577 13.9666 18.9577 14.1324C18.9577 14.2982 18.8918 14.4571 18.7746 14.5743C18.6574 14.6916 18.4984 14.7574 18.3327 14.7574H12.4993C12.3336 14.7574 12.1746 14.6916 12.0574 14.5743C11.9402 14.4571 11.8743 14.2982 11.8743 14.1324ZM7.49935 5.17407C7.66511 5.17407 7.82408 5.23992 7.94129 5.35713C8.0585 5.47434 8.12435 5.63331 8.12435 5.79907C8.12435 5.96483 8.0585 6.1238 7.94129 6.24101C7.82408 6.35822 7.66511 6.42407 7.49935 6.42407H1.66602C1.50026 6.42407 1.34128 6.35822 1.22407 6.24101C1.10686 6.1238 1.04102 5.96483 1.04102 5.79907C1.04102 5.63331 1.10686 5.47434 1.22407 5.35713C1.34128 5.23992 1.50026 5.17407 1.66602 5.17407H7.49935ZM1.04102 14.1324C1.04102 13.9666 1.10686 13.8077 1.22407 13.6905C1.34128 13.5733 1.50026 13.5074 1.66602 13.5074H3.33268C3.49844 13.5074 3.65741 13.5733 3.77462 13.6905C3.89183 13.8077 3.95768 13.9666 3.95768 14.1324C3.95768 14.2982 3.89183 14.4571 3.77462 14.5743C3.65741 14.6916 3.49844 14.7574 3.33268 14.7574H1.66602C1.50026 14.7574 1.34128 14.6916 1.22407 14.5743C1.10686 14.4571 1.04102 14.2982 1.04102 14.1324ZM18.3327 5.17407C18.4984 5.17407 18.6574 5.23992 18.7746 5.35713C18.8918 5.47434 18.9577 5.63331 18.9577 5.79907C18.9577 5.96483 18.8918 6.1238 18.7746 6.24101C18.6574 6.35822 18.4984 6.42407 18.3327 6.42407H16.666C16.5003 6.42407 16.3413 6.35822 16.2241 6.24101C16.1069 6.1238 16.041 5.96483 16.041 5.79907C16.041 5.63331 16.1069 5.47434 16.2241 5.35713C16.3413 5.23992 16.5003 5.17407 16.666 5.17407H18.3327Z"
+                fill="#757575"
+              />
+            </svg>
+          </button>
+        </div>
+      </div>
       <div class="timetable-box">
         <div class="semester-label">2025 1학기</div>
-        <div class="timetable-title" style="margin-bottom: 6px">
-          시간표 추가
-        </div>
+        <div class="timetable-title" style="margin-bottom: 6px">시간표</div>
         <table class="timetable-table">
           <thead>
             <tr>
@@ -247,186 +500,985 @@
               <th>F</th>
             </tr>
           </thead>
-          <tbody id="timetable-body">
+          <tbody>
             <tr>
-              <td class="time-label">9</td>
-              <td data-day="월" data-time="9"></td>
-              <td data-day="화" data-time="9"></td>
-              <td data-day="수" data-time="9"></td>
-              <td data-day="목" data-time="9"></td>
-              <td data-day="금" data-time="9"></td>
+              <td class="time-label">
+                <span class="circle-time"
+                  ><span class="circle-bg">9</span></span
+                >
+              </td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
             </tr>
             <tr>
-              <td class="time-label">10</td>
-              <td data-day="월" data-time="10"></td>
-              <td data-day="화" data-time="10"></td>
-              <td data-day="수" data-time="10"></td>
-              <td data-day="목" data-time="10"></td>
-              <td data-day="금" data-time="10"></td>
+              <td class="time-label">
+                <span class="circle-time"
+                  ><span class="circle-bg">10</span></span
+                >
+              </td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
             </tr>
             <tr>
-              <td class="time-label">11</td>
-              <td data-day="월" data-time="11"></td>
-              <td data-day="화" data-time="11"></td>
-              <td data-day="수" data-time="11"></td>
-              <td data-day="목" data-time="11"></td>
-              <td data-day="금" data-time="11"></td>
+              <td class="time-label">
+                <span class="circle-time"
+                  ><span class="circle-bg">11</span></span
+                >
+              </td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
             </tr>
             <tr>
-              <td class="time-label">12</td>
-              <td data-day="월" data-time="12"></td>
-              <td data-day="화" data-time="12"></td>
-              <td data-day="수" data-time="12"></td>
-              <td data-day="목" data-time="12"></td>
-              <td data-day="금" data-time="12"></td>
+              <td class="time-label">
+                <span class="circle-time"
+                  ><span class="circle-bg">12</span></span
+                >
+              </td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
             </tr>
             <tr>
-              <td class="time-label">1</td>
-              <td data-day="월" data-time="13"></td>
-              <td data-day="화" data-time="13"></td>
-              <td data-day="수" data-time="13"></td>
-              <td data-day="목" data-time="13"></td>
-              <td data-day="금" data-time="13"></td>
+              <td class="time-label">
+                <span class="circle-time"
+                  ><span class="circle-bg">13</span></span
+                >
+              </td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+            </tr>
+            <tr>
+              <td class="time-label">
+                <span class="circle-time"
+                  ><span class="circle-bg">14</span></span
+                >
+              </td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+            </tr>
+            <tr>
+              <td class="time-label">
+                <span class="circle-time"
+                  ><span class="circle-bg">15</span></span
+                >
+              </td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+            </tr>
+            <tr>
+              <td class="time-label">
+                <span class="circle-time"
+                  ><span class="circle-bg">16</span></span
+                >
+              </td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+            </tr>
+            <tr>
+              <td class="time-label">
+                <span class="circle-time"
+                  ><span class="circle-bg">17</span></span
+                >
+              </td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+            </tr>
+            <tr>
+              <td class="time-label">
+                <span class="circle-time"
+                  ><span class="circle-bg">18</span></span
+                >
+              </td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
             </tr>
           </tbody>
         </table>
-        <button class="add-btn" onclick="openModal()">과목 추가</button>
       </div>
-      <div class="filters">
-        <button class="filter-btn active" onclick="filterSubjects('전공')">
-          전공
-        </button>
-        <button class="filter-btn" onclick="filterSubjects('교양')">
-          교양
-        </button>
-        <button class="filter-btn" onclick="filterSubjects('학년')">
-          학년
-        </button>
-        <button class="filter-btn" onclick="filterSubjects('전체')">
-          검색
-        </button>
-      </div>
-      <div class="subject-list" id="subjectList"></div>
     </div>
-    <!-- 과목 추가 모달 -->
-    <div class="modal-bg" id="modalBg">
-      <div class="modal">
-        <label>과목명</label>
-        <input type="text" id="subjectName" placeholder="ex. 자료구조" />
-        <label>요일</label>
-        <select id="subjectDay">
-          <option value="월">월</option>
-          <option value="화">화</option>
-          <option value="수">수</option>
-          <option value="목">목</option>
-          <option value="금">금</option>
-        </select>
-        <label>시작 시간</label>
-        <select id="subjectStart">
-          <option value="9">9</option>
-          <option value="10">10</option>
-          <option value="11">11</option>
-          <option value="12">12</option>
-          <option value="13">13</option>
-        </select>
-        <label>종료 시간</label>
-        <select id="subjectEnd">
-          <option value="9">9</option>
-          <option value="10">10</option>
-          <option value="11">11</option>
-          <option value="12">12</option>
-          <option value="13">13</option>
-        </select>
-        <label>유형</label>
-        <select id="subjectType">
-          <option value="전공">전공</option>
-          <option value="교양">교양</option>
-          <option value="학년">학년</option>
-        </select>
-        <button onclick="addSubject()">추가</button>
-        <button
-          style="background: #b7b7f9; margin-top: 3px"
-          onclick="closeModal()"
+    <!-- 네비 하단 -->
+    <div id="settingsOverlay" style="display: none"></div>
+    <div id="settingsPanel" class="slide-panel">
+      <div class="grab-bar-wrap" id="grabBarBtn">
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          width="103"
+          height="6"
+          viewBox="0 0 103 6"
+          fill="none"
         >
-          닫기
+          <path
+            d="M3 3H100"
+            stroke="#505050"
+            stroke-width="5"
+            stroke-linecap="round"
+          />
+        </svg>
+      </div>
+      <div
+        id="subjectTabBar"
+        style="
+          display: none;
+          flex-wrap: nowrap;
+          justify-content: space-between;
+          gap: 10px;
+          margin: 0 0 16px 0;
+          padding: 0 18px;
+        "
+      >
+        <button class="subject-tab-btn active" data-tab="전공">전공</button>
+        <button class="subject-tab-btn" data-tab="교양">교양</button>
+        <button class="subject-tab-btn" data-tab="학년" disabled>학년</button>
+        <button class="subject-tab-btn" data-tab="검색">검색</button>
+      </div>
+      <div class="panel-btn-list" id="mainPanelBtns">
+        <div class="panel-btn" id="subject-edit-btn">과목 수정</div>
+        <div class="panel-btn" id="subject-add-btn">과목 추가</div>
+        <div class="panel-btn" id="theme-btn">테마 변경</div>
+      </div>
+      <div
+        id="subjectListPanel"
+        style="
+          display: none;
+          position: absolute;
+          left: 0;
+          top: 90px;
+          width: 100%;
+          height: 230px;
+          background: #f8f8ff;
+          border-radius: 18px;
+          box-shadow: 0 4px 12px 0 #a1a1d060;
+          overflow-y: auto;
+          z-index: 2;
+          padding: 18px 0 18px 0;
+        "
+      >
+        <div
+          id="subjectListPanelTitle"
+          style="
+            font-weight: bold;
+            color: #484882;
+            font-size: 18px;
+            margin: 0 0 9px 22px;
+          "
+        >
+          등록된 과목
+        </div>
+        <div id="subjectListItems"></div>
+      </div>
+      <!-- *** 검색 패널: 오직 한 군데에서 관리 *** -->
+      <div
+        id="subjectSearchPanel"
+        style="
+          display: none;
+          position: absolute;
+          left: 0;
+          top: 90px;
+          width: 100%;
+          height: 230px;
+          background: #fff;
+          border-radius: 18px;
+          z-index: 300;
+          padding: 18px;
+        "
+      >
+        <div style="width: 100%; position: relative">
+          <svg
+            style="position: absolute; left: 15px; top: 8px"
+            width="22"
+            height="22"
+            viewBox="0 0 22 22"
+            fill="none"
+          >
+            <circle cx="10" cy="10" r="8" stroke="#aaa" stroke-width="2" />
+            <line
+              x1="16"
+              y1="16"
+              x2="21"
+              y2="21"
+              stroke="#aaa"
+              stroke-width="2"
+              stroke-linecap="round"
+            />
+          </svg>
+          <input
+            id="searchInput"
+            type="text"
+            placeholder="검색어"
+            style="
+              width: 341px;
+              height: 35px;
+              flex-shrink: 0;
+              padding: 11px 40px 11px 42px;
+              font-size: 18px;
+              border-radius: 22px;
+              background: #e5e4f7;
+              border: none;
+              outline: none;
+              position: relative;
+              z-index: 1;
+            "
+          />
+          <button
+            id="searchClearBtn"
+            style="
+              background: none;
+              border: none;
+              cursor: pointer;
+              width: 20px;
+              height: 20px;
+              position: absolute;
+              right: 30px;
+              top: 7px;
+              aspect-ratio: 1/1;
+              padding: 0;
+              display: flex;
+              align-items: center;
+              justify-content: center;
+              z-index: 2;
+            "
+            aria-label="검색 지우기"
+          >
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="20"
+              height="21"
+              viewBox="0 0 20 21"
+              fill="none"
+            >
+              <path
+                opacity="0.5"
+                d="M18.3327 10.4998C18.3327 15.1023 14.6018 18.8332 9.99935 18.8332C5.39685 18.8332 1.66602 15.1023 1.66602 10.4998C1.66602 5.89734 5.39685 2.1665 9.99935 2.1665C14.6018 2.1665 18.3327 5.89734 18.3327 10.4998Z"
+                fill="#757575"
+              />
+              <path
+                d="M7.47575 7.9748C7.59294 7.85776 7.75179 7.79202 7.91742 7.79202C8.08304 7.79202 8.2419 7.85776 8.35909 7.9748L10.0008 9.61647L11.6424 7.9748C11.6996 7.9134 11.7686 7.86415 11.8453 7.82999C11.922 7.79583 12.0047 7.77746 12.0887 7.77598C12.1726 7.7745 12.2559 7.78993 12.3338 7.82137C12.4116 7.8528 12.4823 7.89959 12.5416 7.95894C12.601 8.01829 12.6478 8.08898 12.6792 8.1668C12.7106 8.24463 12.7261 8.32799 12.7246 8.4119C12.7231 8.49582 12.7047 8.57859 12.6706 8.65525C12.6364 8.73192 12.5872 8.80092 12.5258 8.85814L10.8841 10.4998L12.5258 12.1415C12.6362 12.2599 12.6963 12.4167 12.6934 12.5786C12.6905 12.7405 12.6249 12.895 12.5104 13.0095C12.3959 13.124 12.2414 13.1896 12.0795 13.1924C11.9176 13.1953 11.7609 13.1352 11.6424 13.0248L10.0008 11.3831L8.35909 13.0248C8.24061 13.1352 8.0839 13.1953 7.92198 13.1924C7.76007 13.1896 7.60558 13.124 7.49107 13.0095C7.37656 12.895 7.31096 12.7405 7.30811 12.5786C7.30525 12.4167 7.36535 12.2599 7.47575 12.1415L9.11742 10.4998L7.47575 8.85814C7.35871 8.74095 7.29297 8.58209 7.29297 8.41647C7.29297 8.25084 7.35871 8.09199 7.47575 7.9748Z"
+                fill="#757575"
+              />
+            </svg>
+          </button>
+        </div>
+        <div id="searchHistoryWrap" style="padding: 0 0 5px 0; display: none">
+          <div
+            id="searchHistoryList"
+            style="
+              background: #f7f7fb;
+              border-radius: 13px;
+              margin-top: 9px;
+              box-shadow: 0 1px 7px #e2e1f8;
+            "
+          ></div>
+        </div>
+        <div id="searchResultWrap" style="padding: 19px 0 12px 0"></div>
+      </div>
+    </div>
+    <div
+      id="modal"
+      style="
+        display: none;
+        position: fixed;
+        left: 0;
+        top: 0;
+        width: 100vw;
+        height: 100vh;
+        background: rgba(0, 0, 0, 0.28);
+        z-index: 5000;
+        justify-content: center;
+        align-items: center;
+      "
+    >
+      <div
+        style="
+          background: #fff;
+          padding: 2rem 1.3rem;
+          border-radius: 18px;
+          box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+          min-width: 240px;
+          text-align: center;
+          max-width: 85vw;
+        "
+      >
+        <div
+          id="modal-msg"
+          style="
+            color: #5b44c0;
+            font-weight: 700;
+            font-size: 19px;
+            margin-bottom: 1.1rem;
+          "
+        ></div>
+        <button
+          id="modal-btn"
+          style="
+            background: #b7b7f9;
+            color: #fff;
+            font-size: 17px;
+            font-weight: 700;
+            border: none;
+            padding: 8px 0;
+            border-radius: 10px;
+            width: 100%;
+            cursor: pointer;
+          "
+        >
+          확인
         </button>
       </div>
     </div>
-    <script>
-      // 과목 데이터 저장 (localStorage)
-      let subjects = JSON.parse(localStorage.getItem('subjects') || '[]');
-      let filterType = '전체';
-
-      function renderSubjects() {
-        const list = document.getElementById('subjectList');
-        list.innerHTML = '';
-        let filtered = subjects;
-        if (filterType !== '전체') {
-          filtered = subjects.filter((s) => s.type === filterType);
-        }
-        if (filtered.length === 0) {
-          list.innerHTML = '<div style="color:#aaa;">등록된 과목 없음</div>';
-        } else {
-          filtered.forEach((s, i) => {
-            list.innerHTML += `<div class="subject-item">과목 ${
-              i + 1
-            }<div class="subject-detail">${s.name} (${s.day}요일, ${s.start}~${
-              s.end
-            }시)</div></div>`;
-          });
-        }
-      }
-
-      function renderTimetable() {
-        // 시간표 칸 전부 초기화
-        document
-          .querySelectorAll('.timetable-table td')
-          .forEach((td) => (td.innerText = ''));
-        subjects.forEach((s) => {
-          for (let t = Number(s.start); t <= Number(s.end); t++) {
-            let cell = document.querySelector(
-              `td[data-day='${s.day}'][data-time='${t}']`
-            );
-            if (cell) cell.innerText = s.name;
-          }
+    <div id="themeSlidePanel" class="slide-panel">
+      <div class="grab-bar-wrap" id="themePanelGrab">
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          width="103"
+          height="6"
+          viewBox="0 0 103 6"
+          fill="none"
+        >
+          <path
+            d="M3 3H100"
+            stroke="#505050"
+            stroke-width="5"
+            stroke-linecap="round"
+          />
+        </svg>
+      </div>
+      <div
+        style="
+          font-weight: bold;
+          color: #484882;
+          font-size: 18px;
+          margin: 0 0 10px 22px;
+        "
+      >
+        테마 선택
+      </div>
+      <div
+        id="themeChoices"
+        style="
+          display: flex;
+          flex-direction: row;
+          gap: 14px;
+          justify-content: center;
+          margin: 10px 0 14px 0;
+        "
+      >
+        <!-- JS로 테마 SVG 미리보기 생성 -->
+      </div>
+      <div
+        style="
+          color: #b3b3bf;
+          font-size: 14px;
+          text-align: center;
+          margin: 10px 0 18px 0;
+        "
+      >
+        테마는 My Uni 내에서 확인 가능합니다!
+      </div>
+      <button
+        onclick="closeThemeSlidePanel()"
+        style="
+          width: 94%;
+          margin: 0 auto 8px auto;
+          display: block;
+          background: #b7b7f9;
+          color: #fff;
+          font-weight: 700;
+          font-size: 19px;
+          padding: 12px 0;
+          border: none;
+          border-radius: 13px;
+          box-shadow: 0 2px 7px #b7b7f925;
+        "
+      >
+        완료하기
+      </button>
+    </div>
+  </body>
+  <script>
+    // "테마 변경" 버튼에 연결해라.
+    const THEMES = [
+      {
+        name: '테마1',
+        colors: {
+          main: '#574AD3',
+          sub: '#8B85F9',
+          card: '#B7B7F9',
+          point: '#E6E6F2',
+        },
+      },
+      {
+        name: '테마2',
+        colors: {
+          main: '#488234',
+          sub: '#91CF98',
+          card: '#D4E7BA',
+          point: '#FA7070',
+        },
+      },
+      {
+        name: '테마3',
+        colors: {
+          main: '#F7FFDE',
+          sub: '#FFADAD',
+          card: '#FFDBDD',
+          point: '#FFEBCE',
+        },
+      },
+      {
+        name: '테마4',
+        colors: {
+          main: '#595959',
+          sub: '#8C8A8D',
+          card: '#B4BABD',
+          point: '#D6D6E0',
+        },
+      },
+    ];
+    function assignColorsToSubjects(subjectList, themeIdx) {
+      // 테마의 4가지 색상 배열로 뽑기
+      const themeColors = Object.values(THEMES[themeIdx].colors);
+      // 랜덤 섞기 (중복 방지용)
+      let shuffledColors = shuffleArray(themeColors.slice());
+      const colorAssignment = {};
+      // 4개 이하: 중복 없이 랜덤
+      if (subjectList.length <= 4) {
+        subjectList.forEach((subj, i) => {
+          colorAssignment[subj.name] = shuffledColors[i];
+        });
+      } else {
+        // 5개 이상: 4개까지 중복X, 이후 중복 허용 랜덤
+        subjectList.forEach((subj, i) => {
+          if (i < 4) colorAssignment[subj.name] = shuffledColors[i];
+          else
+            colorAssignment[subj.name] =
+              themeColors[Math.floor(Math.random() * 4)];
         });
       }
+      return colorAssignment;
+    }
+    function shuffleArray(arr) {
+      for (let i = arr.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [arr[i], arr[j]] = [arr[j], arr[i]];
+      }
+      return arr;
+    }
+    function renderTimetableWithColors(subjectColors) {
+      const table = document.querySelector('.timetable-table');
+      // 초기화
+      for (let r = 1; r < table.rows.length; r++) {
+        for (let c = 1; c < table.rows[r].cells.length; c++) {
+          let cell = table.rows[r].cells[c];
+          cell.style.background = '#fff';
+          cell.style.color = '#444';
+          cell.textContent = '';
+          cell.classList.remove('subject-cell', 'subject-bg');
+        }
+      }
+      const timetableSubjects = loadTimetableSubjects();
+      timetableSubjects.forEach((subj) => {
+        const dayMap = { 월: 1, 화: 2, 수: 3, 목: 4, 금: 5 };
+        const col = dayMap[subj.day];
+        const color = subjectColors[subj.name];
+        for (let t = Number(subj.start); t < Number(subj.end); t++) {
+          const row = t - 9;
+          if (row < 0 || row > 9) continue;
+          const cell = table.rows[row + 1].cells[col];
+          cell.style.background = color;
+          cell.style.color = '#fff';
+          if (t === Number(subj.start)) {
+            cell.textContent = subj.name;
+            cell.classList.add('subject-cell');
+          } else {
+            cell.textContent = '';
+            cell.classList.add('subject-bg');
+          }
+        }
+      });
+    }
 
-      function filterSubjects(type) {
-        filterType = type;
-        document
-          .querySelectorAll('.filter-btn')
-          .forEach((btn) => btn.classList.remove('active'));
-        let idx =
-          type === '전공' ? 0 : type === '교양' ? 1 : type === '학년' ? 2 : 3;
-        document.querySelectorAll('.filter-btn')[idx].classList.add('active');
-        renderSubjects();
-      }
+    function applyTheme(themeIdx) {
+      const theme = THEMES[themeIdx];
+      document.documentElement.style.setProperty(
+        '--color-main',
+        theme.colors.main
+      );
+      document.documentElement.style.setProperty(
+        '--color-sub',
+        theme.colors.sub
+      );
+      document.documentElement.style.setProperty(
+        '--color-card',
+        theme.colors.card
+      );
+      document.documentElement.style.setProperty(
+        '--color-point',
+        theme.colors.point
+      );
+      localStorage.setItem('selectedTheme', themeIdx);
 
-      function openModal() {
-        document.getElementById('modalBg').style.display = 'flex';
+      // 시간표 색상 재할당+적용
+      const timetableSubjects = loadTimetableSubjects();
+      const subjectColors = assignColorsToSubjects(timetableSubjects, themeIdx);
+      renderTimetableWithColors(subjectColors);
+    }
+
+    // ===== SEARCH 기능 =====
+    function loadSearchHistory() {
+      return JSON.parse(localStorage.getItem('searchHistory') || '[]');
+    }
+    function saveSearchHistory(history) {
+      localStorage.setItem(
+        'searchHistory',
+        JSON.stringify(history.slice(0, 10))
+      );
+    }
+    const emptySVG = `
+      <div style="text-align:center;padding:40px 0;">
+        <svg width="55" height="55" viewBox="0 0 55 55" fill="none">
+          <path d="M40.8966 35.6857C41.4686 32.8167 41.3492 29.8528 40.5483 27.0392L38.857 26.9361H38.8387L38.7493 26.9315L38.3598 26.9269C37.8434 26.9304 37.3275 26.9534 36.8129 26.9957C35.4791 27.1057 33.5908 27.3738 31.4206 28.0109C30.976 28.1415 30.4604 28.3798 29.7591 28.735L29.3214 28.9596C28.7485 29.2529 28.0816 29.5944 27.3643 29.9152C25.5012 30.7494 23.1706 31.5102 20.1295 31.5102C15.7914 31.5102 12.2164 30.2727 9.73225 29.0467C8.72634 28.5508 7.75818 27.9817 6.83559 27.344C6.49289 27.1065 6.15958 26.8558 5.83642 26.5923L5.77455 26.5419L5.75621 26.5236L5.74934 26.519L5.74705 26.5167L6.85621 25.2402L5.74475 26.5144L5.511 26.3104C4.5909 29.1041 4.35127 32.0771 4.81205 34.9821L5.65996 34.9477H5.731C6.00968 34.9366 6.28859 34.9328 6.56746 34.9363C7.12434 34.9409 7.91496 34.9592 8.866 35.0211C11.255 35.1697 13.6236 35.552 15.9381 36.1623C16.7539 36.3869 17.5629 36.7513 18.3168 37.1065L18.8439 37.3586C19.4512 37.6473 20.0585 37.9384 20.7345 38.2179C22.7378 39.0896 24.9 39.5367 27.0848 39.5311C31.9935 39.5311 37.0123 37.5511 39.2764 36.3067L40.782 35.4794L40.8966 35.6857Z" fill="#D9D9EC"/>
+          <path d="M39.4214 40.0721C36.5041 41.4127 31.8223 42.9688 27.0854 42.9688C24.4469 42.9746 21.8353 42.4379 19.4129 41.3921C18.6498 41.0713 17.9393 40.7344 17.3229 40.441L16.8508 40.2142C16.0968 39.8613 15.5308 39.616 15.0312 39.4808C12.9404 38.9286 10.8004 38.5832 8.64206 38.4496C7.70838 38.3885 6.7726 38.3656 5.83706 38.3808L5.80497 38.3831H5.80039L5.69727 38.3877C6.9366 41.7682 9.14352 44.709 12.0429 46.8437C14.9423 48.9784 18.4059 50.2125 22.0018 50.3921C25.5978 50.5717 29.1671 49.6889 32.2648 47.8537C35.3625 46.0186 37.8514 43.3122 39.4214 40.0721ZM6.97372 23.0244L8.00268 23.9227L8.00497 23.925L8.03477 23.9479L8.17914 24.0671C8.31359 24.174 8.51983 24.3268 8.79789 24.5254C9.58339 25.0612 10.405 25.5421 11.2568 25.9646C13.3973 27.0233 16.4498 28.0729 20.1302 28.0729C22.5525 28.0729 24.3973 27.4771 25.9602 26.7781C26.5858 26.4985 27.1473 26.2121 27.711 25.921L28.206 25.669C28.9073 25.3138 29.6727 24.9425 30.4518 24.7133C32.4352 24.1276 34.4731 23.7452 36.5339 23.5721C37.306 23.5077 38.0808 23.4824 38.8554 23.4965L38.9975 23.501L39.041 23.5033H39.0639L38.9585 25.2175L39.0639 23.5056L39.1258 23.5079C37.5665 20.5615 35.2333 18.0959 32.3773 16.3766C29.5213 14.6572 26.2505 13.7491 22.9168 13.75C19.6769 13.7492 16.4946 14.6071 13.694 16.2362C10.8935 17.8654 8.57466 20.2076 6.97372 23.0244Z" fill="#D9D9EC"/>
+          <path fill-rule="evenodd" clip-rule="evenodd" d="M41.8713 15.7953L44.166 20.9985L46.4608 15.7953L51.666 13.5006L46.4608 11.2058L44.166 5.9999L41.8713 11.2058L36.666 13.5006L41.8713 15.7953Z" fill="#D9D9EC"/>
+        </svg>
+        <div style="color:#a6a6b4;font-size:19px;margin-top:10px;">검색한 기록이 없습니다.</div>
+      </div>
+    `;
+
+    const searchPanel = document.getElementById('subjectSearchPanel');
+    const searchInput = document.getElementById('searchInput');
+    const searchClearBtn = document.getElementById('searchClearBtn');
+    const searchResultWrap = document.getElementById('searchResultWrap');
+    const searchHistoryWrap = document.getElementById('searchHistoryWrap');
+    const searchHistoryList = document.getElementById('searchHistoryList');
+
+    function showSearchHistory() {
+      const history = loadSearchHistory();
+      if (history.length === 0) {
+        searchHistoryWrap.style.display = 'none';
+        searchResultWrap.innerHTML = emptySVG;
+        return;
       }
-      function closeModal() {
-        document.getElementById('modalBg').style.display = 'none';
+      searchHistoryWrap.style.display = 'block';
+      searchResultWrap.innerHTML = '';
+      searchHistoryList.innerHTML = history
+        .map(
+          (h) =>
+            `<div style="padding:9px 13px;cursor:pointer;" onclick="doSearch('${h.replace(
+              /'/g,
+              "\\'"
+            )}')">${h}</div>`
+        )
+        .join('');
+    }
+    function hideSearchHistory() {
+      searchHistoryWrap.style.display = 'none';
+    }
+    function doSearch(keyword) {
+      const trimmed = keyword.trim();
+      searchInput.value = trimmed;
+      hideSearchHistory();
+      if (!trimmed) {
+        searchResultWrap.innerHTML = '';
+        return;
       }
-      function addSubject() {
-        let name = document.getElementById('subjectName').value.trim();
-        let day = document.getElementById('subjectDay').value;
-        let start = document.getElementById('subjectStart').value;
-        let end = document.getElementById('subjectEnd').value;
-        let type = document.getElementById('subjectType').value;
-        if (!name) return alert('과목명을 입력하세요!');
-        if (Number(end) < Number(start))
-          return alert('종료 시간이 시작 시간보다 빠름');
-        subjects.push({ name, day, start, end, type });
-        localStorage.setItem('subjects', JSON.stringify(subjects));
-        closeModal();
-        renderSubjects();
-        renderTimetable();
+      let history = loadSearchHistory();
+      history = [trimmed, ...history.filter((h) => h !== trimmed)];
+      saveSearchHistory(history);
+
+      // subject에서 name에 keyword 포함되는 것만
+      const subjects = JSON.parse(localStorage.getItem('subjects') || '[]');
+      const results = subjects.filter((s) => s.name.includes(trimmed));
+      if (results.length === 0) {
+        searchResultWrap.innerHTML = emptySVG;
+      } else {
+        searchResultWrap.innerHTML = results
+          .map((s) => {
+            const timestr = `${s.day}, ${String(s.start).padStart(
+              2,
+              '0'
+            )}:00-${String(s.end).padStart(2, '0')}:00`;
+            return `
+            <div style="display:flex;align-items:center;justify-content:space-between;background:#f4f4fa;padding:17px 19px 9px 18px;margin-bottom:11px;border-radius:12px;">
+              <div>
+                <div style="font-size:17px;font-weight:700;color:#5656b0">${
+                  s.name
+                }</div>
+                <div style="font-size:13px;color:#a1a1a1;margin-top:2px;font-weight:500">${timestr}</div>
+              </div>
+              <div style="display:flex;gap:6px;">
+                <button onclick='addToTimetable(${JSON.stringify(
+                  s
+                )})' style="border:none;border-radius:12px;padding:8px 16px;background:#c9c5fc;color:#5846d6;font-size:16px;font-weight:600;cursor:pointer;">추가</button>
+                <button onclick='removeFromTimetable(${JSON.stringify(
+                  s
+                )})' style="border:none;border-radius:12px;padding:8px 16px;background:#eee8ff;color:#d26d76;font-size:16px;font-weight:600;cursor:pointer;">삭제</button>
+              </div>
+            </div>
+          `;
+          })
+          .join('');
       }
-      // 페이지 진입 시 렌더링
-      renderSubjects();
-      renderTimetable();
-    </script>
-  </body>
+    }
+    searchInput.onfocus = showSearchHistory;
+    searchInput.oninput = function () {
+      if (!searchInput.value) showSearchHistory();
+      else hideSearchHistory();
+    };
+    searchClearBtn.onclick = function () {
+      searchInput.value = '';
+      hideSearchHistory();
+      searchResultWrap.innerHTML = '';
+      localStorage.removeItem('searchHistory');
+    };
+    searchInput.onkeydown = function (e) {
+      if (e.key === 'Enter') doSearch(searchInput.value);
+    };
+    window.doSearch = doSearch;
+
+    // 탭 클릭시
+    document.querySelector('.subject-tab-btn[data-tab="검색"]').onclick =
+      function () {
+        document.getElementById('subjectListPanel').style.display = 'none';
+        searchPanel.style.display = 'block';
+        searchInput.value = '';
+        searchResultWrap.innerHTML = '';
+        showSearchHistory();
+      };
+
+    document.getElementById('subjectTabBar').onclick = function (e) {
+      const target = e.target.closest('.subject-tab-btn');
+      if (!target.classList.contains('subject-tab-btn') || target.disabled)
+        return;
+      document
+        .querySelectorAll('.subject-tab-btn')
+        .forEach((btn) => btn.classList.remove('active'));
+      target.classList.add('active');
+      if (target.dataset.tab === '전공' || target.dataset.tab === '교양') {
+        document.getElementById('subjectListPanel').style.display = 'block';
+        searchPanel.style.display = 'none';
+        renderSubjectList(target.dataset.tab);
+      } else if (target.dataset.tab === '검색') {
+        document.getElementById('subjectListPanel').style.display = 'none';
+        searchPanel.style.display = 'block';
+        searchInput.value = '';
+        searchResultWrap.innerHTML = '';
+        showSearchHistory();
+      }
+    };
+    function resetTabBtns() {
+      document
+        .querySelectorAll('.subject-tab-btn')
+        .forEach((btn) => btn.classList.remove('active'));
+      document
+        .querySelector('.subject-tab-btn[data-tab="전공"]')
+        .classList.add('active');
+    }
+    // === 패널 오픈 이벤트
+    document.addEventListener('DOMContentLoaded', function () {
+      let timetableSubjects = loadTimetableSubjects();
+      timetableSubjects.forEach((subj) => {
+        addToTimetable(subj);
+      });
+      const panel = document.getElementById('settingsPanel');
+      const overlay = document.getElementById('settingsOverlay');
+      const iconBtns = document.querySelectorAll('.icon-btn');
+      iconBtns[iconBtns.length - 1].addEventListener('click', function (e) {
+        e.preventDefault();
+        panel.classList.add('active');
+        overlay.style.display = 'block';
+        document.getElementById('mainPanelBtns').style.display = 'flex';
+        document.getElementById('subjectListPanel').style.display = 'none';
+        document.getElementById('subjectTabBar').style.display = 'none';
+        searchPanel.style.display = 'none';
+        resetTabBtns();
+      });
+      overlay.addEventListener('click', closePanel);
+      document.getElementById('grabBarBtn').onclick = closePanel;
+      function closePanel() {
+        panel.classList.remove('active');
+        setTimeout(() => {
+          overlay.style.display = 'none';
+        }, 350);
+        document.getElementById('subjectListPanel').style.display = 'none';
+        document.getElementById('mainPanelBtns').style.display = 'flex';
+        document.getElementById('subjectTabBar').style.display = 'none';
+        searchPanel.style.display = 'none';
+      }
+      document.getElementById('subject-edit-btn').onclick = function () {
+        document.getElementById('mainPanelBtns').style.display = 'none';
+        document.getElementById('subjectListPanel').style.display = 'block';
+        document.getElementById('subjectTabBar').style.display = 'flex';
+        searchPanel.style.display = 'none';
+        resetTabBtns();
+        renderSubjectList('전공');
+      };
+      document.getElementById('subject-add-btn').onclick = function () {
+        window.location.href = '../kimga/subject.html';
+      };
+      document.getElementById('theme-btn').onclick = function () {
+        document.getElementById('settingsPanel').classList.remove('active');
+        setTimeout(openThemeSlidePanel, 350);
+      };
+    });
+
+    // --- 슬라이드 테마 패널 열고 닫기 ---
+    function openThemeSlidePanel() {
+      document.getElementById('themeSlidePanel').classList.add('active');
+      document.getElementById('settingsOverlay').style.display = 'block';
+      renderThemeChoices();
+    }
+    function closeThemeSlidePanel() {
+      document.getElementById('themeSlidePanel').classList.remove('active');
+      setTimeout(() => {
+        document.getElementById('settingsOverlay').style.display = 'none';
+      }, 350);
+    }
+    // 패널 닫기
+    document.getElementById('themePanelGrab').onclick = closeThemeSlidePanel;
+    document
+      .getElementById('settingsOverlay')
+      .addEventListener('click', function () {
+        closeThemeSlidePanel();
+        document.getElementById('settingsPanel').classList.remove('active');
+      });
+    // “테마 변경” 버튼에서 패널 띄우기
+
+    // --- 테마 4개 SVG 미리보기 생성 ---
+    function renderThemeChoices() {
+      const themeIdx = Number(localStorage.getItem('selectedTheme')) || 0;
+      const themeChoices = document.getElementById('themeChoices');
+      themeChoices.innerHTML = '';
+      THEMES.forEach((theme, idx) => {
+        // 4개 색상 추출(순서: card, point, sub, main)
+        const colors = [
+          theme.colors.card, // 좌상
+          theme.colors.point, // 좌하
+          theme.colors.sub, // 우상
+          theme.colors.main, // 우하
+        ];
+        // SVG 네모박스(60x60)
+        const svg = `
+      <svg xmlns="http://www.w3.org/2000/svg" width="60" height="60" viewBox="0 0 60 60" fill="none">
+        <rect x="30" width="30" height="30" fill="${colors[2]}"/>
+        <rect width="30" height="30" fill="${colors[0]}"/>
+        <rect y="30" width="30" height="30" fill="${colors[1]}"/>
+        <rect x="30" y="30" width="30" height="30" fill="${colors[3]}"/>
+      </svg>
+    `;
+        // 테마명
+        const label = `<div class="theme-choice-label">${theme.name}</div>`;
+        // 박스
+        const box = document.createElement('div');
+        box.className =
+          'theme-choice-box' + (idx === Number(themeIdx) ? ' selected' : '');
+        box.innerHTML = svg + label;
+        box.onclick = function () {
+          applyTheme(idx);
+          closeThemeSlidePanel();
+        };
+        themeChoices.appendChild(box);
+      });
+    }
+
+    // 기존 렌더 함수, 패널용
+    function renderSubjectList(typeFilter = '전공') {
+      const subjects = JSON.parse(localStorage.getItem('subjects') || '[]');
+      const container = document.getElementById('subjectListItems');
+      container.innerHTML = '';
+      let filtered = subjects;
+      if (typeFilter === '전공' || typeFilter === '교양') {
+        filtered = subjects.filter((s) => (s.type || '').trim() === typeFilter);
+      }
+      if (!filtered.length) {
+        container.innerHTML =
+          '<div style="color:#c1c1c1; padding:22px 0; text-align:center;">등록된 과목이 없습니다.</div>';
+        return;
+      }
+      filtered.forEach((s, idx) => {
+        const timestr =
+          s.day +
+          ', ' +
+          String(s.start).padStart(2, '0') +
+          ':00-' +
+          String(s.end).padStart(2, '0') +
+          ':00';
+        const item = document.createElement('div');
+        item.className = 'subject-list-item';
+        item.style = `display: flex; align-items: center; justify-content: space-between;
+        padding: 10px 10px 10px 18px; margin-bottom:8px; background:#f4f4fa;
+        border-radius:10px; box-shadow:0 0 8px #ececff; min-height:44px;`;
+        const infoDiv = document.createElement('div');
+        infoDiv.innerHTML = `<div style="font-size:15px;font-weight:700;color:#5656b0;">${s.name}</div>
+        <div style="font-size:12px;color:#a1a1a1;margin-top:2px;font-weight:500;">${timestr}</div>`;
+        const btnBox = document.createElement('div');
+        btnBox.style = 'display:flex;gap:6px;';
+        const addBtn = document.createElement('button');
+        addBtn.textContent = '추가';
+        addBtn.style =
+          'background:#b7b7f9;color:white;font-weight:600;padding:2px 12px;font-size:13px;border:none;border-radius:7px;cursor:pointer;';
+        addBtn.onclick = function (e) {
+          addToTimetable(s);
+          e.stopPropagation();
+        };
+        const delBtn = document.createElement('button');
+        delBtn.textContent = '삭제';
+        delBtn.style =
+          'background:#f1f1f8;color:#5656b0;font-weight:600;padding:2px 12px;font-size:13px;border:none;border-radius:7px;cursor:pointer;';
+        delBtn.onclick = function (e) {
+          removeFromTimetable(s);
+          e.stopPropagation();
+        };
+        btnBox.appendChild(addBtn);
+        btnBox.appendChild(delBtn);
+        item.appendChild(infoDiv);
+        item.appendChild(btnBox);
+        container.appendChild(item);
+      });
+    }
+
+    // === 모달
+    let modalCallback = null;
+    function showModal(msg, cb) {
+      document.getElementById('modal-msg').textContent = msg;
+      document.getElementById('modal').style.display = 'flex';
+      modalCallback = typeof cb === 'function' ? cb : null;
+    }
+    document.getElementById('modal-btn').onclick = function () {
+      document.getElementById('modal').style.display = 'none';
+      if (modalCallback) {
+        modalCallback();
+        modalCallback = null;
+      }
+    };
+    // === 시간표 추가/삭제
+    function saveTimetableSubjects(subjects) {
+      localStorage.setItem('timetableSubjects', JSON.stringify(subjects));
+    }
+    function loadTimetableSubjects() {
+      return JSON.parse(localStorage.getItem('timetableSubjects') || '[]');
+    }
+    function addToTimetable(subj) {
+      const dayMap = { 월: 1, 화: 2, 수: 3, 목: 4, 금: 5 };
+      const col = dayMap[subj.day];
+      if (!col) {
+        showModal('잘못된 요일 정보');
+        return;
+      }
+      const table = document.querySelector('.timetable-table');
+      for (let t = Number(subj.start); t < Number(subj.end); t++) {
+        const row = t - 9;
+        if (row < 0 || row > 9) continue;
+        const cell = table.rows[row + 1].cells[col];
+        if (
+          cell.textContent.trim() !== '' ||
+          cell.classList.contains('subject-bg') ||
+          cell.classList.contains('subject-cell')
+        ) {
+          showModal('시간이 겹쳐 추가할 수 없습니다!');
+          return;
+        }
+      }
+      for (let t = Number(subj.start); t < Number(subj.end); t++) {
+        const row = t - 9;
+        if (row < 0 || row > 9) continue;
+        const cell = table.rows[row + 1].cells[col];
+        cell.textContent = '';
+        cell.classList.remove('subject-cell', 'subject-bg');
+      }
+      const firstRow = Number(subj.start) - 9;
+      const firstCell = table.rows[firstRow + 1].cells[col];
+      firstCell.textContent = subj.name;
+      firstCell.classList.add('subject-cell');
+      for (let t = Number(subj.start) + 1; t < Number(subj.end); t++) {
+        const row = t - 9;
+        if (row < 0 || row > 9) continue;
+        const cell = table.rows[row + 1].cells[col];
+        cell.textContent = '';
+        cell.classList.add('subject-bg');
+      }
+      let timetableSubjects = loadTimetableSubjects();
+      const already = timetableSubjects.some(
+        (s) =>
+          s.name === subj.name &&
+          s.day === subj.day &&
+          s.start === subj.start &&
+          s.end === subj.end
+      );
+      if (!already) {
+        timetableSubjects.push(subj);
+        saveTimetableSubjects(timetableSubjects);
+      }
+      const themeIdx = Number(localStorage.getItem('selectedTheme')) || 0;
+      const timetableSubjectsReload = loadTimetableSubjects();
+      const subjectColors = assignColorsToSubjects(
+        timetableSubjectsReload,
+        themeIdx
+      );
+      renderTimetableWithColors(subjectColors);
+    }
+    function removeFromTimetable(subj) {
+      let timetableSubjects = loadTimetableSubjects();
+      timetableSubjects = timetableSubjects.filter(
+        (s) =>
+          !(
+            s.name === subj.name &&
+            s.day === subj.day &&
+            s.start === subj.start &&
+            s.end === subj.end
+          )
+      );
+      saveTimetableSubjects(timetableSubjects);
+      const themeIdx = Number(localStorage.getItem('selectedTheme')) || 0;
+      const timetableSubjectsReload = loadTimetableSubjects();
+      const subjectColors = assignColorsToSubjects(
+        timetableSubjectsReload,
+        themeIdx
+      );
+      renderTimetableWithColors(subjectColors);
+      const dayMap = { 월: 1, 화: 2, 수: 3, 목: 4, 금: 5 };
+      const col = dayMap[subj.day];
+      if (!col) return;
+      const table = document.querySelector('.timetable-table');
+      for (let t = Number(subj.start); t < Number(subj.end); t++) {
+        const row = t - 9;
+        if (row < 0 || row > 9) continue;
+        const cell = table.rows[row + 1].cells[col];
+        cell.textContent = '';
+        cell.classList.remove('subject-cell', 'subject-bg');
+      }
+    }
+    window.addEventListener('DOMContentLoaded', function () {
+      const saved = localStorage.getItem('selectedTheme') || 0;
+      applyTheme(saved);
+    });
+  </script>
 </html>
