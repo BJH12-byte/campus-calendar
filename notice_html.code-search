@@ -1,0 +1,77 @@
+# Query: notice.html
+# ContextLines: 1
+
+15개 결과 - 13 파일
+
+homepage.html:
+  67  					</div>
+  68: 					<div class="nav-item active" onclick="location.href='homepage2.html'">
+  69  						<div class="nav-circle">
+
+campus-calendar\basic\home.html:
+  681          </div>
+  682:         <div class="nav-item" onclick="location.href='homepage2.html'">
+  683            <div class="nav-circle">
+
+campus-calendar\basic\team-calendar.html:
+  600          </div>
+  601:         <div class="nav-item" onclick="location.href='homepage2.html'">
+  602            <div class="nav-circle">
+
+campus-calendar\kimgabelow\homepage2.html:
+  110  					</div>
+  111: 					<div class="nav-item active" onclick="location.href='homepage2.html'">
+  112  						<div class="nav-circle">
+
+campus-calendar\kimgabelow\subjectboard.html:
+  45  							data-tab="school-schedule"
+  46: 							onclick="location.href='homepage2.html'"
+  47  						>
+
+  91  					</div>
+  92: 					<div class="nav-item active" onclick="location.href='homepage2.html'">
+  93  						<div class="nav-circle">
+
+campus-calendar\kimgabelow\subjectselect.html:
+   80  							data-tab="school-schedule"
+   81: 							onclick="location.href='homepage2.html'"
+   82  						>
+
+  116  					</div>
+  117: 					<div class="nav-item active" onclick="location.href='homepage2.html'">
+  118  						<div class="nav-circle">
+
+campus-calendar\kimgabelow\boards\all.html:
+  101  					</div>
+  102: 					<div class="nav-item active" onclick="location.href='../homepage2.html'">
+  103  						<div class="nav-circle">
+
+campus-calendar\kimgabelow\boards\byname.html:
+  101  					</div>
+  102: 					<div class="nav-item active" onclick="location.href='../homepage2.html'">
+  103  						<div class="nav-circle">
+
+campus-calendar\kimgabelow\boards\coding.html:
+  101  					</div>
+  102: 					<div class="nav-item active" onclick="location.href='../homepage2.html'">
+  103  						<div class="nav-circle">
+
+campus-calendar\kimgabelow\boards\major1.html:
+  101  					</div>
+  102: 					<div class="nav-item active" onclick="location.href='../homepage2.html'">
+  103  						<div class="nav-circle">
+
+campus-calendar\kimgabelow\boards\subject2.html:
+  101  					</div>
+  102: 					<div class="nav-item active" onclick="location.href='../homepage2.html'">
+  103  						<div class="nav-circle">
+
+campus-calendar\kimgabelow\boards\subject3.html:
+  101  					</div>
+  102: 					<div class="nav-item active" onclick="location.href='../homepage2.html'">
+  103  						<div class="nav-circle">
+
+campus-calendar\kimgabelow\boards\subject5.html:
+  101  					</div>
+  102: 					<div class="nav-item active" onclick="location.href='../homepage2.html'">
+  103  						<div class="nav-circle">
