@@ -17,7 +17,10 @@
 				<img src="lefttop-logo-white.svg" alt="로고" class="logo" />
 			</div>
 			<div class="header-actions">
-				<a href="subject-topic.html" class="back-button">&larr;</a>
+				<a href="subjectboard.html" class="back-button">
+					<img src="goback.svg" alt="뒤로가기" />
+				</a>
+
 				<div class="page-title">과목명 불러오는 중...</div>
 				<span class="complete-button">완료</span>
 			</div>
@@ -121,7 +124,7 @@
 							return;
 						}
 						if (!content) {
-							alert('내용을 입력해주세요.');
+							alert('내용을 작성해주세요.');
 							return;
 						}
 
@@ -139,7 +142,13 @@
 						posts.push(postData);
 						localStorage.setItem(`posts_${subject}`, JSON.stringify(posts));
 
-						// 최신 글은 유지해도 됨
+						// ✅ 최신 글을 과목별 키로도 저장 (필수!)
+						localStorage.setItem(
+							`latestPost_${subject}`,
+							JSON.stringify(postData)
+						);
+
+						// 기존 공통 latestPost 유지
 						localStorage.setItem('latestPost', JSON.stringify(postData));
 
 						window.location.href = 'subject-written.html';

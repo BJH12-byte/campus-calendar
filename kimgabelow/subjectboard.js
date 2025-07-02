@@ -19,15 +19,26 @@ document.addEventListener('DOMContentLoaded', () => {
 	const boardItems = document.querySelectorAll('.board-item');
 	boardItems.forEach((item) => {
 		item.addEventListener('click', () => {
-			window.location.href = 'post.html';
+			const title = item.querySelector('.board-title')?.innerText || '';
+			const subject = item.querySelector('.board-subject')?.innerText || '';
+			const date = item.querySelector('.board-date')?.innerText || '';
+			const image = item.querySelector('img')?.src || '';
+
+			const postData = { title, subject, date, content: '', image };
+
+			// ✅ 클릭한 게시물 데이터를 latestPost로 저장
+			localStorage.setItem('latestPost', JSON.stringify(postData));
+
+			// ✅ 상세 페이지로 이동
+			window.location.href = 'subject-written.html';
 		});
 	});
 
-	// ✅ 글쓰기 버튼 클릭 시 subject-write.html로 이동
+	// ✅ 글쓰기 버튼 클릭 시 subject-choose.html로 이동
 	const writeBtn = document.querySelector('.write-button button');
 	if (writeBtn) {
 		writeBtn.addEventListener('click', () => {
-			window.location.href = 'subject-write.html';
+			window.location.href = 'subject-choose.html'; // ✅ 수정됨: 글쓰기 -> 과목 선택으로 이동
 		});
 	}
 });

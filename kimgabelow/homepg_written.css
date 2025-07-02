@@ -30,7 +30,7 @@ body {
 .header-top {
 	position: relative;
 	height: 64px;
-	background: #b7b7f9; /* header-top 자체에 배경 부여 */
+	background: #b7b7f9;
 	border-top-left-radius: 30px;
 	border-top-right-radius: 30px;
 }
@@ -51,7 +51,7 @@ body {
 	padding: 20px;
 	overflow-y: auto;
 	box-sizing: border-box;
-	margin-top: 64px; /* header-top 높이만큼 아래로 밀어줌 */
+	margin-top: 64px;
 }
 
 .post-content h2 {
@@ -164,7 +164,6 @@ body {
 }
 
 .back-btn,
-.bookmark-btn,
 .more-button {
 	background: none;
 	border: none;
@@ -177,5 +176,26 @@ body {
 .header-actions {
 	display: flex;
 	align-items: center;
-	gap: 16px; /* 북마크-더보기 버튼 간 간격 */
+	gap: 16px;
+}
+
+.edit-delete-option {
+	width: 120px;
+	padding: 10px;
+	font-size: 16px;
+	color: white;
+	background: #7c74c9;
+	text-align: center;
+	cursor: pointer;
+}
+
+.edit-delete-option:first-child {
+	border-top-left-radius: 12px;
+	border-top-right-radius: 12px;
+}
+
+.edit-delete-option:last-child {
+	border-bottom-left-radius: 12px;
+	border-bottom-right-radius: 12px;
+	background: #b7b7f9;
 }

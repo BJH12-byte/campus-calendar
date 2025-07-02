@@ -3,7 +3,7 @@
 	<head>
 		<meta charset="UTF-8" />
 		<meta name="viewport" content="width=393, height=852, initial-scale=1.0" />
-		<title>subject5 - 캠퍼스 캘린더</title>
+		<title>과목3 게시판 - 캠퍼스 캘린더</title>
 		<link rel="stylesheet" href="../homepage2.css" />
 	</head>
 	<body>
@@ -11,11 +11,11 @@
 			<header class="header">
 				<div class="header-top">
 					<div class="logo-container">
-						<img src="../logo.svg" alt="로고" class="logo" />
+						<img src="../lefttop-logo-white.svg" alt="로고" class="logo" />
 					</div>
 					<div class="write-button">
 						<div class="write-container">
-							<button class="write-btn">
+							<button class="write-btn" id="write-button">
 								글쓰기
 								<div class="write-icon">
 									<svg
@@ -67,23 +67,7 @@
 
 			<main class="notice-main">
 				<div class="board-list" id="subject-board">
-					<article class="board-item">
-						<div class="thumbnail">
-							<img src="../sample-image-1.jpg" alt="공지 이미지" />
-						</div>
-						<div class="board-content">
-							<p class="board-title">자료 제출 안내</p>
-						</div>
-					</article>
-
-					<article class="board-item">
-						<div class="thumbnail">
-							<img src="../sample-image-2.jpg" alt="공지 이미지" />
-						</div>
-						<div class="board-content">
-							<p class="board-title">과제 발표 일정</p>
-						</div>
-					</article>
+					<!-- 게시글은 JS에서 동적으로 렌더링됩니다 -->
 				</div>
 			</main>
 
@@ -147,12 +131,9 @@
 				tabs.forEach((tab) => {
 					tab.addEventListener('click', () => {
 						const tabType = tab.dataset.tab;
-
 						if (tabType === 'school-schedule') {
-							// school-schedule 탭 클릭 시 학교 일정 페이지로 이동
 							window.location.href = '../homepage2.html';
 						} else if (tabType === 'subject-board') {
-							// 과목별로 탭 클릭 시 현재 페이지 유지
 							tabs.forEach((t) => t.classList.remove('active'));
 							tab.classList.add('active');
 							indicator.style.left = '50%';
@@ -160,12 +141,41 @@
 					});
 				});
 
-				// 게시글 클릭 시 글 상세 페이지로 이동
-				const boardItems = document.querySelectorAll('.board-item');
-				boardItems.forEach((item) => {
-					item.addEventListener('click', () => {
-						window.location.href = '../post.html';
+				const writeBtn = document.getElementById('write-button');
+				writeBtn.addEventListener('click', () => {
+					window.location.href = '../subject-choose.html';
+				});
+
+				// ✅ 과목3 게시판 전용
+				const subjects = ['과목3'];
+				let allPosts = [];
+
+				subjects.forEach((subj) => {
+					const posts = JSON.parse(localStorage.getItem(`posts_${subj}`)) || [];
+					allPosts = allPosts.concat(posts);
+				});
+
+				const boardList = document.getElementById('subject-board');
+				boardList.innerHTML = '';
+
+				allPosts.forEach((post) => {
+					const article = document.createElement('article');
+					article.className = 'board-item';
+					article.innerHTML = `
+        <div class="thumbnail">
+          <img src="${post.image || '../default-img.png'}" alt="공지 이미지">
+        </div>
+        <div class="board-content">
+          <p class="board-title">${post.title}</p>
+          <p class="board-subject">${post.subject}</p>
+          <p class="board-date">${post.date}</p>
+        </div>
+      `;
+					article.addEventListener('click', () => {
+						localStorage.setItem('latestPost', JSON.stringify(post));
+						window.location.href = '../subject-written.html';
 					});
+					boardList.appendChild(article);
 				});
 			});
 		</script>

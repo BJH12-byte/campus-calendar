@@ -14,23 +14,42 @@
 						<img src="lefttop-logo-white.svg" alt="로고" class="logo" />
 					</div>
 					<div class="write-button">
-						<button>
-							글쓰기
-							<div class="write-icon">
+						<div class="write-container">
+							<button
+								class="write-btn"
+								onclick="location.href='subject-choose.html'"
+							>
+								글쓰기
+								<div class="write-icon">
+									<svg
+										width="13"
+										height="13"
+										viewBox="0 0 13 13"
+										fill="none"
+										xmlns="http://www.w3.org/2000/svg"
+									>
+										<path
+											d="M0 13.0004V7.31291L5.27312 2.03978L10.9606 7.72728L5.6875 13.0004H0ZM11.8219 6.86603C12.2015 6.49396 12.5037 6.05032 12.7108 5.56077C12.918 5.07121 13.026 4.54544 13.0287 4.01387C13.0314 3.4823 12.9286 2.95546 12.7265 2.46384C12.5243 1.97221 12.2266 1.52554 11.8507 1.14966C11.4749 0.773777 11.0282 0.476137 10.5366 0.273952C10.0449 0.0717664 9.51811 -0.0309538 8.98654 -0.028269C8.45497 -0.0255842 7.9292 0.0824522 7.43964 0.289593C6.95008 0.496734 6.50644 0.79887 6.13438 1.17853L11.8219 6.86603Z"
+											fill="white"
+										/>
+									</svg>
+								</div>
+							</button>
+
+							<button class="more-button">
 								<svg
-									width="13"
-									height="13"
-									viewBox="0 0 13 13"
-									fill="none"
 									xmlns="http://www.w3.org/2000/svg"
+									width="5"
+									height="21"
+									viewBox="0 0 5 21"
+									fill="none"
 								>
-									<path
-										d="M0 13.0004V7.31291L5.27312 2.03978L10.9606 7.72728L5.6875 13.0004H0ZM11.8219 6.86603C12.2015 6.49396 12.5037 6.05032 12.7108 5.56077C12.918 5.07121 13.026 4.54544 13.0287 4.01387C13.0314 3.4823 12.9286 2.95546 12.7265 2.46384C12.5243 1.97221 12.2266 1.52554 11.8507 1.14966C11.4749 0.773777 11.0282 0.476137 10.5366 0.273952C10.0449 0.0717664 9.51811 -0.0309538 8.98654 -0.028269C8.45497 -0.0255842 7.9292 0.0824522 7.43964 0.289593C6.95008 0.496734 6.50644 0.79887 6.13438 1.17853L11.8219 6.86603Z"
-										fill="white"
-									/>
+									<circle cx="2.5" cy="2.5" r="2.5" fill="white" />
+									<circle cx="2.5" cy="10.5" r="2.5" fill="white" />
+									<circle cx="2.5" cy="18.5" r="2.5" fill="white" />
 								</svg>
-							</div>
-						</button>
+							</button>
+						</div>
 					</div>
 				</div>
 
@@ -57,23 +76,7 @@
 
 			<main class="notice-main">
 				<div class="board-list" id="subject-board">
-					<article class="board-item">
-						<div class="thumbnail">
-							<img src="sample-image-1.jpg" alt="공지 이미지" />
-						</div>
-						<div class="board-content">
-							<p class="board-title">자료 제출 안내</p>
-						</div>
-					</article>
-
-					<article class="board-item">
-						<div class="thumbnail">
-							<img src="sample-image-2.jpg" alt="공지 이미지" />
-						</div>
-						<div class="board-content">
-							<p class="board-title">과제 발표 일정</p>
-						</div>
-					</article>
+					<!-- JS에서 동적으로 불러온 게시글만 표시됩니다 -->
 				</div>
 			</main>
 
