@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="ko">
+	<head>
+		<meta charset="UTF-8" />
+		<meta name="viewport" content="width=393, height=852, initial-scale=1.0" />
+		<title>게시글 상세보기 - 캠퍼스 캘린더</title>
+		<link rel="stylesheet" href="homepg_written.css" />
+	</head>
+	<body>
+		<div id="app-container">
+			<!-- 헤더 -->
+			<div class="header-top">
+				<div class="logo-container">
+					<img src="lefttop-logo-white.svg" alt="로고" class="logo" />
+				</div>
+			</div>
+			<div class="header-controls">
+				<button class="back-btn" onclick="location.href='subject-topic.html'">
+					&larr;
+				</button>
+				<div class="page-title">과목명 불러오는 중...</div>
+				<div class="header-actions">
+					<button class="bookmark-btn">
+						<svg
+							xmlns="http://www.w3.org/2000/svg"
+							width="20"
+							height="20"
+							viewBox="0 0 24 24"
+							fill="none"
+							stroke="currentColor"
+							stroke-width="2"
+							stroke-linecap="round"
+							stroke-linejoin="round"
+						>
+							<path
+								d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"
+							></path>
+						</svg>
+					</button>
+				</div>
+			</div>
+
+			<!-- 본문 -->
+			<main class="post-content">
+				<h2 id="post-title">게시글 제목</h2>
+				<div class="post-meta">
+					<span id="post-date">YYYY.MM.DD</span>
+					<span class="divider">|</span>
+					<span id="post-subject">과목명/카테고리</span>
+				</div>
+				<p id="post-body">게시글 내용이 여기에 표시됩니다.</p>
+				<div class="image-container">
+					<img id="post-image" src="" alt="게시글 이미지" />
+				</div>
+			</main>
+
+			<!-- 하단탭 -->
+			<footer class="notice-footer">
+				<div class="bottom-bar"></div>
+				<div class="bottom-nav">
+					<div class="nav-item" onclick="location.href='home.html'">
+						<div class="nav-circle">
+							<img
+								src="https://img.icons8.com/ios-filled/50/ffffff/home.png"
+								alt="피드"
+							/>
+							<span class="circle-label">피드</span>
+						</div>
+					</div>
+					<div class="nav-item active" onclick="location.href='homepage2.html'">
+						<div class="nav-circle">
+							<img
+								src="https://img.icons8.com/ios-filled/50/ffffff/compass--v1.png"
+								alt="공지"
+							/>
+							<span class="circle-label">공지</span>
+						</div>
+					</div>
+					<div
+						class="nav-item"
+						onclick="location.href='../notification/notification.html'"
+					>
+						<div class="nav-circle">
+							<img
+								src="https://img.icons8.com/ios-filled/50/ffffff/appointment-reminders.png"
+								alt="알림"
+							/>
+							<span class="circle-label">알림</span>
+						</div>
+					</div>
+					<div class="nav-item" onclick="location.href='../Mypage/mypage.html'">
+						<div class="nav-circle">
+							<img
+								src="https://img.icons8.com/ios-filled/50/ffffff/user.png"
+								alt="MY"
+							/>
+							<span class="circle-label">MY</span>
+						</div>
+					</div>
+				</div>
+			</footer>
+		</div>
+
+		<script>
+			document.addEventListener('DOMContentLoaded', () => {
+				// ✅ 선택한 과목명을 상단 page-title에 표시
+				const subject = localStorage.getItem('selectedSubject');
+				if (subject) {
+					document.querySelector('.page-title').textContent = subject;
+					document.getElementById('post-subject').textContent = subject;
+				} else {
+					document.querySelector('.page-title').textContent = '과목 정보 없음';
+					document.getElementById('post-subject').textContent = '과목명 없음';
+				}
+
+				// ✅ 작성한 게시글 내용 표시
+				const latestPostStr = localStorage.getItem('latestPost');
+				if (latestPostStr) {
+					const post = JSON.parse(latestPostStr);
+					document.getElementById('post-title').innerText =
+						post.title || '제목 없음';
+					document.getElementById('post-body').innerText =
+						post.content || '내용 없음';
+					if (post.image) {
+						document.getElementById('post-image').src = post.image;
+					} else {
+						document.getElementById('post-image').style.display = 'none';
+					}
+				}
+
+				// ✅ 작성일자 표시
+				const today = new Date();
+				const formatted = `${today.getFullYear()}-${String(
+					today.getMonth() + 1
+				).padStart(2, '0')}-${String(today.getDate()).padStart(2, '0')}`;
+				document.getElementById('post-date').innerText = formatted;
+			});
+		</script>
+	</body>
+</html>

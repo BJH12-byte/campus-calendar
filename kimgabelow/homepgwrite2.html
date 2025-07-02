@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="ko">
+	<head>
+		<meta charset="UTF-8" />
+		<meta name="viewport" content="width=393, height=852, initial-scale=1.0" />
+		<title>학교 일정 작성 - 캠퍼스 캘린더</title>
+		<link rel="stylesheet" href="homepgwrite2.css" />
+		<link
+			rel="stylesheet"
+			href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/variable/pretendardvariable.css"
+		/>
+	</head>
+	<body>
+		<div id="app-container">
+			<!-- 상단 로고/헤더 영역 -->
+			<div class="logo-bar">
+				<img src="lefttop-logo-white.svg" alt="로고" class="logo" />
+			</div>
+
+			<!-- 작성 영역 -->
+			<div class="page-content">
+				<div class="header-actions">
+					<a href="homepage2.html" class="back-button">&larr;</a>
+					<span class="complete-button">완료</span>
+				</div>
+
+				<div
+					class="title-input"
+					contenteditable="true"
+					data-placeholder="제목을 입력해주세요."
+				></div>
+				<div class="date-display">2025.07.04</div>
+				<div class="line-separator"></div>
+				<div
+					class="content-input"
+					contenteditable="true"
+					data-placeholder="학교의 일정을 작성해보세요."
+				></div>
+				<div class="char-counter">0/1000</div>
+			</div>
+			<!-- 사진 선택 팝업 -->
+			<div
+				id="photo-option-popup"
+				style="
+					display: none;
+					position: absolute;
+					bottom: 70px; /* 하단 버튼 위에 위치 */
+					left: 20px; /* 왼쪽 여백 맞춤 */
+					background: white;
+					border-radius: 12px;
+					overflow: hidden;
+					box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+					z-index: 9999;
+				"
+			>
+				<div class="photo-option" id="option-gallery">사진첩</div>
+				<div style="height: 1px; background: #ddd"></div>
+				<div class="photo-option" id="option-camera">촬영</div>
+			</div>
+
+			<!-- 하단 첨부 버튼 -->
+			<footer class="footer-bar">
+				<button class="attach-btn">
+					<img src="camera-icon.svg" alt="사진첨부" />
+				</button>
+				<button
+					class="attach-btn"
+					onclick="document.getElementById('file-input').click()"
+				>
+					<img src="clip-icon.svg" alt="파일첨부" />
+				</button>
+			</footer>
+
+			<!-- 숨겨진 파일 입력창 -->
+			<input
+				type="file"
+				accept="image/*"
+				capture="environment"
+				id="camera-input"
+				style="display: none"
+			/>
+			<input type="file" id="file-input" style="display: none" />
+		</div>
+
+		<script src="popup.js"></script>
+		<script src="popup_yes_or_no.js"></script>
+		<script src="homepgwrite2.js"></script>
+		<script>
+			window.popupMessages = {
+				titleRequired: '제목을 입력해주세요.',
+				contentRequired: '내용을 작성해주세요.',
+				writePageConfirm: '일정확인 제대로 하셨나요?',
+			};
+		</script>
+	</body>
+</html>
