@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=393, user-scalable=no" />
+    <title>Start with Google</title>
+    <style>
+      body {
+        margin: 0;
+        background: #f5f5f5;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+      }
+
+      .container {
+        position: relative;
+        width: 393px;
+        height: 852px;
+        background: white;
+        overflow: hidden;
+        box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        padding-top: 230px; /* 로고 위치 보정 */
+        box-sizing: border-box;
+      }
+
+      .logo-wrapper {
+        width: 219px;
+        height: 202px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        margin-bottom: 40px;
+      }
+
+      .logo {
+        max-width: 100%;
+        max-height: 100%;
+      }
+
+      .subtitle {
+        font-family: Pretendard, sans-serif;
+        font-size: 16px;
+        color: #505050;
+        font-weight: 500;
+        margin: 0 0 40px 0;
+        text-align: center;
+      }
+
+      .google-button {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        width: 80%;
+        height: 45px;
+        border: none;
+        border-radius: 50px;
+        outline: 3px solid #e1e0e0;
+        outline-offset: -3px;
+        cursor: pointer;
+        background: white;
+        justify-content: center;
+      }
+
+      .google-icon {
+        width: 24px;
+        height: 24px;
+      }
+
+      .google-text {
+        font-family: Pretendard, sans-serif;
+        font-size: 16px;
+        color: #8b8686;
+        font-weight: 400;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <div class="logo-wrapper">
+        <img src="logo.svg" alt="로고" class="logo" />
+      </div>
+      <p class="subtitle">나만의 Unidays 캘린더 시작하기</p>
+      <button class="google-button" onclick="goToNextPage()">
+        <img src="google-icon.svg" alt="구글 아이콘" class="google-icon" />
+        <span class="google-text">구글로 계속하기</span>
+      </button>
+    </div>
+    <script>
+      document.addEventListener('DOMContentLoaded', () => {
+        const startButton = document.querySelector('.start-button');
+        const googleButton = document.querySelector('.google-button');
+
+        if (startButton) {
+          startButton.addEventListener('click', () => {
+            window.location.href = 'signup.html'; // 시작하기 후 이동
+          });
+        }
+
+        if (googleButton) {
+          googleButton.addEventListener('click', () => {
+            window.location.href =
+              'http://unidays-project.com:8080/oauth2/authorization/google'; // 구글 로그인 페이지 이동
+          });
+        }
+      });
+    </script>
+  </body>
+</html>

@@ -1,0 +1,369 @@
+<!DOCTYPE html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=393, user-scalable=no" />
+    <title>전공 게시판</title>
+    <style>
+      body {
+        margin: 0;
+        font-family: Pretendard, sans-serif;
+        display: flex; /* flex로 중앙정렬 준비 */
+        justify-content: center; /* 가로 방향 중앙정렬 */
+        align-items: center; /* 세로 방향 중앙정렬 (선택: 필요 없으면 빼도됨) */
+        height: 100vh; /* 세로 정렬 기준을 위해 전체 높이 사용 */
+        background: #f0f0f0; /* 필요하면 페이지 배경 추가 */
+      }
+
+      .container {
+        width: 393px;
+        height: 852px;
+        position: relative;
+        overflow: hidden;
+        background: white;
+      }
+
+      .header {
+        background: #b7b7f9;
+        height: 308px;
+        padding-top: 85px;
+        text-align: left;
+        position: relative;
+      }
+
+      .profile-circle {
+        width: 40px;
+        height: 40px;
+        background: white;
+        border-radius: 50%;
+        margin-left: 32px;
+        display: inline-block;
+        vertical-align: middle;
+      }
+
+      .username {
+        display: inline-block;
+        color: white;
+        font-size: 26.9px;
+        font-weight: 500;
+        margin-left: 10px;
+        vertical-align: middle;
+      }
+
+      .major {
+        color: white;
+        font-size: 20px;
+        font-weight: 500;
+        margin-left: 77px;
+        margin-top: 5px;
+      }
+
+      .menu-buttons {
+        display: flex;
+        justify-content: space-around;
+        background: #b7b7f9;
+        padding: 10px 0;
+      }
+
+      .menu-btn {
+        background: #e2e2fd;
+        border-radius: 50px;
+        width: 81px;
+        height: 35px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        font-weight: 600;
+        font-size: 14px;
+        cursor: pointer;
+      }
+
+      .subject-list {
+        padding: 20px;
+      }
+
+      .subject {
+        margin-bottom: 20px;
+        padding: 10px;
+        cursor: pointer;
+        border-radius: 10px;
+      }
+
+      .subject.selected {
+        background: #e2e2fd; /* 선택 시 연보라색 */
+      }
+
+      .subject-title {
+        font-weight: 600;
+        font-size: 16px;
+      }
+
+      .subject-info {
+        font-weight: 500;
+        font-size: 12px;
+      }
+
+      .footer {
+        position: absolute;
+        bottom: 0;
+        width: 100%;
+        height: 62px;
+        background: #b7b7f9;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+      }
+
+      .register-btn {
+        background: none;
+        border: none;
+        color: white;
+        font-size: 20px;
+        font-weight: 700;
+        cursor: pointer;
+      }
+      .modal {
+        position: fixed;
+        top: 0;
+        left: 0;
+        display: none;
+        width: 100%;
+        height: 100%;
+        background: rgba(0, 0, 0, 0.5);
+        justify-content: center;
+        align-items: center;
+        z-index: 9999;
+      }
+      .modal-content {
+        background: #fff;
+        padding: 2rem;
+        border-radius: 12px;
+        max-width: 300px;
+        text-align: center;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+      }
+      .modal-title {
+        font-weight: bold;
+        margin-bottom: 1rem;
+      }
+      .select-btn {
+        background-color: #d1d5db;
+        border: none;
+        padding: 0.5rem 1rem;
+        border-radius: 8px;
+        font-weight: bold;
+        cursor: pointer;
+        margin-top: 1rem;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <div class="header">
+        <div class="profile-circle"></div>
+        <div class="username">000님</div>
+        <div class="major">~학과</div>
+      </div>
+
+      <div class="menu-buttons">
+        <div class="search-box" style="display: none">
+          <input
+            type="text"
+            class="search-input"
+            placeholder="과목명 검색..."
+          />
+        </div>
+
+        <div class="menu-btn">전공</div>
+        <div class="menu-btn">교양</div>
+        <div class="menu-btn">학년</div>
+        <div class="menu-btn">검색</div>
+      </div>
+
+      <div class="subject-list">
+        <div class="subject" data-name="과목1">
+          <div class="subject-title">과목 1</div>
+          <div class="subject-info">요일, 시간</div>
+        </div>
+        <div class="subject" data-name="과목2">
+          <div class="subject-title">과목 2</div>
+          <div class="subject-info">요일, 시간</div>
+        </div>
+        <div class="subject" data-name="과목3">
+          <div class="subject-title">과목 3</div>
+          <div class="subject-info">요일, 시간</div>
+        </div>
+      </div>
+
+      <div class="footer">
+        <button class="register-btn">과목 등록</button>
+      </div>
+    </div>
+    <div id="alertModal" class="modal">
+      <div class="modal-content">
+        <div class="modal-title">알림</div>
+        <div id="alertMessage">메시지</div>
+        <button class="select-btn" onclick="closeAlertModal()">확인</button>
+      </div>
+    </div>
+
+    <!-- ... style, body 구조 생략 ... -->
+    <script>
+      const MOCK_MAJOR_SUBJECTS = [
+        {
+          id: 1,
+          name: '컴퓨터프로그래밍',
+          time: '월 3-4, 수 2',
+          type: '전공',
+          major: '의료IT학과',
+          grade: 1,
+        },
+        {
+          id: 2,
+          name: '운영체제',
+          time: '수 5-6',
+          type: '전공',
+          major: '의료IT학과',
+          grade: 3,
+        },
+        {
+          id: 3,
+          name: '웹프로그래밍',
+          time: '월 1-2',
+          type: '전공',
+          major: '의료IT학과',
+          grade: 2,
+        },
+        {
+          id: 4,
+          name: '글쓰기',
+          time: '화 1-2',
+          type: '교양',
+          major: '공통',
+          grade: 1,
+        },
+        {
+          id: 5,
+          name: '인공지능입문',
+          time: '금 3-4',
+          type: '교양',
+          major: '공통',
+          grade: 2,
+        },
+      ];
+      let MOCK_MY_SUBJECTS = [];
+
+      let alertCallback = null;
+      function showAlertModal(msg, cb) {
+        document.getElementById('alertMessage').textContent = msg;
+        document.getElementById('alertModal').style.display = 'flex';
+        alertCallback = typeof cb === 'function' ? cb : null;
+      }
+      function closeAlertModal() {
+        document.getElementById('alertModal').style.display = 'none';
+        if (alertCallback) {
+          alertCallback();
+          alertCallback = null;
+        }
+      }
+
+      // 과목 리스트 그리는 함수(필터 적용)
+      function renderSubjects(filterFn) {
+        const list = document.querySelector('.subject-list');
+        list.innerHTML = '';
+        const subjects =
+          typeof filterFn === 'function'
+            ? MOCK_MAJOR_SUBJECTS.filter(filterFn)
+            : MOCK_MAJOR_SUBJECTS;
+
+        subjects.forEach((subject) => {
+          const div = document.createElement('div');
+          div.className = 'subject';
+          div.setAttribute('data-id', subject.id);
+          div.innerHTML = `
+        <div class="subject-title">${subject.name}</div>
+        <div class="subject-info">${subject.time || ''}</div>
+      `;
+          div.onclick = function () {
+            div.classList.toggle('selected');
+          };
+          list.appendChild(div);
+        });
+      }
+
+      window.onload = function () {
+        // 1. localStorage에서 user 정보 꺼내서 헤더에 표시
+        const user = JSON.parse(localStorage.getItem('user') || '{}');
+        if (user.name) {
+          document.querySelector('.username').textContent = user.name + '님';
+        }
+        if (user.major) {
+          document.querySelector('.major').textContent = user.major;
+        }
+
+        // 2. 과목 리스트 초기 렌더
+        renderSubjects();
+
+        // 3. 메뉴 버튼 클릭 기능 연결
+        document.querySelectorAll('.menu-btn').forEach((btn) => {
+          btn.addEventListener('click', () => {
+            const label = btn.textContent;
+            if (label === '전공') renderSubjects((s) => s.type === '전공');
+            if (label === '교양') renderSubjects((s) => s.type === '교양');
+            if (label === '학년') {
+              const year = prompt('학년을 숫자로 입력하세요 (예: 1)');
+              if (!year || isNaN(year)) return;
+              renderSubjects((s) => s.grade === Number(year));
+            }
+            if (label === '검색') {
+              const query = prompt('검색할 과목명을 입력하세요:');
+              if (!query) return;
+              renderSubjects((s) => s.name.includes(query));
+              const found = MOCK_MAJOR_SUBJECTS.some((s) =>
+                s.name.includes(query)
+              );
+              if (!found) showAlertModal('해당 과목을 찾을 수 없습니다.');
+            }
+          });
+        });
+
+        // 4. 과목 등록 버튼
+        document
+          .querySelector('.register-btn')
+          .addEventListener('click', () => {
+            const selected = document.querySelectorAll('.subject.selected');
+            if (selected.length === 0) {
+              showAlertModal('과목을 선택해주세요.');
+              return;
+            }
+            let mySubjects = JSON.parse(
+              localStorage.getItem('mySubjects') || '[]'
+            );
+
+            selected.forEach((subj) => {
+              const subjectId = Number(subj.getAttribute('data-id'));
+              if (!mySubjects.some((s) => s.subject.id === subjectId)) {
+                const subjectData = MOCK_MAJOR_SUBJECTS.find(
+                  (s) => s.id === subjectId
+                );
+                mySubjects.push({
+                  id: Date.now(),
+                  subject: subjectData,
+                });
+              }
+            });
+            localStorage.setItem('mySubjects', JSON.stringify(mySubjects));
+            const subjectNames = Array.from(selected)
+              .map((el) => el.querySelector('.subject-title').textContent)
+              .join(', ');
+
+            showAlertModal(`${subjectNames} 이(가) 등록되었습니다.`);
+
+            setTimeout(() => {
+              window.location.href = 'auto-event-register.html';
+            }, 1500);
+          });
+      };
+    </script>
+  </body>
+</html>

@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="ko">
+	<head>
+		<meta charset="UTF-8" />
+		<meta name="viewport" content="width=393, height=852, initial-scale=1.0" />
+		<title>게시글 상세보기 - 캠퍼스 캘린더</title>
+		<link rel="stylesheet" href="homepg_written.css" />
+		<style>
+			.edit-delete-option {
+				width: 120px;
+				padding: 10px;
+				font-size: 16px;
+				color: white;
+				background: #7c74c9;
+				text-align: center;
+				cursor: pointer;
+			}
+			.edit-delete-option:first-child {
+				border-top-left-radius: 12px;
+				border-top-right-radius: 12px;
+			}
+			.edit-delete-option:last-child {
+				border-bottom-left-radius: 12px;
+				border-bottom-right-radius: 12px;
+				background: #b7b7f9;
+			}
+		</style>
+	</head>
+	<body>
+		<div id="app-container">
+			<!-- 헤더 -->
+			<div class="header-top">
+				<div class="logo-container">
+					<img src="lefttop-logo-white.svg" alt="로고" class="logo" />
+				</div>
+			</div>
+			<div class="header-controls">
+				<button class="back-btn" onclick="location.href='subjectboard.html'">
+					<img src="goback.svg" alt="뒤로가기" />
+				</button>
+				<div class="page-title">과목명 불러오는 중...</div>
+				<div class="header-actions">
+					<button class="save-button">
+						<img src="savebtn.svg" alt="저장" />
+					</button>
+					<button class="more-button">
+						<img src="morebtn.svg" alt="더보기" />
+					</button>
+				</div>
+			</div>
+
+			<!-- 수정/삭제 팝업 -->
+			<div
+				id="more-option-popup"
+				style="
+					display: none;
+					position: absolute;
+					top: 100px;
+					right: 20px;
+					background: white;
+					border-radius: 12px;
+					overflow: hidden;
+					box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+					z-index: 9999;
+				"
+			>
+				<div class="edit-delete-option" id="option-edit">수정</div>
+				<div style="height: 1px; background: #ddd"></div>
+				<div class="edit-delete-option" id="option-delete">삭제</div>
+			</div>
+
+			<!-- 본문 -->
+			<main class="post-content">
+				<h2 id="post-title">게시글 제목</h2>
+				<div class="post-meta">
+					<span id="post-date">YYYY.MM.DD</span>
+					<span class="divider">|</span>
+					<span id="post-subject">과목명/카테고리</span>
+				</div>
+				<p id="post-body">게시글 내용이 여기에 표시됩니다.</p>
+				<div class="image-container">
+					<img id="post-image" src="" alt="게시글 이미지" />
+				</div>
+			</main>
+
+			<!-- 하단탭 -->
+			<footer class="notice-footer">
+				<div class="bottom-bar"></div>
+				<div class="bottom-nav">
+					<div class="nav-item" onclick="location.href='home.html'">
+						<div class="nav-circle">
+							<img
+								src="https://img.icons8.com/ios-filled/50/ffffff/home.png"
+								alt="피드"
+							/>
+							<span class="circle-label">피드</span>
+						</div>
+					</div>
+					<div class="nav-item active" onclick="location.href='homepage2.html'">
+						<div class="nav-circle">
+							<img
+								src="https://img.icons8.com/ios-filled/50/ffffff/compass--v1.png"
+								alt="공지"
+							/>
+							<span class="circle-label">공지</span>
+						</div>
+					</div>
+					<div
+						class="nav-item"
+						onclick="location.href='../notification/notification.html'"
+					>
+						<div class="nav-circle">
+							<img
+								src="https://img.icons8.com/ios-filled/50/ffffff/appointment-reminders.png"
+								alt="알림"
+							/>
+							<span class="circle-label">알림</span>
+						</div>
+					</div>
+					<div class="nav-item" onclick="location.href='../Mypage/mypage.html'">
+						<div class="nav-circle">
+							<img
+								src="https://img.icons8.com/ios-filled/50/ffffff/user.png"
+								alt="MY"
+							/>
+							<span class="circle-label">MY</span>
+						</div>
+					</div>
+				</div>
+			</footer>
+		</div>
+
+		<script>
+			document.addEventListener('DOMContentLoaded', () => {
+				const latestPostStr = localStorage.getItem('latestPost');
+
+				if (latestPostStr) {
+					const post = JSON.parse(latestPostStr);
+					displayPost(post);
+					document.querySelector('.page-title').textContent =
+						post.subject || '과목 정보 없음';
+					document.getElementById('post-subject').textContent =
+						post.subject || '과목명 없음';
+					document.getElementById('post-date').innerText =
+						post.date || 'YYYY.MM.DD';
+				} else {
+					document.getElementById('post-body').innerText =
+						'작성된 게시글이 없습니다.';
+				}
+
+				// 저장 버튼 클릭
+				document.querySelector('.save-button').addEventListener('click', () => {
+					const post = {
+						title: document.getElementById('post-title').innerText,
+						content: document.getElementById('post-body').innerText,
+						date: document.getElementById('post-date').innerText,
+						subject: document.getElementById('post-subject').innerText,
+						image: document.getElementById('post-image').src,
+					};
+					localStorage.setItem('myProfilePost', JSON.stringify(post));
+					alert('게시글이 내 프로필에 저장되었습니다!');
+				});
+
+				// 더보기 버튼 클릭
+				const moreBtn = document.querySelector('.more-button');
+				const morePopup = document.getElementById('more-option-popup');
+				moreBtn.addEventListener('click', (e) => {
+					e.stopPropagation(); // 팝업 열 때 문서 클릭으로 닫히는 것 방지
+					morePopup.style.display =
+						morePopup.style.display === 'block' ? 'none' : 'block';
+				});
+
+				// 화면 다른 영역 클릭 시 팝업 닫기
+				document.addEventListener('click', (e) => {
+					if (
+						morePopup.style.display === 'block' &&
+						!morePopup.contains(e.target) &&
+						!moreBtn.contains(e.target)
+					) {
+						morePopup.style.display = 'none';
+					}
+				});
+
+				document.getElementById('option-edit').addEventListener('click', () => {
+					location.href = 'subjectwritten.html';
+				});
+
+				document
+					.getElementById('option-delete')
+					.addEventListener('click', () => {
+						alert('삭제 기능은 게시판에서만 지원됩니다.');
+					});
+			});
+
+			function displayPost(post) {
+				document.getElementById('post-title').innerText =
+					post.title || '제목 없음';
+				document.getElementById('post-body').innerText =
+					post.content || '내용 없음';
+				document.getElementById('post-subject').innerText =
+					post.subject || '과목명 없음';
+				if (post.image) {
+					document.getElementById('post-image').src = post.image;
+					document.getElementById('post-image').style.display = 'block';
+				} else {
+					document.getElementById('post-image').style.display = 'none';
+				}
+			}
+		</script>
+	</body>
+</html>

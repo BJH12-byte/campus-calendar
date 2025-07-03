@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="ko">
+	<head>
+		<meta charset="UTF-8" />
+		<meta name="viewport" content="width=393, height=852, initial-scale=1.0" />
+		<title>주제 선택 - 캠퍼스 캘린더</title>
+		<link
+			rel="stylesheet"
+			href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/variable/pretendardvariable.css"
+		/>
+		<style>
+			body,
+			html {
+				margin: 0;
+				padding: 0;
+				width: 100%;
+				height: 100%;
+				font-family: 'Pretendard Variable', sans-serif;
+				background: white;
+			}
+			#app-container {
+				width: 393px;
+				height: 852px;
+				margin: 0 auto;
+				display: flex;
+				flex-direction: column;
+				position: relative;
+				overflow: hidden;
+			}
+			.header {
+				height: 64px;
+				background: #b7b7f9;
+				display: flex;
+				align-items: center;
+				padding-left: 20px;
+				position: relative;
+			}
+			.header-title {
+				position: absolute;
+				top: 89px;
+				width: 100%;
+				text-align: center;
+				font-size: 20px;
+				font-weight: 600;
+				color: black;
+			}
+			.topic-list {
+				position: absolute;
+				top: 138px;
+				left: 0;
+				width: 100%;
+				height: calc(100% - 138px);
+				background: #e6e6f2;
+				display: flex;
+				flex-direction: column;
+				overflow-y: auto;
+			}
+			.topic-item {
+				width: 100%;
+				height: 60px;
+				text-align: center;
+				font-size: 20px;
+				font-weight: 600;
+				color: black;
+				line-height: 60px;
+				cursor: pointer;
+				transition: background 0.3s;
+			}
+			.topic-item.active {
+				background: #b3b3d9;
+			}
+		</style>
+	</head>
+	<body>
+		<div id="app-container">
+			<div class="header">
+				<img src="lefttop-logo-white.svg" alt="로고" class="logo" />
+			</div>
+			<div class="header-title">일정</div>
+			<div class="topic-list">
+				<div class="topic-item" data-topic="시험">시험</div>
+				<div class="topic-item" data-topic="과제">과제</div>
+			</div>
+		</div>
+
+		<script>
+			let lastSelected = null;
+
+			document.querySelectorAll('.topic-item').forEach((item) => {
+				item.addEventListener('click', () => {
+					const selectedTopic = item.dataset.topic;
+
+					if (lastSelected === item) {
+						// 같은 항목 두 번째 클릭 → 이동
+						localStorage.setItem('selectedTopic', selectedTopic);
+						window.location.href = 'subject-write.html';
+					} else {
+						// 다른 항목 클릭 → 선택만
+						document
+							.querySelectorAll('.topic-item')
+							.forEach((i) => i.classList.remove('active'));
+						item.classList.add('active');
+						lastSelected = item;
+					}
+				});
+			});
+		</script>
+	</body>
+</html>

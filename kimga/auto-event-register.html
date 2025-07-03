@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=393, user-scalable=no" />
+    <title>일정 자동 담기</title>
+    <style>
+      body {
+        margin: 0;
+        font-family: Pretendard, sans-serif;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+        background: #f0f0f0;
+      }
+
+      .container {
+        width: 393px;
+        height: 852px;
+        background: #ffffff;
+        position: relative;
+        box-sizing: border-box;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+      }
+
+      .description-box {
+        width: 100%;
+        box-sizing: border-box;
+        padding: 0 23px;
+        text-align: center;
+      }
+
+      .description {
+        font-size: 14px; /* 기존보다 작게 조정 */
+        font-family: Pretendard, sans-serif;
+        font-weight: 500;
+        line-height: 1.4;
+        color: #505050;
+        word-break: keep-all;
+      }
+
+      .description .highlight {
+        color: #8b85f9;
+      }
+
+      .note {
+        color: #8b8686;
+        font-size: 10px; /* 기존 8px → 10px로 줄이면서 가독성 확보 */
+        font-family: Pretendard;
+        font-weight: 500;
+        text-decoration: underline;
+        margin-top: 12px;
+        text-align: center;
+        padding: 0 23px;
+      }
+
+      .footer {
+        position: absolute;
+        bottom: 0;
+        width: 100%;
+        display: flex;
+        height: 62px;
+      }
+
+      .btn {
+        flex: 1;
+        border: none;
+        font-size: 18px; /* 버튼 텍스트도 약간 줄임 */
+        font-weight: 700;
+        color: #ffffff;
+        background: #b7b7f9;
+        cursor: pointer;
+      }
+
+      .btn.no-btn {
+        border-right: 1px solid #ffffff33;
+      }
+
+      .btn:active {
+        opacity: 0.7;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <div class="description-box">
+        <div class="description">
+          <div>
+            <span class="text">공지에 나온 일정을 </span>
+            <span class="highlight">자동 담기</span>
+            <span class="text"> 하면 소식이 올라올 때마다</span>
+          </div>
+          <div>
+            <span class="text">바로 캘린더에서 확인이 가능합니다!</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="note">(공지 페이지→옵션)에서 수정 가능합니다.</div>
+
+      <div class="footer">
+        <button class="btn no-btn">아니요</button>
+        <button class="btn yes-btn">네</button>
+      </div>
+    </div>
+
+    <script>
+      document.querySelector('.yes-btn').addEventListener('click', () => {
+        // TODO: 자동연동 로직 구현 예정
+        window.location.href = '../basic/home.html';
+      });
+
+      document.querySelector('.no-btn').addEventListener('click', () => {
+        // TODO: 수동연동 로직 구현 예정
+        window.location.href = '../basic/home.html';
+      });
+    </script>
+  </body>
+</html>
