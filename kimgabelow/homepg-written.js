@@ -51,7 +51,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
 					if (optionDelete) {
 						optionDelete.addEventListener('click', () => {
-							localStorage.removeItem('latestPost');
+							localStorage.removeItem('latestSchoolPost');
 							alert('게시글이 삭제되었습니다.');
 							location.href = 'subjectboard.html';
 						});
@@ -70,7 +70,7 @@ document.addEventListener('DOMContentLoaded', () => {
 		.catch((err) => console.error('footer-nav 로드 실패:', err));
 
 	// ✅ 로컬스토리지에서 게시글 표시
-	const latestPostStr = localStorage.getItem('latestPost');
+	const latestPostStr = localStorage.getItem('latestSchoolPost');
 	if (latestPostStr) {
 		const post = JSON.parse(latestPostStr);
 		document.getElementById('post-title').innerText = post.title;

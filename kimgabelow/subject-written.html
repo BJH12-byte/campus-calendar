@@ -87,7 +87,7 @@
 			<footer class="notice-footer">
 				<div class="bottom-bar"></div>
 				<div class="bottom-nav">
-					<div class="nav-item" onclick="location.href='home.html'">
+					<div class="nav-item" onclick="location.href='../basic/home.html'">
 						<div class="nav-circle">
 							<img
 								src="https://img.icons8.com/ios-filled/50/ffffff/home.png"
@@ -139,7 +139,7 @@
 					displayPost(post);
 					document.querySelector('.page-title').textContent =
 						post.subject || '과목 정보 없음';
-					document.getElementById('post-subject').textContent =
+					document.getElementById('post-subject').innerText =
 						post.subject || '과목명 없음';
 					document.getElementById('post-date').innerText =
 						post.date || 'YYYY.MM.DD';
@@ -165,12 +165,11 @@
 				const moreBtn = document.querySelector('.more-button');
 				const morePopup = document.getElementById('more-option-popup');
 				moreBtn.addEventListener('click', (e) => {
-					e.stopPropagation(); // 팝업 열 때 문서 클릭으로 닫히는 것 방지
+					e.stopPropagation();
 					morePopup.style.display =
 						morePopup.style.display === 'block' ? 'none' : 'block';
 				});
 
-				// 화면 다른 영역 클릭 시 팝업 닫기
 				document.addEventListener('click', (e) => {
 					if (
 						morePopup.style.display === 'block' &&
@@ -181,14 +180,54 @@
 					}
 				});
 
+				// 수정 버튼
 				document.getElementById('option-edit').addEventListener('click', () => {
 					location.href = 'subjectwritten.html';
 				});
 
+				// 삭제 버튼
 				document
 					.getElementById('option-delete')
 					.addEventListener('click', () => {
-						alert('삭제 기능은 게시판에서만 지원됩니다.');
+						const latestPostStr = localStorage.getItem('latestPost');
+						if (!latestPostStr) return alert('삭제할 게시글이 없습니다.');
+
+						const post = JSON.parse(latestPostStr);
+						const isSchoolPost =
+							post.subject === '학교일정' || post.subject === '학교 일정';
+
+						// 배열에서 삭제 처리
+						const subjectKey = isSchoolPost
+							? null
+							: post.subject
+							? `posts_${post.subject}`
+							: null;
+						if (subjectKey) {
+							const posts = JSON.parse(localStorage.getItem(subjectKey)) || [];
+							const updatedPosts = posts.filter(
+								(p) => !(p.title === post.title && p.date === post.date)
+							);
+							localStorage.setItem(subjectKey, JSON.stringify(updatedPosts));
+							localStorage.removeItem(`latestPost_${post.subject}`);
+						} else if (isSchoolPost) {
+							const schoolPosts =
+								JSON.parse(localStorage.getItem('posts_school')) || [];
+							const updatedSchoolPosts = schoolPosts.filter(
+								(p) => !(p.title === post.title && p.date === post.date)
+							);
+							localStorage.setItem(
+								'posts_school',
+								JSON.stringify(updatedSchoolPosts)
+							);
+							localStorage.removeItem('latestSchoolPost');
+						}
+
+						localStorage.removeItem('latestPost'); // 공통 최신글 제거
+
+						alert('게시글이 삭제되었습니다.');
+						location.href = isSchoolPost
+							? 'homepage2.html'
+							: 'subjectboard.html';
 					});
 			});
 

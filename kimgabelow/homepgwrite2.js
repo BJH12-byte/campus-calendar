@@ -33,7 +33,7 @@ document.addEventListener('DOMContentLoaded', () => {
 					date: new Date().toISOString(),
 					image: localStorage.getItem('uploadedImage') || '',
 				};
-				localStorage.setItem('latestPost', JSON.stringify(post));
+				localStorage.setItem('latestSchoolPost', JSON.stringify(post));
 
 				window.location.href = 'homepg-written.html';
 			},

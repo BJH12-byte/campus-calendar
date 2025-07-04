@@ -32,11 +32,10 @@ document.addEventListener('DOMContentLoaded', () => {
 		});
 	}
 });
-document.addEventListener('DOMContentLoaded', () => {
-	// ...
 
-	// ✅ 글목록에 최신글 추가
-	const latestPostStr = localStorage.getItem('latestPost');
+document.addEventListener('DOMContentLoaded', () => {
+	// ✅ 글목록에 최신글 추가 (학교 일정 전용)
+	const latestPostStr = localStorage.getItem('latestPost-school'); // 분리된 키로 수정
 	if (latestPostStr) {
 		const post = JSON.parse(latestPostStr);
 		const board = document.getElementById('school-schedule-board');
