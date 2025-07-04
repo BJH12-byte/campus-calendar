@@ -48,13 +48,6 @@ body {
 	position: relative;
 }
 
-.header-actions {
-	display: flex;
-	justify-content: space-between;
-	align-items: center;
-	margin-bottom: 20px;
-}
-
 .back-button {
 	font-size: 24px;
 	color: #000;
@@ -85,7 +78,6 @@ body {
 .date-display {
 	font-size: 14px;
 	color: #505050;
-	margin: 10px 0;
 }
 
 .line-separator {
@@ -161,12 +153,11 @@ body {
 }
 
 .header-actions {
-	height: 50px; /* homepg-written과 동일하게 헤더 높이 고정 */
+	height: 50px;
 	display: flex;
 	align-items: center;
 	justify-content: space-between;
 	padding: 0 16px;
 	box-sizing: border-box;
-	background: white; /* 배경 흰색 유지 */
-	border-bottom: 1px solid #e6e6f2;
+	background: white;
 }

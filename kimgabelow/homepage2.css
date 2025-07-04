@@ -4,6 +4,7 @@ body {
 	padding: 0;
 	width: 100%;
 	height: 100%;
+	overflow: hidden;
 }
 
 body {
@@ -243,11 +244,11 @@ body {
 }
 
 .bottom-nav {
-	position: absolute;
+	/* position: absolute; */
 	bottom: 0;
 	left: 0;
 	width: 393px;
-	height: 83px;
+	height: 98px;
 	display: flex;
 	justify-content: space-around;
 	align-items: center;
@@ -263,7 +264,7 @@ body {
 	justify-content: center;
 	align-items: center;
 	position: relative;
-	top: -18px;
+	top: -15px;
 }
 
 .nav-item.active .nav-circle {
