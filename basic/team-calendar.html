@@ -905,6 +905,10 @@
           return `<svg xmlns="http://www.w3.org/2000/svg" width="11" height="11" viewBox="0 0 11 11" fill="none">
             <circle cx="5.5" cy="5.5" r="5.5" fill="#B7B7F9"/>
           </svg>`;
+        } else if (type === '기타') {
+          return `<svg xmlns="http://www.w3.org/2000/svg" width="11" height="11" viewBox="0 0 11 11" fill="none">
+            <circle cx="5.5" cy="5.5" r="5.5" fill="#B7B7F9"/>
+          </svg>`;
         }
         return '';
       }
@@ -1056,6 +1060,13 @@
                 if (s.type === '시험') {
                   svgIcon = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 9 9" style="width:8.051px;height:8.05px;flex-shrink:0;aspect-ratio:8.05/8.05;transform:translateY(1px);" fill="none"><path fill-rule="evenodd" clip-rule="evenodd" d="M5.25699 2.79265L4.02536 0L2.79374 2.79265L0 4.02427L2.79374 5.25589L4.02536 8.05L5.25699 5.25589L8.05073 4.02427L5.25699 2.79265Z" fill="#574AD3"/></svg>`;
                 } else if (s.type === '과제') {
+                  svgIcon = `
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 3 3"
+         style="width:3px;height:3px;aspect-ratio:1/1;transform: translateY(3px);"
+         fill="none">
+      <circle cx="1.5" cy="1.5" r="1.5" fill="#574AD3"/>
+    </svg>`;
+                } else if (s.type === '기타') {
                   svgIcon = `
     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 3 3"
          style="width:3px;height:3px;aspect-ratio:1/1;transform: translateY(3px);"
