@@ -101,8 +101,8 @@
         height: 346px;
         margin: -80px auto 0; /* top:-80px, 좌우 auto로 정확히 중앙 */
         background: #fff;
-        border-radius: 12px;
-        box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+        border-radius: 30px 30px 30px 0;
+        box-shadow: 4px 4px 16px 0px rgba(0, 0, 0, 0.1);
         box-sizing: border-box;
         display: flex;
         justify-content: center;
@@ -114,15 +114,7 @@
       .calendar-box input[type='text'] {
         text-align: center;
       }
-      .calendar-box .flatpickr-prev-month {
-        left: 16px;
-      }
-      .calendar-box .flatpickr-prev-month,
-      .calendar-box .flatpickr-next-month {
-        position: absolute;
-        top: 16px;
-        font-size: 1.25rem;
-      }
+
       .flatpickr-calendar {
         position: static !important; /* 절대위치 해제 */
         transform: none !important; /* translateX 등 해제 */
@@ -131,6 +123,12 @@
         height: 100% !important; /* wrapper(346px)에 맞춰 */
         border: none !important; /* 혹시 남아있는 border */
         box-shadow: none !important;
+        padding-left: 0 !important;
+        margin-left: 0 !important;
+      }
+      .flatpickr-innerContainer {
+        padding-left: 0 !important;
+        margin-left: 0 !important;
       }
       .icon-dot {
         position: absolute;
@@ -185,20 +183,37 @@
         margin-top: 1rem;
       }
       /* flatpickr의 월 드롭다운 셀렉터 완전 숨김 */
-      .flatpickr-current-month .flatpickr-monthDropdown-months,
-      .flatpickr-current-month
-        .flatpickr-monthDropdown-months
-        + .numInputWrapper {
-        display: none !important;
+      .flatpickr-current-month {
+        justify-content: flex-start !important;
+        text-align: left !important;
+        width: 100% !important;
+        font-family: 'Pretendard', Arial, sans-serif !important;
+        font-weight: 600 !important;
+        font-size: 24px !important;
+        line-height: 29px !important;
+        letter-spacing: -1.5%;
+        color: #222;
+        margin-bottom: 6px;
+        box-sizing: border-box;
+        display: flex !important;
+        align-items: center;
+        padding-left: 0 !important;
+        margin-left: 0 !important;
+        justify-content: flex-start !important;
       }
-
       /* 월 텍스트만 보이도록 처리 */
       .flatpickr-current-month .cur-month {
-        font-size: 1.5rem;
-        font-weight: bold;
-        pointer-events: none;
+        font-family: 'Pretendard', Arial, sans-serif !important;
+        font-weight: 600 !important;
+        font-size: 24px !important;
+        color: #222;
+        margin-right: 4px;
         background: none !important;
-        color: #333;
+        pointer-events: none;
+        line-height: 29px;
+        letter-spacing: -1.5%;
+        padding: 0;
+        display: inline-bloc;
       }
 
       .today-info img {
@@ -492,6 +507,22 @@
       #calendar.flatpickr-input {
         display: none;
       }
+      .flatpickr-current-month input.cur-year {
+        font-family: 'Pretendard', Arial, sans-serif !important;
+        font-weight: 600 !important;
+        font-size: 24px !important;
+        color: #222;
+        width: auto !important;
+        text-align: left !important;
+        background: none !important;
+        border: none !important;
+        margin-left: 0;
+        padding: 0;
+        line-height: 29px;
+        letter-spacing: -1.5%;
+        box-shadow: none !important;
+        display: inline-block;
+      }
       .schedule-item span:first-child {
         font-size: 14px; /* 달력 아이콘 기본 크기와 유사하게 */
         line-height: normal;
@@ -550,6 +581,10 @@
       #scheduleDate,
       #scheduleList {
         margin-top: 40px; /* 원하는 만큼만 내려! 40~56px 추천 */
+      }
+      .flatpickr-prev-month,
+      .flatpickr-next-month {
+        display: none !important;
       }
     </style>
   </head>

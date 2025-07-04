@@ -12,6 +12,12 @@
       href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css"
     />
     <style>
+      .flatpickr-current-month .flatpickr-monthDropdown-months,
+      .flatpickr-current-month
+        .flatpickr-monthDropdown-months
+        + .numInputWrapper {
+        display: none !important;
+      }
       html {
         margin: 0;
         padding: 0;
@@ -96,8 +102,8 @@
         height: 346px;
         margin: -80px auto 0;
         background: #fff;
-        border-radius: 12px;
-        box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+        border-radius: 30px 30px 30px 0;
+        box-shadow: 4px 4px 16px 0px rgba(0, 0, 0, 0.1);
         box-sizing: border-box;
         display: flex;
         justify-content: center;
@@ -217,6 +223,10 @@
         font-size: 14px;
         line-height: normal;
         display: inline-block;
+      }
+      .flatpickr-prev-month,
+      .flatpickr-next-month {
+        display: none !important;
       }
       .schedule-item span:nth-child(2) {
         color: #757575;
@@ -595,6 +605,62 @@
         width: 1.2px;
         background: #c5c2ef;
         height: 100%;
+      }
+      .flatpickr-current-month {
+        margin-left: 10px;
+        justify-content: flex-start !important;
+        text-align: left !important;
+        width: auto !important;
+        height: 29px !important;
+        padding-left: 0 !important;
+        margin-left: 0 !important;
+        font-family: 'Pretendard', Arial, sans-serif !important;
+        font-weight: 600 !important;
+        font-size: 24px !important;
+        line-height: 29px !important;
+        letter-spacing: -1.5%;
+        color: #222;
+        display: flex !important;
+        align-items: center;
+        box-sizing: border-box;
+      }
+
+      /* calendar-box의 padding도 0으로, 진짜 왼쪽 끝 */
+      .calendar-box {
+        padding-left: 10px !important;
+      }
+
+      /* 월 텍스트 (July) */
+      .flatpickr-current-month .cur-month {
+        font-family: 'Pretendard', Arial, sans-serif !important;
+        font-weight: 600 !important;
+        font-size: 24px !important;
+        line-height: 29px !important;
+        color: #222;
+        letter-spacing: -1.5% !important;
+        margin-right: 4px;
+        background: none !important;
+        pointer-events: none;
+        padding: 0;
+        display: inline-block;
+      }
+
+      /* 년도(2025)도 같이 */
+      .flatpickr-current-month input.cur-year {
+        font-family: 'Pretendard', Arial, sans-serif !important;
+        font-weight: 600 !important;
+        font-size: 24px !important;
+        line-height: 29px !important;
+        color: #222;
+        letter-spacing: -1.5% !important;
+        width: auto !important;
+        text-align: left !important;
+        background: none !important;
+        border: none !important;
+        margin-left: 0;
+        padding: 0;
+        box-shadow: none !important;
+        display: inline-block;
       }
     </style>
   </head>
