@@ -26,16 +26,27 @@ document.addEventListener('DOMContentLoaded', () => {
 		showYesNoPopup(
 			window.popupMessages?.writePageConfirm || '일정확인 제대로 하셨나요?',
 			() => {
-				// ✅ 글쓰기 시 데이터 로컬스토리지에 저장
+				// ✅ 고유 ID 생성
+				const id = Date.now().toString();
+
+				// ✅ 글쓰기 시 데이터 로컬스토리지에 누적 저장
 				const post = {
+					id,
 					title,
 					content,
 					date: new Date().toISOString(),
 					image: localStorage.getItem('uploadedImage') || '',
 				};
+
+				// 학교 일정 배열로 누적
+				let posts = JSON.parse(localStorage.getItem('posts_school')) || [];
+				posts.push(post);
+				localStorage.setItem('posts_school', JSON.stringify(posts));
+
+				// 최신 글은 개별적으로 유지 (선택적)
 				localStorage.setItem('latestSchoolPost', JSON.stringify(post));
 
-				window.location.href = 'homepg-written.html';
+				window.location.href = `homepg-written.html?id=${id}`;
 			},
 			() => {
 				console.log('재확인 버튼 눌림 - 다시 확인!');

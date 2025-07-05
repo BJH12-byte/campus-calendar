@@ -85,8 +85,6 @@
 			/>
 			<input type="file" id="file-input" style="display: none" />
 		</div>
-		<script src="popup.js"></script>
-		<script src="popup_yes_or_no.js"></script>
 		<script src="homepgwrite2.js"></script>
 		<script>
 			window.popupMessages = {
@@ -120,11 +118,11 @@
 						const subject = selectedSubject || '과목 정보 없음';
 
 						if (!title) {
-							alert('제목을 입력해주세요.');
+							showCustomPopup(window.popupMessages.titleRequired);
 							return;
 						}
 						if (!content) {
-							alert('내용을 작성해주세요.');
+							showCustomPopup(window.popupMessages.contentRequired);
 							return;
 						}
 
@@ -151,9 +149,13 @@
 						// 기존 공통 latestPost 유지
 						localStorage.setItem('latestPost', JSON.stringify(postData));
 
-						window.location.href = 'subject-written.html';
+						// ✅ 팝업 닫힌 후에 이동하도록 수정
+						showCustomPopup('일정이 저장되었습니다.', () => {
+							window.location.href = 'subject-written.html';
+						});
 					});
 			});
 		</script>
+		<script src="popup.js"></script>
 	</body>
 </html>

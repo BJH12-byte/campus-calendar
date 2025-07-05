@@ -56,8 +56,9 @@ document.addEventListener('DOMContentLoaded', () => {
 			selected = dayElem;
 		});
 
-		// ✅ 두번 클릭하면 homepgwrite2.html로 이동
+		// ✅ 두번 클릭하면 homepgwrite2.html로 이동 + uploadedImage 초기화
 		dayElem.addEventListener('dblclick', () => {
+			localStorage.removeItem('uploadedImage'); // 이전 이미지 삭제
 			window.location.href = 'homepgwrite2.html';
 		});
 

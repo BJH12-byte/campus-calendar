@@ -71,13 +71,15 @@
 
 			<!-- 본문 -->
 			<main class="post-content">
-				<h2 id="post-title">게시글 제목</h2>
+				<h2 id="post-title" contenteditable="true">게시글 제목</h2>
 				<div class="post-meta">
 					<span id="post-date">YYYY.MM.DD</span>
 					<span class="divider">|</span>
 					<span id="post-subject">과목명/카테고리</span>
 				</div>
-				<p id="post-body">게시글 내용이 여기에 표시됩니다.</p>
+				<p id="post-body" contenteditable="true">
+					게시글 내용이 여기에 표시됩니다.
+				</p>
 				<div class="image-container">
 					<img id="post-image" src="" alt="게시글 이미지" />
 				</div>
@@ -129,7 +131,7 @@
 				</div>
 			</footer>
 		</div>
-
+		<script src="popup.js"></script>
 		<script>
 			document.addEventListener('DOMContentLoaded', () => {
 				const latestPostStr = localStorage.getItem('latestPost');
@@ -148,7 +150,7 @@
 						'작성된 게시글이 없습니다.';
 				}
 
-				// 저장 버튼 클릭
+				// 저장 버튼 클릭: 프로필 저장
 				document.querySelector('.save-button').addEventListener('click', () => {
 					const post = {
 						title: document.getElementById('post-title').innerText,
@@ -158,10 +160,10 @@
 						image: document.getElementById('post-image').src,
 					};
 					localStorage.setItem('myProfilePost', JSON.stringify(post));
-					alert('게시글이 내 프로필에 저장되었습니다!');
+					showCustomPopup('게시글이 내 프로필에 저장되었습니다!');
 				});
 
-				// 더보기 버튼 클릭
+				// 더보기 버튼 클릭: 팝업 토글
 				const moreBtn = document.querySelector('.more-button');
 				const morePopup = document.getElementById('more-option-popup');
 				moreBtn.addEventListener('click', (e) => {
@@ -180,9 +182,18 @@
 					}
 				});
 
-				// 수정 버튼
+				// 수정 버튼: 게시글 수정 모드 활성화
 				document.getElementById('option-edit').addEventListener('click', () => {
-					location.href = 'subjectwritten.html';
+					document
+						.getElementById('post-title')
+						.setAttribute('contenteditable', 'true');
+					document
+						.getElementById('post-body')
+						.setAttribute('contenteditable', 'true');
+					showCustomPopup(
+						'제목과 내용을 수정할 수 있습니다.\n수정 후 저장 버튼을 눌러주세요.'
+					);
+					morePopup.style.display = 'none'; // 수정 선택 후 팝업 닫기
 				});
 
 				// 삭제 버튼
@@ -190,7 +201,8 @@
 					.getElementById('option-delete')
 					.addEventListener('click', () => {
 						const latestPostStr = localStorage.getItem('latestPost');
-						if (!latestPostStr) return alert('삭제할 게시글이 없습니다.');
+						if (!latestPostStr)
+							return showCustomPopup('삭제할 게시글이 없습니다.');
 
 						const post = JSON.parse(latestPostStr);
 						const isSchoolPost =
@@ -224,10 +236,11 @@
 
 						localStorage.removeItem('latestPost'); // 공통 최신글 제거
 
-						alert('게시글이 삭제되었습니다.');
-						location.href = isSchoolPost
-							? 'homepage2.html'
-							: 'subjectboard.html';
+						showCustomPopup('게시글이 삭제되었습니다.', () => {
+							location.href = isSchoolPost
+								? 'homepage2.html'
+								: 'subjectboard.html';
+						});
 					});
 			});
 

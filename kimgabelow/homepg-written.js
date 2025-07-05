@@ -14,7 +14,6 @@ document.addEventListener('DOMContentLoaded', () => {
 					container.innerHTML = controlsHtml;
 					headerPlaceholder.appendChild(container);
 
-					// ✅ 저장/더보기 버튼 이벤트 등록
 					const saveBtn = container.querySelector('.save-button');
 					const moreBtn = container.querySelector('.more-button');
 					const morePopup = container.querySelector('#more-option-popup');
@@ -29,7 +28,7 @@ document.addEventListener('DOMContentLoaded', () => {
 								image: document.getElementById('post-image').src,
 							};
 							localStorage.setItem('myProfilePost', JSON.stringify(post));
-							alert('게시글이 내 프로필에 저장되었습니다!');
+							showCustomPopup('게시글이 내 프로필에 저장되었습니다!');
 						});
 					}
 
@@ -51,9 +50,16 @@ document.addEventListener('DOMContentLoaded', () => {
 
 					if (optionDelete) {
 						optionDelete.addEventListener('click', () => {
-							localStorage.removeItem('latestSchoolPost');
-							alert('게시글이 삭제되었습니다.');
-							location.href = 'subjectboard.html';
+							const id = getParam('id');
+							if (id) {
+								let posts =
+									JSON.parse(localStorage.getItem('posts_school')) || [];
+								posts = posts.filter((p) => p.id !== id);
+								localStorage.setItem('posts_school', JSON.stringify(posts));
+								showCustomPopup('게시글이 삭제되었습니다.', () => {
+									location.href = 'homepage2.html';
+								});
+							}
 						});
 					}
 				})
@@ -69,15 +75,37 @@ document.addEventListener('DOMContentLoaded', () => {
 		})
 		.catch((err) => console.error('footer-nav 로드 실패:', err));
 
-	// ✅ 로컬스토리지에서 게시글 표시
-	const latestPostStr = localStorage.getItem('latestSchoolPost');
-	if (latestPostStr) {
-		const post = JSON.parse(latestPostStr);
-		document.getElementById('post-title').innerText = post.title;
-		document.getElementById('post-body').innerText = post.content;
-		document.getElementById('post-date').innerText = post.date.split('T')[0];
-		if (post.image) {
-			document.getElementById('post-image').src = post.image;
+	// ✅ URL 파라미터로 id 받아오기
+	const id = getParam('id');
+	if (id) {
+		const posts = JSON.parse(localStorage.getItem('posts_school')) || [];
+		const post = posts.find((p) => p.id === id);
+
+		if (post) {
+			document.getElementById('post-title').innerText = post.title;
+			document.getElementById('post-body').innerText = post.content;
+			document.getElementById('post-date').innerText = post.date.split('T')[0];
+			document.getElementById('post-subject').innerText = '학교 일정';
+
+			const imageContainer = document.querySelector('.image-container');
+			const postImage = document.getElementById('post-image');
+
+			if (post.image) {
+				postImage.src = post.image;
+				imageContainer.style.display = 'block'; // 이미지 있을 때 보이기
+			} else {
+				postImage.removeAttribute('src');
+				imageContainer.style.display = 'none'; // 이미지 없을 때 숨기기
+			}
+		} else {
+			document.getElementById('post-title').innerText =
+				'글을 찾을 수 없습니다.';
 		}
+	}
+
+	// 쿼리스트링 id 읽는 함수
+	function getParam(name) {
+		const url = new URL(window.location.href);
+		return url.searchParams.get(name);
 	}
 });
