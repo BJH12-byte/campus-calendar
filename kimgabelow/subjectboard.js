@@ -27,7 +27,10 @@ document.addEventListener('DOMContentLoaded', () => {
 			const postData = { title, subject, date, content: '', image };
 
 			// ✅ 클릭한 게시물 데이터를 latestPost로 저장
-			localStorage.setItem('latestPost', JSON.stringify(postData));
+			if (subject) {
+				localStorage.setItem(`latestPost_${subject}`, JSON.stringify(postData));
+				localStorage.setItem('selectedSubject', subject); // subject-written이 어떤 과목의 latestPost를 불러올지 알게 하기 위함
+			}
 
 			// ✅ 상세 페이지로 이동
 			window.location.href = 'subject-written.html';

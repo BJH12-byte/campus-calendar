@@ -158,10 +158,13 @@
 				const boardList = document.getElementById('subject-board');
 				boardList.innerHTML = '';
 
-				allPosts.forEach((post) => {
-					const article = document.createElement('article');
-					article.className = 'board-item';
-					article.innerHTML = `
+				allPosts
+					.slice()
+					.reverse()
+					.forEach((post) => {
+						const article = document.createElement('article');
+						article.className = 'board-item';
+						article.innerHTML = `
         <div class="thumbnail">
           <img src="${post.image || '../default-img.png'}" alt="공지 이미지">
         </div>
@@ -171,12 +174,17 @@
           <p class="board-date">${post.date}</p>
         </div>
       `;
-					article.addEventListener('click', () => {
-						localStorage.setItem('latestPost', JSON.stringify(post));
-						window.location.href = '../subject-written.html';
+						article.addEventListener('click', () => {
+							localStorage.setItem(
+								`latestPost_${post.subject}`,
+								JSON.stringify(post)
+							);
+							localStorage.setItem('selectedSubject', post.subject);
+							window.location.href = '../subject-written.html';
+						});
+
+						boardList.appendChild(article);
 					});
-					boardList.appendChild(article);
-				});
 			});
 		</script>
 	</body>

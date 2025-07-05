@@ -1,88 +1,88 @@
 <!DOCTYPE html>
 <html lang="ko">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=393, user-scalable=no" />
-    <title>UniDays - Intro</title>
-    <style>
-      :root {
-        --primary-purple: #b7b7f9;
-        --primary-dark-purple: #8b85f9;
-        --font-family: 'Pretendard', sans-serif;
-      }
+	<head>
+		<meta charset="UTF-8" />
+		<meta name="viewport" content="width=393, user-scalable=no" />
+		<title>UniDays - Intro</title>
+		<style>
+			:root {
+				--primary-purple: #b7b7f9;
+				--primary-dark-purple: #8b85f9;
+				--font-family: 'Pretendard', sans-serif;
+			}
 
-      body,
-      html {
-        margin: 0;
-        padding: 0;
-        width: 100%;
-        height: 100%;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        background: #ffffff;
-        font-family: var(--font-family);
-      }
+			body,
+			html {
+				margin: 0;
+				padding: 0;
+				width: 100%;
+				height: 100%;
+				display: flex;
+				justify-content: center;
+				align-items: center;
+				background: #ffffff;
+				font-family: var(--font-family);
+			}
 
-      .container {
-        width: 393px;
-        height: 852px;
-        position: relative;
-        box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
-        overflow: hidden;
-      }
+			.container {
+				width: 393px;
+				height: 852px;
+				position: relative;
+				box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+				overflow: hidden;
+			}
 
-      .intro {
-        width: 100%;
-        height: 100%;
-        display: flex;
-        flex-direction: column;
-        justify-content: space-between;
-      }
+			.intro {
+				width: 100%;
+				height: 100%;
+				display: flex;
+				flex-direction: column;
+				justify-content: space-between;
+			}
 
-      .intro-logo-container {
-        flex-grow: 1;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-      }
+			.intro-logo-container {
+				flex-grow: 1;
+				display: flex;
+				justify-content: center;
+				align-items: center;
+			}
 
-      .intro-logo {
-        width: 55%;
-        height: auto;
-        max-width: 300px;
-      }
+			.intro-logo {
+				width: 55%;
+				height: auto;
+				max-width: 300px;
+			}
 
-      .intro-button {
-        width: 100%;
-        padding: 20px 0;
-        background-color: var(--primary-purple);
-        color: #fff;
-        font-size: 20px;
-        font-weight: 700;
-        border: none;
-        cursor: pointer;
-        text-align: center;
-      }
+			.intro-button {
+				width: 100%;
+				padding: 20px 0;
+				background-color: var(--primary-purple);
+				color: #fff;
+				font-size: 20px;
+				font-weight: 700;
+				border: none;
+				cursor: pointer;
+				text-align: center;
+			}
 
-      .intro-button:active {
-        background-color: var(--primary-dark-purple);
-      }
-    </style>
-  </head>
-  <body>
-    <div class="container">
-      <div class="intro">
-        <div class="intro-logo-container">
-          <img src="logo.svg" alt="UniDays Logo" class="intro-logo" />
-        </div>
-        <button id="nextBtn" class="intro-button">다음</button>
-      </div>
-    </div>
-    <script>
-      document.getElementById('nextBtn').addEventListener('click', () => {
-        window.location.href = 'loading.html';
-      });
-    </script>
-  </body>
+			.intro-button:active {
+				background-color: var(--primary-dark-purple);
+			}
+		</style>
+	</head>
+	<body>
+		<div class="container">
+			<div class="intro">
+				<div class="intro-logo-container">
+					<img src="logo.svg" alt="UniDays Logo" class="intro-logo" />
+				</div>
+				<button id="nextBtn" class="intro-button">다음</button>
+			</div>
+		</div>
+		<script>
+			document.getElementById('nextBtn').addEventListener('click', () => {
+				window.location.href = 'loading.html';
+			});
+		</script>
+	</body>
 </html>

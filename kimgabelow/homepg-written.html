@@ -5,11 +5,51 @@
 		<meta name="viewport" content="width=393, height=852, initial-scale=1.0" />
 		<title>게시글 상세보기 - 캠퍼스 캘린더</title>
 		<link rel="stylesheet" href="homepg_written.css" />
+		<style>
+			.edit-delete-option {
+				width: 120px;
+				padding: 10px;
+				font-size: 16px;
+				color: white;
+				background: #7c74c9;
+				text-align: center;
+				cursor: pointer;
+			}
+			.edit-delete-option:first-child {
+				border-top-left-radius: 12px;
+				border-top-right-radius: 12px;
+			}
+			.edit-delete-option:last-child {
+				border-bottom-left-radius: 12px;
+				border-bottom-right-radius: 12px;
+				background: #b7b7f9;
+			}
+		</style>
 	</head>
 	<body>
 		<div id="app-container">
 			<!-- 헤더 -->
 			<div id="header-placeholder"></div>
+
+			<!-- 수정모드 팝업 (새로 추가) -->
+			<div
+				id="edit-popup"
+				style="
+					display: none;
+					position: absolute;
+					top: 100px;
+					right: 20px;
+					background: white;
+					border-radius: 12px;
+					overflow: hidden;
+					box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+					z-index: 9999;
+				"
+			>
+				<div class="edit-delete-option" id="save-edit">저장</div>
+				<div style="height: 1px; background: #ddd"></div>
+				<div class="edit-delete-option" id="cancel-edit">취소</div>
+			</div>
 
 			<!-- 본문 -->
 			<main class="post-content">

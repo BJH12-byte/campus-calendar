@@ -178,6 +178,17 @@ body {
 	display: flex;
 	align-items: center;
 }
+.save-button {
+	background: none;
+	border: none;
+	outline: none;
+	box-shadow: none;
+	padding: 0;
+	margin-right: 5px;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+}
 
 .header-actions {
 	display: flex;

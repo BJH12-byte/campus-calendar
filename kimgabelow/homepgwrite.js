@@ -56,10 +56,16 @@ document.addEventListener('DOMContentLoaded', () => {
 			selected = dayElem;
 		});
 
-		// ✅ 두번 클릭하면 homepgwrite2.html로 이동 + uploadedImage 초기화
-		dayElem.addEventListener('dblclick', () => {
-			localStorage.removeItem('uploadedImage'); // 이전 이미지 삭제
-			window.location.href = 'homepgwrite2.html';
+		// ✅ 두 번 클릭 감지로 homepgwrite2.html로 이동 + uploadedImage 초기화
+		let lastClickTime = 0;
+		dayElem.addEventListener('click', () => {
+			const currentTime = Date.now();
+			if (currentTime - lastClickTime < 3000) {
+				// 300ms 내 두 번 클릭으로 인식
+				localStorage.removeItem('uploadedImage'); // 이전 이미지 삭제
+				window.location.href = 'homepgwrite2.html';
+			}
+			lastClickTime = currentTime;
 		});
 
 		calendarDays.appendChild(dayElem);

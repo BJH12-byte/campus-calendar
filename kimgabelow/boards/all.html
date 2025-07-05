@@ -74,7 +74,7 @@
 			<footer class="notice-footer">
 				<div class="bottom-bar"></div>
 				<div class="bottom-nav">
-					<div class="nav-item" onclick="location.href='../basic/home.html'">
+					<div class="nav-item" onclick="location.href='../../basic/home.html'">
 						<div class="nav-circle">
 							<img
 								src="https://img.icons8.com/ios-filled/50/ffffff/home.png"
@@ -122,7 +122,6 @@
 				</div>
 			</footer>
 		</div>
-
 		<script>
 			document.addEventListener('DOMContentLoaded', () => {
 				const tabs = document.querySelectorAll('.tab');
@@ -147,29 +146,27 @@
 					window.location.href = '../subject-choose.html';
 				});
 
-				// ✅ 전체 게시판용: 모든 과목의 게시글을 불러와 합치기
-				const subjects = [
-					'창의적 사고와 코딩',
-					'전공or교양 1',
-					'이름순',
-					'과목5',
-					'과목2',
-					'과목3',
-				];
+				// ✅ 전체 게시판용: posts_school을 제외하고 posts_* 키만 모아오기
 				let allPosts = [];
 
-				subjects.forEach((subj) => {
-					const posts = JSON.parse(localStorage.getItem(`posts_${subj}`)) || [];
-					allPosts = allPosts.concat(posts);
-				});
+				for (let i = 0; i < localStorage.length; i++) {
+					const key = localStorage.key(i);
+					if (key.startsWith('posts_') && key !== 'posts_school') {
+						const posts = JSON.parse(localStorage.getItem(key)) || [];
+						allPosts = allPosts.concat(posts);
+					}
+				}
 
 				const boardList = document.getElementById('subject-board');
 				boardList.innerHTML = ''; // 기존 예제 아이템 제거
 
-				allPosts.forEach((post) => {
-					const article = document.createElement('article');
-					article.className = 'board-item';
-					article.innerHTML = `
+				allPosts
+					.slice()
+					.sort((a, b) => new Date(b.date) - new Date(a.date)) // 최신순으로 정렬
+					.forEach((post) => {
+						const article = document.createElement('article');
+						article.className = 'board-item';
+						article.innerHTML = `
         <div class="thumbnail">
           <img src="${post.image || '../default-img.png'}" alt="공지 이미지">
         </div>
@@ -179,12 +176,16 @@
           <p class="board-date">${post.date}</p>
         </div>
       `;
-					article.addEventListener('click', () => {
-						localStorage.setItem('latestPost', JSON.stringify(post));
-						window.location.href = '../subject-written.html';
+						article.addEventListener('click', () => {
+							localStorage.setItem('selectedSubject', post.subject);
+							localStorage.setItem(
+								`latestPost_${post.subject}`,
+								JSON.stringify(post)
+							);
+							window.location.href = '../subject-written.html';
+						});
+						boardList.appendChild(article);
 					});
-					boardList.appendChild(article);
-				});
 			});
 		</script>
 	</body>

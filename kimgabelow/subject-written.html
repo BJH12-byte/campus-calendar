@@ -35,7 +35,10 @@
 				</div>
 			</div>
 			<div class="header-controls">
-				<button class="back-btn" onclick="location.href='subjectboard.html'">
+				<button
+					class="back-btn"
+					onclick="location.href='../kimgabelow/boards/all.html'"
+				>
 					<img src="goback.svg" alt="뒤로가기" />
 				</button>
 				<div class="page-title">과목명 불러오는 중...</div>
@@ -49,7 +52,7 @@
 				</div>
 			</div>
 
-			<!-- 수정/삭제 팝업 -->
+			<!-- 더보기 팝업 -->
 			<div
 				id="more-option-popup"
 				style="
@@ -69,17 +72,36 @@
 				<div class="edit-delete-option" id="option-delete">삭제</div>
 			</div>
 
+			<!-- 수정모드 팝업 (새로 추가) -->
+			<div
+				id="edit-popup"
+				style="
+					display: none;
+					position: absolute;
+					top: 100px;
+					right: 20px;
+
+					background: white;
+					border-radius: 12px;
+					overflow: hidden;
+					box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+					z-index: 9999;
+				"
+			>
+				<div class="edit-delete-option" id="save-edit">저장</div>
+				<div style="height: 1px; background: #ddd"></div>
+				<div class="edit-delete-option" id="cancel-edit">취소</div>
+			</div>
+
 			<!-- 본문 -->
 			<main class="post-content">
-				<h2 id="post-title" contenteditable="true">게시글 제목</h2>
+				<h2 id="post-title">게시글 제목</h2>
 				<div class="post-meta">
 					<span id="post-date">YYYY.MM.DD</span>
 					<span class="divider">|</span>
 					<span id="post-subject">과목명/카테고리</span>
 				</div>
-				<p id="post-body" contenteditable="true">
-					게시글 내용이 여기에 표시됩니다.
-				</p>
+				<p id="post-body">게시글 내용이 여기에 표시됩니다.</p>
 				<div class="image-container">
 					<img id="post-image" src="" alt="게시글 이미지" />
 				</div>
@@ -131,10 +153,14 @@
 				</div>
 			</footer>
 		</div>
+
 		<script src="popup.js"></script>
 		<script>
 			document.addEventListener('DOMContentLoaded', () => {
-				const latestPostStr = localStorage.getItem('latestPost');
+				const selectedSubject = localStorage.getItem('selectedSubject');
+				const latestPostStr = selectedSubject
+					? localStorage.getItem(`latestPost_${selectedSubject}`)
+					: null;
 
 				if (latestPostStr) {
 					const post = JSON.parse(latestPostStr);
@@ -150,7 +176,7 @@
 						'작성된 게시글이 없습니다.';
 				}
 
-				// 저장 버튼 클릭: 프로필 저장
+				// 저장 버튼 클릭: 스크랩 (프로필 저장 전용)
 				document.querySelector('.save-button').addEventListener('click', () => {
 					const post = {
 						title: document.getElementById('post-title').innerText,
@@ -182,64 +208,121 @@
 					}
 				});
 
-				// 수정 버튼: 게시글 수정 모드 활성화
+				// 수정 버튼 → 수정모드 진입 + 수정팝업 표시
+				let originalTitle = '';
+				let originalBody = '';
 				document.getElementById('option-edit').addEventListener('click', () => {
-					document
-						.getElementById('post-title')
-						.setAttribute('contenteditable', 'true');
-					document
-						.getElementById('post-body')
-						.setAttribute('contenteditable', 'true');
+					if (!selectedSubject) {
+						showCustomPopup('과목 정보가 없습니다.');
+						return;
+					}
+
+					const titleEl = document.getElementById('post-title');
+					const bodyEl = document.getElementById('post-body');
+
+					originalTitle = titleEl.innerText;
+					originalBody = bodyEl.innerText;
+
+					titleEl.setAttribute('contenteditable', 'true');
+					bodyEl.setAttribute('contenteditable', 'true');
+
+					document.getElementById('edit-popup').style.display = 'block';
+
+					// 더보기 팝업 강제 닫기
+					morePopup.style.display = 'none';
+
 					showCustomPopup(
-						'제목과 내용을 수정할 수 있습니다.\n수정 후 저장 버튼을 눌러주세요.'
+						'수정 모드로 전환했습니다.\n수정 후 저장/취소 버튼을 사용하세요.'
 					);
-					morePopup.style.display = 'none'; // 수정 선택 후 팝업 닫기
+				});
+
+				// 저장 버튼 (수정팝업)
+				document.getElementById('save-edit').addEventListener('click', () => {
+					const titleEl = document.getElementById('post-title');
+					const bodyEl = document.getElementById('post-body');
+
+					const latestPostStr = localStorage.getItem(
+						`latestPost_${selectedSubject}`
+					);
+					if (!latestPostStr) {
+						showCustomPopup('저장할 게시글이 없습니다.');
+						return;
+					}
+
+					const latestPost = JSON.parse(latestPostStr);
+					const updatedTitle = titleEl.innerText;
+					const updatedBody = bodyEl.innerText;
+
+					const subjectKey = `posts_${selectedSubject}`;
+					let posts = JSON.parse(localStorage.getItem(subjectKey)) || [];
+					const index = posts.findIndex(
+						(p) => p.title === latestPost.title && p.date === latestPost.date
+					);
+
+					if (index !== -1) {
+						posts[index].title = updatedTitle;
+						posts[index].content = updatedBody;
+						localStorage.setItem(subjectKey, JSON.stringify(posts));
+					}
+
+					latestPost.title = updatedTitle;
+					latestPost.content = updatedBody;
+					localStorage.setItem(
+						`latestPost_${selectedSubject}`,
+						JSON.stringify(latestPost)
+					);
+
+					titleEl.setAttribute('contenteditable', 'false');
+					bodyEl.setAttribute('contenteditable', 'false');
+					document.getElementById('edit-popup').style.display = 'none';
+
+					showCustomPopup('게시글이 수정되었습니다.');
+				});
+
+				// 취소 버튼 (수정팝업)
+				document.getElementById('cancel-edit').addEventListener('click', () => {
+					const titleEl = document.getElementById('post-title');
+					const bodyEl = document.getElementById('post-body');
+
+					titleEl.innerText = originalTitle;
+					bodyEl.innerText = originalBody;
+
+					titleEl.setAttribute('contenteditable', 'false');
+					bodyEl.setAttribute('contenteditable', 'false');
+					document.getElementById('edit-popup').style.display = 'none';
+
+					showCustomPopup('수정을 취소했습니다.');
 				});
 
 				// 삭제 버튼
 				document
 					.getElementById('option-delete')
 					.addEventListener('click', () => {
-						const latestPostStr = localStorage.getItem('latestPost');
-						if (!latestPostStr)
-							return showCustomPopup('삭제할 게시글이 없습니다.');
-
-						const post = JSON.parse(latestPostStr);
-						const isSchoolPost =
-							post.subject === '학교일정' || post.subject === '학교 일정';
-
-						// 배열에서 삭제 처리
-						const subjectKey = isSchoolPost
-							? null
-							: post.subject
-							? `posts_${post.subject}`
-							: null;
-						if (subjectKey) {
-							const posts = JSON.parse(localStorage.getItem(subjectKey)) || [];
-							const updatedPosts = posts.filter(
-								(p) => !(p.title === post.title && p.date === post.date)
-							);
-							localStorage.setItem(subjectKey, JSON.stringify(updatedPosts));
-							localStorage.removeItem(`latestPost_${post.subject}`);
-						} else if (isSchoolPost) {
-							const schoolPosts =
-								JSON.parse(localStorage.getItem('posts_school')) || [];
-							const updatedSchoolPosts = schoolPosts.filter(
-								(p) => !(p.title === post.title && p.date === post.date)
-							);
-							localStorage.setItem(
-								'posts_school',
-								JSON.stringify(updatedSchoolPosts)
-							);
-							localStorage.removeItem('latestSchoolPost');
+						if (!selectedSubject) {
+							showCustomPopup('과목 정보가 없습니다.');
+							return;
 						}
 
-						localStorage.removeItem('latestPost'); // 공통 최신글 제거
+						const latestPostStr = localStorage.getItem(
+							`latestPost_${selectedSubject}`
+						);
+						if (!latestPostStr) {
+							showCustomPopup('삭제할 게시글이 없습니다.');
+							return;
+						}
+
+						const post = JSON.parse(latestPostStr);
+
+						const subjectKey = `posts_${selectedSubject}`;
+						let posts = JSON.parse(localStorage.getItem(subjectKey)) || [];
+						const updatedPosts = posts.filter(
+							(p) => !(p.title === post.title && p.date === post.date)
+						);
+						localStorage.setItem(subjectKey, JSON.stringify(updatedPosts));
+						localStorage.removeItem(`latestPost_${selectedSubject}`);
 
 						showCustomPopup('게시글이 삭제되었습니다.', () => {
-							location.href = isSchoolPost
-								? 'homepage2.html'
-								: 'subjectboard.html';
+							location.href = 'subjectboard.html';
 						});
 					});
 			});
