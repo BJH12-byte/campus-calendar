@@ -1,1063 +1,1084 @@
 <!DOCTYPE html>
 <html lang="ko">
-	<head>
-		<meta charset="UTF-8" />
-		<meta
-			name="viewport"
-			content="width=device-width, initial-scale=1.0, user-scalable=no"
-		/>
-		<title>팀 캘린더</title>
-		<link
-			rel="stylesheet"
-			href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css"
-		/>
-		<style>
-			html {
-				margin: 0;
-				padding: 0;
-				font-family: Arial, sans-serif;
-				background-color: #f3f4f6;
-				width: 100vw;
-				height: 100vh;
-				display: flex;
-				overflow: hidden;
-				flex-direction: column;
-				align-items: center;
-				height: 100%;
-				overflow-y: auto;
-			}
-			body {
-				margin: 0;
-				padding: 0;
-				font-family: Arial, sans-serif;
-				background-color: #f3f4f6;
-				width: 100vw;
-				height: 100vh;
-				display: flex;
-				overflow: hidden;
-				flex-direction: column;
-				align-items: center;
-				scrollbar-width: none; /* Firefox */
-				-ms-overflow-style: none;
-				height: 100%;
-				overflow: hidden;
-				overflow-y: auto;
-			}
-			.fixed-container {
-				width: 393px;
-				height: 852px;
-				background: #fff;
-				margin: 0 auto;
-				box-shadow: 0 0 10px rgba(0, 0, 0, 0.05);
-				overflow: visible;
-				position: relative;
-				display: flex;
-				flex-direction: column;
-				overflow-y: auto;
-				scrollbar-width: none;
-				-ms-overflow-style: none;
-			}
-			.fixed-container::-webkit-scrollbar {
-				display: none;
-			}
-			.header {
-				position: relative;
-				width: 393px;
-				height: 130px;
-				flex-shrink: 0;
-				background: #b7b7f9;
-				display: flex;
-				justify-content: space-between;
-				align-items: center;
-				padding: 16px 0 173px;
-				flex-direction: column;
-			}
-			#scheduleDate,
-			#scheduleList {
-				margin-top: 40px; /* 원하는 만큼만 내려! 40~56px 추천 */
-			}
+  <head>
+    <meta charset="UTF-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0, user-scalable=no"
+    />
+    <title>팀 캘린더</title>
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css"
+    />
+    <style>
+      html {
+        margin: 0;
+        padding: 0;
+        font-family: Arial, sans-serif;
+        background-color: #f3f4f6;
+        width: 100vw;
+        height: 100vh;
+        display: flex;
+        overflow: hidden;
+        flex-direction: column;
+        align-items: center;
+        height: 100%;
+        overflow-y: auto;
+      }
+      body {
+        margin: 0;
+        padding: 0;
+        font-family: Arial, sans-serif;
+        background-color: #f3f4f6;
+        width: 100vw;
+        height: 100vh;
+        display: flex;
+        overflow: hidden;
+        flex-direction: column;
+        align-items: center;
+        scrollbar-width: none; /* Firefox */
+        -ms-overflow-style: none;
+        height: 100%;
+        overflow: hidden;
+        overflow-y: auto;
+      }
+      .fixed-container {
+        width: 393px;
+        height: 852px;
+        background: #fff;
+        margin: 0 auto;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.05);
+        overflow: visible;
+        position: relative;
+        display: flex;
+        flex-direction: column;
+        overflow-y: auto;
+        scrollbar-width: none;
+        -ms-overflow-style: none;
+      }
+      .fixed-container::-webkit-scrollbar {
+        display: none;
+      }
+      .header {
+        position: relative;
+        width: 393px;
+        height: 130px;
+        flex-shrink: 0;
+        background: #b7b7f9;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 16px 0 173px;
+        flex-direction: column;
+      }
+      #scheduleDate,
+      #scheduleList {
+        margin-top: 40px; /* 원하는 만큼만 내려! 40~56px 추천 */
+      }
 
-			.title {
-				position: absolute;
-				top: 16px;
-				left: 16px;
-				width: 81.62px;
-				height: 28px;
-				flex-shrink: 0;
-				color: #fff;
-				font-family: Pretendard, sans-serif;
-				font-size: 24px;
-				font-weight: 700;
-				line-height: normal;
-				letter-spacing: -0.21px;
-			}
-			.calendar-box {
-				width: 352px;
-				height: 346px;
-				margin: -80px auto 0;
-				background: #fff;
-				border-radius: 12px;
-				box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
-				box-sizing: border-box;
-				display: flex;
-				justify-content: center;
-				align-items: center;
-				position: relative;
-				padding: 16px;
-				z-index: 1;
-			}
-			.calendar-box input[type='text'] {
-				text-align: center;
-			}
-			.flatpickr-day.selected,
-			.flatpickr-day.today.selected {
-				background: #b7b7f9 !important;
-			}
-			.flatpickr-day.today:not(.selected) {
-				background: #e6e6f2 !important;
-				border: none !important;
-			}
-			.calendar-box .flatpickr-prev-month {
-				left: 16px;
-			}
-			.calendar-box .flatpickr-prev-month,
-			.calendar-box .flatpickr-next-month {
-				position: absolute;
-				top: 16px;
-				font-size: 1.25rem;
-			}
-			.flatpickr-calendar {
-				position: static !important; /* 절대위치 해제 */
-				transform: none !important; /* translateX 등 해제 */
-				margin: 0 auto !important; /* wrapper 가로 중앙에 */
-				width: 100% !important; /* wrapper(352px)에 맞춰 */
-				height: 100% !important; /* wrapper(346px)에 맞춰 */
-				border: none !important; /* 혹시 남아있는 border */
-				box-shadow: none !important;
-			}
-			#calendar.flatpickr-input {
-				display: none;
-			}
-			.icon-dot {
-				position: absolute;
-				bottom: 4px;
-				left: 50%;
-				transform: translateX(-50%);
-				display: flex;
-				gap: 2px;
-				font-size: 10px;
-				color: #333;
-				line-height: 1;
-				pointer-events: none;
-			}
-			.slide-up-panel {
-				position: fixed;
-				bottom: -500px;
-				left: 50%;
-				transform: translateX(-50%);
-				width: 393px;
-				height: 327px;
-				border-radius: 40px 40px 0 0;
-				background: #fff;
-				box-shadow: 0px 0px 16px 2px rgba(0, 0, 0, 0.16);
-				transition: bottom 0.3s ease-in-out;
-				z-index: 1000;
-				padding: 1rem;
-				box-sizing: border-box;
-				align-items: center;
-			}
-			.slide-up-panel.active {
-				bottom: 0px;
-			}
-			.drag-handle {
-				position: absolute;
-				top: 8px;
-				left: 50%;
-				transform: translateX(-50%);
-				width: 97px;
-				cursor: pointer;
-			}
-			.drag-handle svg {
-				width: 97px;
-				height: 6px;
-			}
-			.close-button {
-				position: absolute;
-				top: 8px;
-				left: 50%;
-				transform: translateX(-50%);
-				background: none;
-				border: none;
-				padding: 0;
-				z-index: 1002;
-			}
-			#scheduleDate {
-				width: 352px;
-				height: 29px;
-				flex-shrink: 0;
-				border-radius: 10px;
-				background: #e6e6f2;
-				display: flex;
-				align-items: center;
-				justify-content: center;
-				font-weight: bold;
-				margin-bottom: 0.5rem;
-			}
-			.schedule-item {
-				display: flex;
-				padding: 10px 7px;
-				align-items: center;
-				gap: 5px;
-				align-self: stretch;
-				border-bottom: 1px solid #e2e8f0;
-				cursor: pointer;
-				background: #fff;
-			}
-			.schedule-item span:first-child {
-				font-size: 14px;
-				line-height: normal;
-				display: inline-block;
-			}
-			.schedule-item span:nth-child(2) {
-				color: #757575;
-				text-align: center;
-				font-family: Pretendard, sans-serif;
-				font-size: 16px;
-				font-style: normal;
-				font-weight: 600;
-				line-height: normal;
-				letter-spacing: -0.24px;
-			}
-			.schedule-item-icon svg {
-				width: 14px;
-				height: 14px;
-				margin-top: 7px;
-			}
-			.container-wrapper {
-				padding: 0 1rem 100px;
-				box-sizing: border-box;
-				width: 100%;
-				max-width: 500px;
-			}
-			.today-info,
-			.schedule-info {
-				width: 100%;
-				max-width: 500px;
-				box-sizing: border-box;
-				display: flex;
-				align-items: center;
-				justify-content: flex-start;
-				font-weight: bold;
-				margin-top: 1rem;
-			}
-			.today-info img {
-				width: 32px;
-				height: 32px;
-				margin-left: 0.5rem;
-			}
-			.today-task-card {
-				display: flex;
-				justify-content: space-between;
-				align-items: center;
-				width: 352px;
-				height: 29px;
-				flex-shrink: 0;
-				border-radius: 10px;
-				background: #e6e6f2;
-				padding: 0.75rem 1rem;
-				border-radius: 0.5rem;
-				margin-bottom: 0.5rem;
-				width: 100%;
-				box-sizing: border-box;
-				color: #000;
-				font-family: Pretendard, sans-serif;
-				font-size: 14px;
-				font-style: normal;
-				font-weight: 500;
-				line-height: normal;
-				letter-spacing: -0.21px;
-			}
-			#todayTasksContainer {
-				display: flex;
-				flex-direction: column;
-				gap: 0.5rem;
-				width: 100%;
-				max-width: 500px;
-				box-sizing: border-box;
-				padding: 1rem;
-				background-color: #ffffff;
-				border-radius: 0.75rem;
-				box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
-				margin: 1rem auto 100px auto;
-			}
-			.bottom-nav {
-				width: 393px;
-				height: 49px;
-				background: #b7b7f9;
-				display: flex;
-				justify-content: space-around;
-				align-items: flex-start;
-				padding-top: 16px;
-				position: fixed;
-				bottom: 0;
-				left: 50%;
-				transform: translateX(-50%);
-				border-top-left-radius: 16px;
-				border-top-right-radius: 16px;
-				z-index: 10;
-			}
-			.nav-item {
-				position: relative;
-			}
-			.nav-circle {
-				width: 63px;
-				height: 63px;
-				background: #b7b7f9;
-				border-radius: 50%;
-				display: flex;
-				flex-direction: column;
-				align-items: center;
-				justify-content: center;
-				position: relative;
-				top: -40px;
-				z-index: 11;
-				cursor: pointer;
-			}
-			.nav-item.active .nav-circle {
-				background: #8b85f9;
-				border: 3px solid white;
-			}
-			.nav-circle img {
-				width: 24px;
-				height: 24px;
-				margin-bottom: 2px;
-			}
-			.circle-label {
-				font-size: 11px;
-				color: white;
-				line-height: 1;
-			}
-			.modal {
-				position: fixed;
-				top: 0;
-				left: 0;
-				display: none;
-				width: 100%;
-				height: 100%;
-				background: rgba(0, 0, 0, 0.4);
-				justify-content: center;
-				align-items: center;
-				z-index: 10000;
-			}
-			.modal-content {
-				background: white;
-				padding: 2rem;
-				border-radius: 16px;
-				text-align: center;
-				max-width: 300px;
-				width: 80%;
-				box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
-				animation: fadeIn 0.2s ease-in-out;
-			}
-			.modal-title {
-				font-size: 1.2rem;
-				font-weight: bold;
-				margin-bottom: 1rem;
-			}
-			#alertMessage {
-				font-size: 0.95rem;
-				margin-bottom: 1.5rem;
-				color: #111827;
-			}
-			.select-btn {
-				background-color: #3b82f6;
-				color: white;
-				border: none;
-				padding: 0.6rem 1.2rem;
-				font-size: 0.9rem;
-				border-radius: 8px;
-				cursor: pointer;
-				font-weight: bold;
-			}
-			.team-btn {
-				display: flex;
-				width: 107px;
-				height: 32px;
-				padding: 2px 14px;
-				justify-content: center;
-				align-items: center;
-				gap: 1px;
-				flex-shrink: 0;
-				border-radius: 40px;
-				border: 3px solid #fff;
-				background: transparent;
-				color: #fff;
-				cursor: pointer;
-			}
-			.select-btn:hover {
-				background-color: #2563eb;
-			}
+      .title {
+        position: absolute;
+        top: 16px;
+        left: 16px;
+        width: 81.62px;
+        height: 28px;
+        flex-shrink: 0;
+        color: #fff;
+        font-family: Pretendard, sans-serif;
+        font-size: 24px;
+        font-weight: 700;
+        line-height: normal;
+        letter-spacing: -0.21px;
+      }
+      .calendar-box {
+        width: 352px;
+        height: 346px;
+        margin: -80px auto 0; /* top:-80px, 좌우 auto로 정확히 중앙 */
+        background: #fff;
+        border-radius: 30px 30px 30px 0;
+        box-shadow: 4px 4px 16px 0px rgba(0, 0, 0, 0.1);
+        box-sizing: border-box;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        position: relative;
+        padding: 16px;
+        z-index: 1;
+      }
+      .calendar-box input[type='text'] {
+        text-align: center;
+      }
+      .flatpickr-day.selected,
+      .flatpickr-day.today.selected {
+        background: #b7b7f9 !important;
+      }
+      .flatpickr-day.today:not(.selected) {
+        background: #e6e6f2 !important;
+        border: none !important;
+      }
+      .calendar-box .flatpickr-prev-month,
+      .calendar-box .flatpickr-next-month {
+        position: absolute;
+        top: 16px;
+        font-size: 1.25rem;
+      }
+      .flatpickr-calendar {
+        position: static !important; /* 절대위치 해제 */
+        transform: none !important; /* translateX 등 해제 */
+        margin: 0 auto !important; /* wrapper 가로 중앙에 */
+        width: 100% !important; /* wrapper(352px)에 맞춰 */
+        height: 100% !important; /* wrapper(346px)에 맞춰 */
+        border: none !important; /* 혹시 남아있는 border */
+        box-shadow: none !important;
+        padding-left: 0 !important;
+        margin-left: 0 !important;
+      }
+      #calendar.flatpickr-input {
+        display: none;
+      }
+      .icon-dot {
+        position: absolute;
+        bottom: 4px;
+        left: 50%;
+        transform: translateX(-50%);
+        display: flex;
+        gap: 2px;
+        font-size: 10px;
+        color: #333;
+        line-height: 1;
+        pointer-events: none;
+      }
+      .slide-up-panel {
+        position: fixed;
+        bottom: -500px;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 393px;
+        height: 327px;
+        border-radius: 40px 40px 0 0;
+        background: #fff;
+        box-shadow: 0px 0px 16px 2px rgba(0, 0, 0, 0.16);
+        transition: bottom 0.3s ease-in-out;
+        z-index: 1000;
+        padding: 1rem;
+        box-sizing: border-box;
+        align-items: center;
+      }
+      .slide-up-panel.active {
+        bottom: 0px;
+      }
+      .drag-handle {
+        position: absolute;
+        top: 8px;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 97px;
+        cursor: pointer;
+      }
+      .drag-handle svg {
+        width: 97px;
+        height: 6px;
+      }
+      .close-button {
+        position: absolute;
+        top: 8px;
+        left: 50%;
+        transform: translateX(-50%);
+        background: none;
+        border: none;
+        padding: 0;
+        z-index: 1002;
+      }
+      #scheduleDate {
+        width: 352px;
+        height: 29px;
+        flex-shrink: 0;
+        border-radius: 10px;
+        background: #e6e6f2;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-weight: bold;
+        margin-bottom: 0.5rem;
+      }
+      .schedule-item {
+        display: flex;
+        padding: 10px 7px;
+        align-items: center;
+        gap: 5px;
+        align-self: stretch;
+        border-bottom: 1px solid #e2e8f0;
+        cursor: pointer;
+        background: #fff;
+      }
+      .schedule-item span:first-child {
+        font-size: 14px;
+        line-height: normal;
+        display: inline-block;
+      }
+      .schedule-item span:nth-child(2) {
+        color: #757575;
+        text-align: center;
+        font-family: Pretendard, sans-serif;
+        font-size: 16px;
+        font-style: normal;
+        font-weight: 600;
+        line-height: normal;
+        letter-spacing: -0.24px;
+      }
+      .schedule-item-icon svg {
+        width: 14px;
+        height: 14px;
+        margin-top: 7px;
+      }
+      .container-wrapper {
+        padding: 0 1rem 100px;
+        box-sizing: border-box;
+        width: 100%;
+        max-width: 500px;
+      }
+      .today-info,
+      .schedule-info {
+        width: 100%;
+        max-width: 500px;
+        box-sizing: border-box;
+        display: flex;
+        align-items: center;
+        justify-content: flex-start;
+        font-weight: bold;
+        margin-top: 1rem;
+      }
+      .today-info img {
+        width: 32px;
+        height: 32px;
+        margin-left: 0.5rem;
+      }
+      .today-task-card {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        width: 352px;
+        height: 29px;
+        flex-shrink: 0;
+        border-radius: 10px;
+        background: #e6e6f2;
+        padding: 0.75rem 1rem;
+        border-radius: 0.5rem;
+        margin-bottom: 0.5rem;
+        width: 100%;
+        box-sizing: border-box;
+        color: #000;
+        font-family: Pretendard, sans-serif;
+        font-size: 14px;
+        font-style: normal;
+        font-weight: 500;
+        line-height: normal;
+        letter-spacing: -0.21px;
+      }
+      #todayTasksContainer {
+        display: flex;
+        flex-direction: column;
+        gap: 0.5rem;
+        width: 100%;
+        max-width: 500px;
+        box-sizing: border-box;
+        padding: 1rem;
+        background-color: #ffffff;
+        border-radius: 0.75rem;
+        box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+        margin: 1rem auto 100px auto;
+      }
+      .bottom-nav {
+        width: 393px;
+        height: 49px;
+        background: #b7b7f9;
+        display: flex;
+        justify-content: space-around;
+        align-items: flex-start;
+        padding-top: 16px;
+        position: fixed;
+        bottom: 0;
+        left: 50%;
+        transform: translateX(-50%);
+        border-top-left-radius: 16px;
+        border-top-right-radius: 16px;
+        z-index: 10;
+      }
+      .nav-item {
+        position: relative;
+      }
+      .flatpickr-current-month {
+        justify-content: flex-start !important;
+        text-align: left !important;
+        width: 100% !important;
+        font-family: 'Pretendard', Arial, sans-serif !important;
+        font-weight: 600 !important;
+        font-size: 24px !important;
+        line-height: 29px !important;
+        letter-spacing: -1.5%;
+        color: #222;
+        margin-bottom: 6px;
+        box-sizing: border-box;
+        display: flex !important;
+        align-items: center;
+        padding-left: 0 !important;
+        margin-left: 0 !important;
+        justify-content: flex-start !important;
+      }
+      .nav-circle {
+        width: 63px;
+        height: 63px;
+        background: #b7b7f9;
+        border-radius: 50%;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        position: relative;
+        top: -40px;
+        z-index: 11;
+        cursor: pointer;
+      }
+      .nav-item.active .nav-circle {
+        background: #8b85f9;
+        border: 3px solid white;
+      }
+      .nav-circle img {
+        width: 24px;
+        height: 24px;
+        margin-bottom: 2px;
+      }
+      .circle-label {
+        font-size: 11px;
+        color: white;
+        line-height: 1;
+      }
+      .modal {
+        position: fixed;
+        top: 0;
+        left: 0;
+        display: none;
+        width: 100%;
+        height: 100%;
+        background: rgba(0, 0, 0, 0.4);
+        justify-content: center;
+        align-items: center;
+        z-index: 10000;
+      }
+      .modal-content {
+        background: white;
+        padding: 2rem;
+        border-radius: 16px;
+        text-align: center;
+        max-width: 300px;
+        width: 80%;
+        box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+        animation: fadeIn 0.2s ease-in-out;
+      }
+      .modal-title {
+        font-size: 1.2rem;
+        font-weight: bold;
+        margin-bottom: 1rem;
+      }
+      #alertMessage {
+        font-size: 0.95rem;
+        margin-bottom: 1.5rem;
+        color: #111827;
+      }
+      .select-btn {
+        background-color: #3b82f6;
+        color: white;
+        border: none;
+        padding: 0.6rem 1.2rem;
+        font-size: 0.9rem;
+        border-radius: 8px;
+        cursor: pointer;
+        font-weight: bold;
+      }
+      .team-btn {
+        display: flex;
+        width: 107px;
+        height: 32px;
+        padding: 2px 14px;
+        justify-content: center;
+        align-items: center;
+        gap: 1px;
+        flex-shrink: 0;
+        border-radius: 40px;
+        border: 3px solid #fff;
+        background: transparent;
+        color: #fff;
+        cursor: pointer;
+      }
+      .select-btn:hover {
+        background-color: #2563eb;
+      }
 
-			.delete-button:hover {
-				background-color: #dc2626;
-			}
-			@keyframes fadeIn {
-				from {
-					opacity: 0;
-					transform: scale(0.95);
-				}
-				to {
-					opacity: 1;
-					transform: scale(1);
-				}
-			}
-			.team-container {
-				position: absolute;
-				top: 16px; /* header padding과 일치 */
-				right: 40px;
-				z-index: 100;
-			}
-			.alert-banner {
-				background-color: #fff7ed;
-				color: #b45309;
-				font-weight: bold;
-				padding: 0.75rem 1rem;
-				text-align: left;
-				border-bottom: 1px solid #fcd34d;
-				width: 100%;
-				max-width: 500px;
-				box-sizing: border-box;
-				display: flex;
-				justify-content: space-between;
-				align-items: center;
-			}
-			.alert-banner button {
-				background: none;
-				border: none;
-				font-size: 1.25rem;
-				cursor: pointer;
-				color: #b45309;
-			}
-			.user-info {
-				display: flex;
-				align-items: center;
-			}
-			.user-name {
-				color: #fff;
-				color: #fff;
-				font-family: Pretendard;
-				font-size: 26.899px;
-				font-style: normal;
-				font-weight: 500;
-				line-height: normal;
-				letter-spacing: -0.403px;
-			}
-			.flatpickr-current-month .flatpickr-monthDropdown-months,
-			.flatpickr-current-month
-				.flatpickr-monthDropdown-months
-				+ .numInputWrapper {
-				display: none !important;
-			}
+      .delete-button:hover {
+        background-color: #dc2626;
+      }
+      @keyframes fadeIn {
+        from {
+          opacity: 0;
+          transform: scale(0.95);
+        }
+        to {
+          opacity: 1;
+          transform: scale(1);
+        }
+      }
+      .team-container {
+        position: absolute;
+        top: 16px; /* header padding과 일치 */
+        right: 40px;
+        z-index: 100;
+      }
+      .alert-banner {
+        background-color: #fff7ed;
+        color: #b45309;
+        font-weight: bold;
+        padding: 0.75rem 1rem;
+        text-align: left;
+        border-bottom: 1px solid #fcd34d;
+        width: 100%;
+        max-width: 500px;
+        box-sizing: border-box;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+      }
+      .alert-banner button {
+        background: none;
+        border: none;
+        font-size: 1.25rem;
+        cursor: pointer;
+        color: #b45309;
+      }
+      .user-info {
+        display: flex;
+        align-items: center;
+      }
+      .user-name {
+        color: #fff;
+        color: #fff;
+        font-family: Pretendard;
+        font-size: 26.899px;
+        font-style: normal;
+        font-weight: 500;
+        line-height: normal;
+        letter-spacing: -0.403px;
+      }
+      .flatpickr-current-month .flatpickr-monthDropdown-months,
+      .flatpickr-current-month
+        .flatpickr-monthDropdown-months
+        + .numInputWrapper {
+        display: none !important;
+      }
 
-			/* 월 텍스트만 보이도록 처리 */
-			.flatpickr-current-month .cur-month {
-				font-size: 1.5rem;
-				font-weight: bold;
-				pointer-events: none;
-				background: none !important;
-				color: #333;
-			}
-			.team-header-row {
-				display: flex;
-				align-items: center;
-				gap: 12px;
-				position: absolute;
-				top: 180px;
-				left: 40px;
-				z-index: 10;
-			}
+      /* 월 텍스트만 보이도록 처리 */
+      .flatpickr-current-month .cur-month {
+        font-size: 1.5rem;
+        font-weight: bold;
+        pointer-events: none;
+        background: none !important;
+        color: #333;
+      }
+      .team-header-row {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        position: absolute;
+        top: 180px;
+        left: 40px;
+        z-index: 10;
+      }
 
-			.invite-wrapper {
-				display: flex;
-				flex-direction: column;
-				position: relative;
-				margin-left: 12px;
-			}
+      .invite-wrapper {
+        display: flex;
+        flex-direction: column;
+        position: relative;
+        margin-left: 12px;
+      }
 
-			.invite-btn {
-				font-size: 16px;
-				color: #fff;
-				cursor: pointer;
-				border: none;
-				background: none;
-				padding-bottom: 2px;
-				border-bottom: 2px solid #fff;
-				font-family: Pretendard, sans-serif;
-			}
+      .invite-btn {
+        font-size: 16px;
+        color: #fff;
+        cursor: pointer;
+        border: none;
+        background: none;
+        padding-bottom: 2px;
+        border-bottom: 2px solid #fff;
+        font-family: Pretendard, sans-serif;
+      }
 
-			.invite-dropdown-menu {
-				display: none;
-				flex-direction: column;
-				background: #8c8cd9;
-				border-radius: 10px;
-				box-shadow: 0 2px 8px rgba(60, 60, 60, 0.15);
-				position: absolute;
-				top: 28px;
-				left: 50%;
-				transform: translateX(-50%);
-				width: 145px;
-				height: 90px;
-				z-index: 999;
-				padding: 0;
-				overflow: hidden;
-			}
+      .invite-dropdown-menu {
+        display: none;
+        flex-direction: column;
+        background: #8c8cd9;
+        border-radius: 10px;
+        box-shadow: 0 2px 8px rgba(60, 60, 60, 0.15);
+        position: absolute;
+        top: 28px;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 145px;
+        height: 90px;
+        z-index: 999;
+        padding: 0;
+        overflow: hidden;
+      }
 
-			.invite-dropdown-menu .invite-menu-item {
-				height: 30px;
-				line-height: 30px;
-				padding-left: 16px;
-				color: #fff;
-				font-weight: 500;
-				font-size: 14px;
-				cursor: pointer;
-				background: none;
-				border: none;
-				text-align: left;
-				transition: background 0.13s;
-			}
+      .invite-dropdown-menu .invite-menu-item {
+        height: 30px;
+        line-height: 30px;
+        padding-left: 16px;
+        color: #fff;
+        font-weight: 500;
+        font-size: 14px;
+        cursor: pointer;
+        background: none;
+        border: none;
+        text-align: left;
+        transition: background 0.13s;
+      }
 
-			.invite-dropdown-menu .invite-menu-item:not(:last-child) {
-				border-bottom: 1px solid #edeafd;
-			}
+      .invite-dropdown-menu .invite-menu-item:not(:last-child) {
+        border-bottom: 1px solid #edeafd;
+      }
 
-			.invite-dropdown-menu .invite-menu-item:hover {
-				background: #edeafd;
-			}
-			.modal {
-				position: fixed;
-				top: 0;
-				left: 0;
-				width: 100vw;
-				height: 100vh;
-				display: flex;
-				justify-content: center;
-				align-items: center;
-				background: rgba(0, 0, 0, 0.22);
-				z-index: 10000;
-			}
-			.invite-modal-content {
-				width: 240px; /* 이미지 기준 */
-				background: #e7e6fa;
-				border-radius: 16px;
-				box-shadow: 0 4px 20px rgba(30, 30, 80, 0.15);
-				display: flex;
-				flex-direction: column;
-				align-items: center;
-				padding: 22px 18px 14px 18px;
-				position: relative;
-			}
-			.invite-modal-title {
-				text-align: center;
-				margin-bottom: 13px;
-				letter-spacing: -0.2px;
-			}
-			.invite-modal-input {
-				width: 100%;
-				padding: 7px 12px;
-				border: none;
-				border-radius: 6px;
-				font-size: 15px;
-				background: #fff;
-				margin-bottom: 20px;
-				outline: none;
-			}
-			.invite-modal-buttons {
-				display: flex;
-				width: 100%;
-				border-top: 1.4px solid #c5c2ef;
-				margin-top: 7px;
-			}
-			.invite-modal-buttons button {
-				width: 50%;
-				padding: 10px 0;
-				background: none;
-				border: none;
-				font-size: 15px;
-				font-weight: 500;
-				color: #6667ab;
-				cursor: pointer;
-				outline: none;
-			}
-			.invite-modal-buttons button:active {
-				background: #e0e0f8;
-			}
-			.invite-divider {
-				width: 1.2px;
-				background: #c5c2ef;
-				height: 100%;
-			}
-		</style>
-	</head>
-	<body>
-		<div class="fixed-container">
-			<div class="header">
-				<div class="user-info">
-					<div class="team-header-row">
-						<div id="userName" class="user-name" style="font: Pretendard"></div>
-						<div class="invite-wrapper">
-							<span id="inviteBtn" class="invite-btn">초대하기</span>
-							<div id="inviteDropdownMenu" class="invite-dropdown-menu">
-								<div class="invite-menu-item" onclick="openInviteMember()">
-									팀원 초대하기
-								</div>
-								<div class="invite-menu-item" onclick="openMemberList()">
-									팀원 확인하기
-								</div>
-								<div class="invite-menu-item" onclick="openInviteList()">
-									초대장 확인하기
-								</div>
-							</div>
-						</div>
-					</div>
-					<div id="userName" class="user-name"></div>
-				</div>
-				<div class="title">
-					<svg
-						xmlns="http://www.w3.org/2000/svg"
-						width="82"
-						height="28"
-						viewBox="0 0 82 28"
-						fill="none"
-					>
-						<path
-							d="M17.0274 20.3462V22.7291H7.5361C2.95003 22.7291 0 19.9273 0 15.7391V3.17456H2.75739V15.5456C2.75739 18.4774 4.64932 20.3462 7.5361 20.3462C10.4229 20.3462 12.3148 18.4774 12.3148 15.5456V3.17456H15.0722V15.7391C15.0722 17.8015 14.3333 19.3468 13.3729 20.3462H17.0274Z"
-							fill="white"
-						/>
-						<path
-							d="M16.706 22.7314V20.3485L16.9619 20.3167C18.02 20.1867 18.4685 19.5744 18.4685 18.3179V9.04033H21.1627V10.3603C22.1259 9.26563 23.5664 8.68506 25.3318 8.68506C28.8598 8.68506 31.137 11.0045 31.137 14.6439V18.315C31.137 19.5715 31.5856 20.1838 32.6437 20.3138L32.8996 20.3456V22.7285H32.5459C29.7253 22.7285 28.44 20.9897 28.44 18.315V14.8345C28.44 12.4833 26.9017 11.1287 24.7855 11.1287C22.6693 11.1287 21.1627 12.6739 21.1627 14.8345V18.315C21.1627 20.9897 19.8803 22.7285 17.0568 22.7285H16.7031L16.706 22.7314Z"
-							fill="white"
-						/>
-						<path
-							d="M38.8002 20.3448V22.7277H32.5781V20.3448H34.3407V9.03662H37.0348V20.3448H38.7974H38.8002Z"
-							fill="white"
-						/>
-						<path
-							d="M52.3977 21.1986V22.6832H52.0785C51.2591 22.6832 50.4396 22.3828 49.9623 21.4181C49.4218 22.1806 48.1653 22.6832 46.926 22.6832H41.5723V21.1986H43.631C42.9524 20.4765 42.593 19.5146 42.593 18.3708C42.593 15.9041 44.3498 14.096 46.8887 14.096C47.527 14.096 48.1279 14.1769 48.6253 14.3964V15.881C48.0848 15.7019 47.6075 15.6211 46.9663 15.6211C45.4079 15.6211 44.2693 16.7851 44.2693 18.3911C44.2693 19.997 45.3676 21.1986 46.926 21.1986C48.4844 21.1986 49.623 20.0346 49.623 18.4488V10.1013H51.3022V19.9335C51.3022 20.7162 51.5811 21.0975 52.2395 21.1784L52.4006 21.1986H52.3977Z"
-							fill="white"
-						/>
-						<path
-							d="M52.2012 22.6859V21.2012H54.2771C53.5784 20.4589 53.219 19.4971 53.219 18.3937C53.219 15.8866 55.0362 14.0986 57.5521 14.0986C58.0926 14.0986 58.59 14.1795 59.0501 14.3586V15.8837C58.5699 15.7046 58.0322 15.6237 57.5923 15.6237C55.9735 15.6237 54.8953 16.7473 54.8953 18.3937C54.8953 20.0401 55.9937 21.2012 57.5923 21.2012C59.191 21.2012 60.2491 20.0979 60.2491 18.4312V14.1564H61.9282V19.5346C61.9282 20.5773 62.2071 21.1001 62.8656 21.181L63.0266 21.2012V22.6859H62.7074C61.6493 22.6859 60.9104 22.2237 60.5912 21.4208C60.0708 22.1429 58.8143 22.6859 57.5952 22.6859H52.2012Z"
-							fill="white"
-						/>
-						<path
-							d="M63.9801 24.1294V24.0081C63.9801 23.1849 63.6006 22.6852 62.9824 22.6852V21.2006C64.6788 21.1804 65.6794 22.1826 65.6794 24.0486V24.1294C65.6794 25.4928 66.657 26.4979 68.017 26.4979C69.377 26.4979 70.3546 25.4957 70.3546 24.1294V21.0388C69.8745 21.5414 68.8767 21.9025 67.9566 21.9025C65.619 21.9025 64.0233 20.3572 64.0233 18.0898V14.1558H65.7024V18.1071C65.7024 19.4704 66.6599 20.4149 67.9998 20.4149C69.3397 20.4149 70.3575 19.4733 70.3575 18.1273V14.1558H72.0367V21.5385C72.2753 21.3392 72.7354 21.1977 73.1753 21.1977V22.6823C72.4363 22.7026 72.0367 23.1445 72.0367 23.8262V24.1266C72.0367 26.3737 70.3403 27.9999 68.0228 27.9999C65.7053 27.9999 63.9888 26.3737 63.9888 24.1266L63.9801 24.1294Z"
-							fill="white"
-						/>
-						<path
-							d="M81.6167 21.1985V22.6831H73.1289V21.1985H77.8616C78.9398 21.1985 79.2791 20.7565 79.2791 20.1962C79.2791 19.6358 78.799 19.0928 76.7633 18.7722C74.5665 18.4314 73.7873 17.4869 73.7873 16.2448C73.7873 14.8613 74.7074 13.937 76.4844 13.937H80.32V15.4217H76.4642C75.7857 15.4217 75.4665 15.722 75.4665 16.2448C75.4665 16.8081 75.8863 17.1691 77.9622 17.5504C80.1388 17.9519 80.9985 18.934 80.9985 20.1384C80.9985 20.5399 80.9382 20.8808 80.8001 21.2014H81.6196L81.6167 21.1985Z"
-							fill="white"
-						/>
-						<g opacity="0.99">
-							<path
-								d="M39.5051 3.75493C36.095 3.93113 35.9484 4.07843 35.7673 7.50409C35.5919 4.07843 35.4452 3.93112 32.0352 3.74915C35.4452 3.57296 35.5919 3.42565 35.773 0C35.9484 3.42565 36.095 3.57296 39.5051 3.75493Z"
-								fill="white"
-							/>
-						</g>
-					</svg>
-				</div>
-				<div class="team-container">
-					<button onclick="window.location.href='home.html'" class="team-btn">
-						<img src="mdi_cached.png" width="24" alt="icon" />
-						ME
-					</button>
-				</div>
-			</div>
-			<div class="calendar-box">
-				<input
-					id="calendar"
-					type="text"
-					placeholder="날짜 선택"
-					style="
-						width: 100%;
-						padding: 0.5rem;
-						border-radius: 0.5rem;
-						border: 1px solid #ccc;
-						text-align: center;
-						margin-bottom: 0.5rem;
-					"
-				/>
-			</div>
-			<div id="alertContainer"></div>
-			<div class="container-wrapper">
-				<div class="slide-up-panel" id="schedulePanel">
-					<button class="close-button" onclick="closePanel()">
-						<svg
-							xmlns="http://www.w3.org/2000/svg"
-							width="103"
-							height="6"
-							viewBox="0 0 103 6"
-							fill="none"
-						>
-							<path
-								d="M3 3H100"
-								stroke="#505050"
-								stroke-width="5"
-								stroke-linecap="round"
-							/>
-						</svg>
-					</button>
-					<div class="slide-up-panel-inner">
-						<div class="drag-handle" id="dragHandle">
-							<svg
-								xmlns="http://www.w3.org/2000/svg"
-								viewBox="0 0 103 6"
-								fill="none"
-							>
-								<path d="M3 3H100" stroke-linecap="round" />
-							</svg>
-						</div>
-						<div
-							id="scheduleDate"
-							style="margin-bottom: 0.5rem; font-weight: bold"
-						></div>
-						<div id="scheduleList"></div>
-					</div>
-				</div>
-				<div class="today-info">Today</div>
-				<div class="schedule-info" id="todayTasksContainer"></div>
-				<div class="schedule-info" id="upcomingDdays"></div>
-			</div>
+      .invite-dropdown-menu .invite-menu-item:hover {
+        background: #edeafd;
+      }
+      .modal {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100vw;
+        height: 100vh;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        background: rgba(0, 0, 0, 0.22);
+        z-index: 10000;
+      }
+      .invite-modal-content {
+        width: 240px; /* 이미지 기준 */
+        background: #e7e6fa;
+        border-radius: 16px;
+        box-shadow: 0 4px 20px rgba(30, 30, 80, 0.15);
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        padding: 22px 18px 14px 18px;
+        position: relative;
+      }
+      .invite-modal-title {
+        text-align: center;
+        margin-bottom: 13px;
+        letter-spacing: -0.2px;
+      }
+      .invite-modal-input {
+        width: 100%;
+        padding: 7px 12px;
+        border: none;
+        border-radius: 6px;
+        font-size: 15px;
+        background: #fff;
+        margin-bottom: 20px;
+        outline: none;
+      }
+      .invite-modal-buttons {
+        display: flex;
+        width: 100%;
+        border-top: 1.4px solid #c5c2ef;
+        margin-top: 7px;
+      }
+      .invite-modal-buttons button {
+        width: 50%;
+        padding: 10px 0;
+        background: none;
+        border: none;
+        font-size: 15px;
+        font-weight: 500;
+        color: #6667ab;
+        cursor: pointer;
+        outline: none;
+      }
+      .invite-modal-buttons button:active {
+        background: #e0e0f8;
+      }
+      .invite-divider {
+        width: 1.2px;
+        background: #c5c2ef;
+        height: 100%;
+      }
+      .flatpickr-prev-month,
+      .flatpickr-next-month {
+        display: none !important;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="fixed-container">
+      <div class="header">
+        <div class="user-info">
+          <div class="team-header-row">
+            <div id="userName" class="user-name" style="font: Pretendard"></div>
+            <div class="invite-wrapper">
+              <span id="inviteBtn" class="invite-btn">초대하기</span>
+              <div id="inviteDropdownMenu" class="invite-dropdown-menu">
+                <div class="invite-menu-item" onclick="openInviteMember()">
+                  팀원 초대하기
+                </div>
+                <div class="invite-menu-item" onclick="openMemberList()">
+                  팀원 확인하기
+                </div>
+                <div class="invite-menu-item" onclick="openInviteList()">
+                  초대장 확인하기
+                </div>
+              </div>
+            </div>
+          </div>
+          <div id="userName" class="user-name"></div>
+        </div>
+        <div class="title">
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            width="82"
+            height="28"
+            viewBox="0 0 82 28"
+            fill="none"
+          >
+            <path
+              d="M17.0274 20.3462V22.7291H7.5361C2.95003 22.7291 0 19.9273 0 15.7391V3.17456H2.75739V15.5456C2.75739 18.4774 4.64932 20.3462 7.5361 20.3462C10.4229 20.3462 12.3148 18.4774 12.3148 15.5456V3.17456H15.0722V15.7391C15.0722 17.8015 14.3333 19.3468 13.3729 20.3462H17.0274Z"
+              fill="white"
+            />
+            <path
+              d="M16.706 22.7314V20.3485L16.9619 20.3167C18.02 20.1867 18.4685 19.5744 18.4685 18.3179V9.04033H21.1627V10.3603C22.1259 9.26563 23.5664 8.68506 25.3318 8.68506C28.8598 8.68506 31.137 11.0045 31.137 14.6439V18.315C31.137 19.5715 31.5856 20.1838 32.6437 20.3138L32.8996 20.3456V22.7285H32.5459C29.7253 22.7285 28.44 20.9897 28.44 18.315V14.8345C28.44 12.4833 26.9017 11.1287 24.7855 11.1287C22.6693 11.1287 21.1627 12.6739 21.1627 14.8345V18.315C21.1627 20.9897 19.8803 22.7285 17.0568 22.7285H16.7031L16.706 22.7314Z"
+              fill="white"
+            />
+            <path
+              d="M38.8002 20.3448V22.7277H32.5781V20.3448H34.3407V9.03662H37.0348V20.3448H38.7974H38.8002Z"
+              fill="white"
+            />
+            <path
+              d="M52.3977 21.1986V22.6832H52.0785C51.2591 22.6832 50.4396 22.3828 49.9623 21.4181C49.4218 22.1806 48.1653 22.6832 46.926 22.6832H41.5723V21.1986H43.631C42.9524 20.4765 42.593 19.5146 42.593 18.3708C42.593 15.9041 44.3498 14.096 46.8887 14.096C47.527 14.096 48.1279 14.1769 48.6253 14.3964V15.881C48.0848 15.7019 47.6075 15.6211 46.9663 15.6211C45.4079 15.6211 44.2693 16.7851 44.2693 18.3911C44.2693 19.997 45.3676 21.1986 46.926 21.1986C48.4844 21.1986 49.623 20.0346 49.623 18.4488V10.1013H51.3022V19.9335C51.3022 20.7162 51.5811 21.0975 52.2395 21.1784L52.4006 21.1986H52.3977Z"
+              fill="white"
+            />
+            <path
+              d="M52.2012 22.6859V21.2012H54.2771C53.5784 20.4589 53.219 19.4971 53.219 18.3937C53.219 15.8866 55.0362 14.0986 57.5521 14.0986C58.0926 14.0986 58.59 14.1795 59.0501 14.3586V15.8837C58.5699 15.7046 58.0322 15.6237 57.5923 15.6237C55.9735 15.6237 54.8953 16.7473 54.8953 18.3937C54.8953 20.0401 55.9937 21.2012 57.5923 21.2012C59.191 21.2012 60.2491 20.0979 60.2491 18.4312V14.1564H61.9282V19.5346C61.9282 20.5773 62.2071 21.1001 62.8656 21.181L63.0266 21.2012V22.6859H62.7074C61.6493 22.6859 60.9104 22.2237 60.5912 21.4208C60.0708 22.1429 58.8143 22.6859 57.5952 22.6859H52.2012Z"
+              fill="white"
+            />
+            <path
+              d="M63.9801 24.1294V24.0081C63.9801 23.1849 63.6006 22.6852 62.9824 22.6852V21.2006C64.6788 21.1804 65.6794 22.1826 65.6794 24.0486V24.1294C65.6794 25.4928 66.657 26.4979 68.017 26.4979C69.377 26.4979 70.3546 25.4957 70.3546 24.1294V21.0388C69.8745 21.5414 68.8767 21.9025 67.9566 21.9025C65.619 21.9025 64.0233 20.3572 64.0233 18.0898V14.1558H65.7024V18.1071C65.7024 19.4704 66.6599 20.4149 67.9998 20.4149C69.3397 20.4149 70.3575 19.4733 70.3575 18.1273V14.1558H72.0367V21.5385C72.2753 21.3392 72.7354 21.1977 73.1753 21.1977V22.6823C72.4363 22.7026 72.0367 23.1445 72.0367 23.8262V24.1266C72.0367 26.3737 70.3403 27.9999 68.0228 27.9999C65.7053 27.9999 63.9888 26.3737 63.9888 24.1266L63.9801 24.1294Z"
+              fill="white"
+            />
+            <path
+              d="M81.6167 21.1985V22.6831H73.1289V21.1985H77.8616C78.9398 21.1985 79.2791 20.7565 79.2791 20.1962C79.2791 19.6358 78.799 19.0928 76.7633 18.7722C74.5665 18.4314 73.7873 17.4869 73.7873 16.2448C73.7873 14.8613 74.7074 13.937 76.4844 13.937H80.32V15.4217H76.4642C75.7857 15.4217 75.4665 15.722 75.4665 16.2448C75.4665 16.8081 75.8863 17.1691 77.9622 17.5504C80.1388 17.9519 80.9985 18.934 80.9985 20.1384C80.9985 20.5399 80.9382 20.8808 80.8001 21.2014H81.6196L81.6167 21.1985Z"
+              fill="white"
+            />
+            <g opacity="0.99">
+              <path
+                d="M39.5051 3.75493C36.095 3.93113 35.9484 4.07843 35.7673 7.50409C35.5919 4.07843 35.4452 3.93112 32.0352 3.74915C35.4452 3.57296 35.5919 3.42565 35.773 0C35.9484 3.42565 36.095 3.57296 39.5051 3.75493Z"
+                fill="white"
+              />
+            </g>
+          </svg>
+        </div>
+        <div class="team-container">
+          <button onclick="window.location.href='home.html'" class="team-btn">
+            <img src="mdi_cached.png" width="24" alt="icon" />
+            ME
+          </button>
+        </div>
+      </div>
+      <div class="calendar-box">
+        <input
+          id="calendar"
+          type="text"
+          placeholder="날짜 선택"
+          style="
+            width: 100%;
+            padding: 0.5rem;
+            border-radius: 0.5rem;
+            border: 1px solid #ccc;
+            text-align: center;
+            margin-bottom: 0.5rem;
+          "
+        />
+      </div>
+      <div id="alertContainer"></div>
+      <div class="container-wrapper">
+        <div class="slide-up-panel" id="schedulePanel">
+          <button class="close-button" onclick="closePanel()">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="103"
+              height="6"
+              viewBox="0 0 103 6"
+              fill="none"
+            >
+              <path
+                d="M3 3H100"
+                stroke="#505050"
+                stroke-width="5"
+                stroke-linecap="round"
+              />
+            </svg>
+          </button>
+          <div class="slide-up-panel-inner">
+            <div class="drag-handle" id="dragHandle">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                viewBox="0 0 103 6"
+                fill="none"
+              >
+                <path d="M3 3H100" stroke-linecap="round" />
+              </svg>
+            </div>
+            <div
+              id="scheduleDate"
+              style="margin-bottom: 0.5rem; font-weight: bold"
+            ></div>
+            <div id="scheduleList"></div>
+          </div>
+        </div>
+        <div class="today-info">Today</div>
+        <div class="schedule-info" id="todayTasksContainer"></div>
+        <div class="schedule-info" id="upcomingDdays"></div>
+      </div>
 
-			<div class="bottom-nav">
-				<div
-					class="nav-item active"
-					onclick="location.href='team-calendar.html'"
-				>
-					<div class="nav-circle">
-						<img
-							src="https://img.icons8.com/ios-filled/50/ffffff/home.png"
-							alt="피드"
-						/>
-						<span class="circle-label">피드</span>
-					</div>
-				</div>
-				<div
-					class="nav-item"
-					onclick="location.href='../kimgabelow/homepage2.html'"
-				>
-					<div class="nav-circle">
-						<img
-							src="https://img.icons8.com/ios-filled/50/ffffff/compass--v1.png"
-							alt="공지"
-						/>
-						<span class="circle-label">공지</span>
-					</div>
-				</div>
-				<div
-					class="nav-item"
-					onclick="location.href='../notification/notification.html'"
-				>
-					<div class="nav-circle">
-						<img
-							src="https://img.icons8.com/ios-filled/50/ffffff/appointment-reminders.png"
-							alt="알림"
-						/>
-						<span class="circle-label">알림</span>
-					</div>
-				</div>
-				<div class="nav-item" onclick="location.href='../Mypage/mypage.html'">
-					<div class="nav-circle">
-						<img
-							src="https://img.icons8.com/ios-filled/50/ffffff/user.png"
-							alt="MY"
-						/>
-						<span class="circle-label">MY</span>
-					</div>
-				</div>
-			</div>
-			<div id="alertModal" class="modal" style="display: none">
-				<div class="modal-content">
-					<div class="modal-title">알림</div>
-					<div id="alertMessage">삭제되었습니다.</div>
-					<button class="select-btn" onclick="closeAlertModal()">확인</button>
-				</div>
-			</div>
-			<div id="inviteModal" class="modal" style="display: none">
-				<div class="invite-modal-content">
-					<div
-						style="
-							width: 100%;
-							display: flex;
-							justify-content: center;
-							margin-bottom: 2px;
-							margin-top: -17px;
-						"
-					>
-						<img
-							src="Group 47.png"
-							alt="별 아이콘"
-							width="56"
-							height="25"
-							style="display: block"
-						/>
-					</div>
-					<div class="invite-modal-title">
-						<span
-							style="
-								color: #000;
-								font-family: 'Pretendard Variable', Pretendard, sans-serif;
-								font-weight: 500;
-								font-size: 16px;
-								line-height: 100%;
-								letter-spacing: 0;
-								width: 100%;
-								display: inline-block;
-								text-align: center;
-							"
-							>추가할 친구의 이메일 주소를<br />입력해 주세요.</span
-						>
-					</div>
-					<input
-						id="inviteEmailInput"
-						class="invite-modal-input"
-						type="email"
-						placeholder="이메일 입력"
-					/>
-					<div class="invite-modal-buttons">
-						<button id="inviteDoneBtn">완료</button>
-						<div class="invite-divider"></div>
-						<button id="inviteAddBtn">추가</button>
-					</div>
-				</div>
-			</div>
-		</div>
-		<script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
-		<script>
-			function getSvgIcon(type) {
-				if (type === '시험') {
-					return `<svg xmlns="http://www.w3.org/2000/svg" width="14" height="15" viewBox="0 0 14 15" fill="none">
+      <div class="bottom-nav">
+        <div
+          class="nav-item active"
+          onclick="location.href='team-calendar.html'"
+        >
+          <div class="nav-circle">
+            <img
+              src="https://img.icons8.com/ios-filled/50/ffffff/home.png"
+              alt="피드"
+            />
+            <span class="circle-label">피드</span>
+          </div>
+        </div>
+        <div
+          class="nav-item"
+          onclick="location.href='../kimgabelow/homepage2.html'"
+        >
+          <div class="nav-circle">
+            <img
+              src="https://img.icons8.com/ios-filled/50/ffffff/compass--v1.png"
+              alt="공지"
+            />
+            <span class="circle-label">공지</span>
+          </div>
+        </div>
+        <div
+          class="nav-item"
+          onclick="location.href='../notification/notification.html'"
+        >
+          <div class="nav-circle">
+            <img
+              src="https://img.icons8.com/ios-filled/50/ffffff/appointment-reminders.png"
+              alt="알림"
+            />
+            <span class="circle-label">알림</span>
+          </div>
+        </div>
+        <div class="nav-item" onclick="location.href='../Mypage/mypage.html'">
+          <div class="nav-circle">
+            <img
+              src="https://img.icons8.com/ios-filled/50/ffffff/user.png"
+              alt="MY"
+            />
+            <span class="circle-label">MY</span>
+          </div>
+        </div>
+      </div>
+      <div id="alertModal" class="modal" style="display: none">
+        <div class="modal-content">
+          <div class="modal-title">알림</div>
+          <div id="alertMessage">삭제되었습니다.</div>
+          <button class="select-btn" onclick="closeAlertModal()">확인</button>
+        </div>
+      </div>
+      <div id="inviteModal" class="modal" style="display: none">
+        <div class="invite-modal-content">
+          <div
+            style="
+              width: 100%;
+              display: flex;
+              justify-content: center;
+              margin-bottom: 2px;
+              margin-top: -17px;
+            "
+          >
+            <img
+              src="Group 47.png"
+              alt="별 아이콘"
+              width="56"
+              height="25"
+              style="display: block"
+            />
+          </div>
+          <div class="invite-modal-title">
+            <span
+              style="
+                color: #000;
+                font-family: 'Pretendard Variable', Pretendard, sans-serif;
+                font-weight: 500;
+                font-size: 16px;
+                line-height: 100%;
+                letter-spacing: 0;
+                width: 100%;
+                display: inline-block;
+                text-align: center;
+              "
+              >추가할 친구의 이메일 주소를<br />입력해 주세요.</span
+            >
+          </div>
+          <input
+            id="inviteEmailInput"
+            class="invite-modal-input"
+            type="email"
+            placeholder="이메일 입력"
+          />
+          <div class="invite-modal-buttons">
+            <button id="inviteDoneBtn">완료</button>
+            <div class="invite-divider"></div>
+            <button id="inviteAddBtn">추가</button>
+          </div>
+        </div>
+      </div>
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+    <script>
+      function getSvgIcon(type) {
+        if (type === '시험') {
+          return `<svg xmlns="http://www.w3.org/2000/svg" width="14" height="15" viewBox="0 0 14 15" fill="none">
             <path fill-rule="evenodd" clip-rule="evenodd" d="M9.14176 5.35678L7 0.5L4.85824 5.35678L0 7.49873L4.85824 9.64068L7 14.5L9.14176 9.64068L14 7.49873L9.14176 5.35678Z" fill="#574AD3"/>
           </svg>`;
-				} else if (type === '과제') {
-					return `<svg xmlns="http://www.w3.org/2000/svg" width="11" height="11" viewBox="0 0 11 11" fill="none">
+        } else if (type === '과제') {
+          return `<svg xmlns="http://www.w3.org/2000/svg" width="11" height="11" viewBox="0 0 11 11" fill="none">
             <circle cx="5.5" cy="5.5" r="5.5" fill="#B7B7F9"/>
           </svg>`;
-				}
-				return '';
-			}
-			function openPanelWithSchedules(date) {
-				const params = new URLSearchParams(window.location.search);
-				const teamId =
-					params.get('team') ||
-					localStorage.getItem('selectedTeam') ||
-					'default';
-				const storageKey = `${teamId}-schedules`;
-				const schedules = JSON.parse(localStorage.getItem(storageKey) || '[]');
-				const daily = schedules.filter((s) => s.date === date);
-				document.getElementById(
-					'scheduleDate'
-				).textContent = `${date} 일정 (${daily.length})`;
-				const listEl = document.getElementById('scheduleList');
-				listEl.innerHTML = '';
-				daily.forEach((s, idx) => {
-					const item = document.createElement('div');
-					item.className = 'schedule-item';
-					const iconHtml = getSvgIcon(s.type);
-					item.innerHTML = `
+        }
+        return '';
+      }
+      function openPanelWithSchedules(date) {
+        const params = new URLSearchParams(window.location.search);
+        const teamId =
+          params.get('team') ||
+          localStorage.getItem('selectedTeam') ||
+          'default';
+        const storageKey = `${teamId}-schedules`;
+        const schedules = JSON.parse(localStorage.getItem(storageKey) || '[]');
+        const daily = schedules.filter((s) => s.date === date);
+        document.getElementById(
+          'scheduleDate'
+        ).textContent = `${date} 일정 (${daily.length})`;
+        const listEl = document.getElementById('scheduleList');
+        listEl.innerHTML = '';
+        daily.forEach((s, idx) => {
+          const item = document.createElement('div');
+          item.className = 'schedule-item';
+          const iconHtml = getSvgIcon(s.type);
+          item.innerHTML = `
       <span style="font-weight:bold;">(${s.project})</span>
       <span>${s.subject}</span>
       <span>${s.type}</span>
     `;
-					item.addEventListener('click', () => {
-						window.location.href = `add-team-task.html?edit=${date}&index=${idx}&team=${teamId}`;
-					});
-					listEl.appendChild(item);
-				});
-				const newEl = document.createElement('div');
-				newEl.style =
-					'width:100%;text-align:center;font-weight:bold;color:#6b7280;padding:1rem 0;cursor:pointer;';
-				newEl.textContent = '+ 새 일정 만들기';
-				newEl.onclick = () =>
-					(window.location.href = `add-team-task.html?date=${date}&team=${teamId}`);
-				listEl.appendChild(newEl);
-				document.getElementById('schedulePanel').classList.add('active');
-			}
-			function showAlertModal(message, callback) {
-				document.getElementById('alertMessage').textContent = message;
-				document.getElementById('alertModal').style.display = 'flex';
-				document.getElementById('alertModal').dataset.callback = callback
-					? '1'
-					: '';
-			}
-			function closeAlertModal() {
-				document.getElementById('alertModal').style.display = 'none';
-				if (document.getElementById('alertModal').dataset.callback === '1') {
-					location.reload();
-				}
-			}
-			function closePanel() {
-				document.getElementById('schedulePanel').classList.remove('active');
-			}
-			window.onload = () => {
-				const teamName = localStorage.getItem('selectedTeamName') || 'TEAM';
-				document.getElementById('userName').textContent = `${teamName} TEAM`;
-				renderTodayTasks();
-				renderD1Alert();
-			};
-			function renderTodayTasks() {
-				const params = new URLSearchParams(window.location.search);
-				const teamId =
-					params.get('team') ||
-					localStorage.getItem('selectedTeam') ||
-					'default';
-				const storageKey = `${teamId}-schedules`;
-				const schedules = JSON.parse(localStorage.getItem(storageKey) || '[]');
-				const today = new Date().toISOString().slice(0, 10);
-				const tasks = schedules.filter((s) => s.date === today);
-				const container = document.getElementById('todayTasksContainer');
-				container.innerHTML =
-					tasks.length > 0
-						? tasks
-								.map(
-									(s) =>
-										`<div class='today-task-card'><span>${s.subject} ${s.type}</span></div>`
-								)
-								.join('')
-						: "<div class='today-task-card'>오늘 일정 없음</div>";
-			}
-			function renderD1Alert() {
-				const params = new URLSearchParams(window.location.search);
-				const teamId =
-					params.get('team') ||
-					localStorage.getItem('selectedTeam') ||
-					'default';
-				const storageKey = `${teamId}-schedules`;
-				const schedules = JSON.parse(localStorage.getItem(storageKey) || '[]');
-				const today = new Date();
-				today.setHours(0, 0, 0, 0);
-				const d1Alerts = schedules.filter((s) => {
-					const taskDate = new Date(s.date);
-					taskDate.setHours(0, 0, 0, 0);
-					const diff = (taskDate - today) / (1000 * 60 * 60 * 24);
-					return diff === 1;
-				});
-				if (d1Alerts.length > 0) {
-					const alertHTML = `
+          item.addEventListener('click', () => {
+            window.location.href = `add-team-task.html?edit=${date}&index=${idx}&team=${teamId}`;
+          });
+          listEl.appendChild(item);
+        });
+        const newEl = document.createElement('div');
+        newEl.style =
+          'width:100%;text-align:center;font-weight:bold;color:#6b7280;padding:1rem 0;cursor:pointer;';
+        newEl.textContent = '+ 새 일정 만들기';
+        newEl.onclick = () =>
+          (window.location.href = `add-team-task.html?date=${date}&team=${teamId}`);
+        listEl.appendChild(newEl);
+        document.getElementById('schedulePanel').classList.add('active');
+      }
+      function showAlertModal(message, callback) {
+        document.getElementById('alertMessage').textContent = message;
+        document.getElementById('alertModal').style.display = 'flex';
+        document.getElementById('alertModal').dataset.callback = callback
+          ? '1'
+          : '';
+      }
+      function closeAlertModal() {
+        document.getElementById('alertModal').style.display = 'none';
+        if (document.getElementById('alertModal').dataset.callback === '1') {
+          location.reload();
+        }
+      }
+      function closePanel() {
+        document.getElementById('schedulePanel').classList.remove('active');
+      }
+      window.onload = () => {
+        const teamName = localStorage.getItem('selectedTeamName') || 'TEAM';
+        document.getElementById('userName').textContent = `${teamName} TEAM`;
+        renderTodayTasks();
+        renderD1Alert();
+      };
+      function renderTodayTasks() {
+        const params = new URLSearchParams(window.location.search);
+        const teamId =
+          params.get('team') ||
+          localStorage.getItem('selectedTeam') ||
+          'default';
+        const storageKey = `${teamId}-schedules`;
+        const schedules = JSON.parse(localStorage.getItem(storageKey) || '[]');
+        const today = new Date().toISOString().slice(0, 10);
+        const tasks = schedules.filter((s) => s.date === today);
+        const container = document.getElementById('todayTasksContainer');
+        container.innerHTML =
+          tasks.length > 0
+            ? tasks
+                .map(
+                  (s) =>
+                    `<div class='today-task-card'><span>${s.subject} ${s.type}</span></div>`
+                )
+                .join('')
+            : "<div class='today-task-card'>오늘 일정 없음</div>";
+      }
+      function renderD1Alert() {
+        const params = new URLSearchParams(window.location.search);
+        const teamId =
+          params.get('team') ||
+          localStorage.getItem('selectedTeam') ||
+          'default';
+        const storageKey = `${teamId}-schedules`;
+        const schedules = JSON.parse(localStorage.getItem(storageKey) || '[]');
+        const today = new Date();
+        today.setHours(0, 0, 0, 0);
+        const d1Alerts = schedules.filter((s) => {
+          const taskDate = new Date(s.date);
+          taskDate.setHours(0, 0, 0, 0);
+          const diff = (taskDate - today) / (1000 * 60 * 60 * 24);
+          return diff === 1;
+        });
+        if (d1Alerts.length > 0) {
+          const alertHTML = `
           <div class="alert-banner">
             📢 내일 마감!<br />
             <div style="font-weight:normal;">
               ${d1Alerts
-								.map((s) => `- ${s.subject} ${s.type} (D-1)`)
-								.join('<br />')}
+                .map((s) => `- ${s.subject} ${s.type} (D-1)`)
+                .join('<br />')}
             </div>
             <button onclick="this.parentElement.remove()">×</button>
           </div>
         `;
-					document.getElementById('alertContainer').innerHTML = alertHTML;
-				}
-			}
-			document.addEventListener('DOMContentLoaded', () => {
-				const dragHandle = document.getElementById('dragHandle');
-				dragHandle.addEventListener('click', closePanel);
-			});
-			flatpickr('#calendar', {
-				defaultDate: new Date(),
-				inline: true,
-				monthSelectorType: 'static',
-				onDayCreate: function (_, __, fp, dayElem) {
-					const date = fp.formatDate(dayElem.dateObj, 'Y-m-d');
-					const params = new URLSearchParams(window.location.search);
-					const teamId =
-						params.get('team') ||
-						localStorage.getItem('selectedTeam') ||
-						'default';
-					const storageKey = `${teamId}-schedules`;
-					const schedules = JSON.parse(
-						localStorage.getItem(storageKey) || '[]'
-					);
-					const daySchedules = schedules.filter((s) => s.date === date);
-					if (daySchedules.length > 0) {
-						dayElem.style.position = 'relative';
-						const iconContainer = document.createElement('div');
-						iconContainer.style.position = 'absolute';
-						iconContainer.style.bottom = '4px';
-						iconContainer.style.left = '50%';
-						iconContainer.style.transform = 'translateX(-50%)';
-						iconContainer.style.display = 'flex';
-						iconContainer.style.gap = '2px';
-						iconContainer.style.pointerEvents = 'none';
-						daySchedules
-							.filter((s) => s.type !== '시험')
-							.forEach((s) => {
-								let svgIcon = '';
-								if (s.type === '시험') {
-									svgIcon = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 9 9" style="width:8.051px;height:8.05px;flex-shrink:0;aspect-ratio:8.05/8.05;transform:translateY(1px);" fill="none"><path fill-rule="evenodd" clip-rule="evenodd" d="M5.25699 2.79265L4.02536 0L2.79374 2.79265L0 4.02427L2.79374 5.25589L4.02536 8.05L5.25699 5.25589L8.05073 4.02427L5.25699 2.79265Z" fill="#574AD3"/></svg>`;
-								} else if (s.type === '과제') {
-									svgIcon = `
+          document.getElementById('alertContainer').innerHTML = alertHTML;
+        }
+      }
+      document.addEventListener('DOMContentLoaded', () => {
+        const dragHandle = document.getElementById('dragHandle');
+        dragHandle.addEventListener('click', closePanel);
+      });
+      flatpickr('#calendar', {
+        defaultDate: new Date(),
+        inline: true,
+        monthSelectorType: 'static',
+        onDayCreate: function (_, __, fp, dayElem) {
+          const date = fp.formatDate(dayElem.dateObj, 'Y-m-d');
+          const params = new URLSearchParams(window.location.search);
+          const teamId =
+            params.get('team') ||
+            localStorage.getItem('selectedTeam') ||
+            'default';
+          const storageKey = `${teamId}-schedules`;
+          const schedules = JSON.parse(
+            localStorage.getItem(storageKey) || '[]'
+          );
+          const daySchedules = schedules.filter((s) => s.date === date);
+          if (daySchedules.length > 0) {
+            dayElem.style.position = 'relative';
+            const iconContainer = document.createElement('div');
+            iconContainer.style.position = 'absolute';
+            iconContainer.style.bottom = '4px';
+            iconContainer.style.left = '50%';
+            iconContainer.style.transform = 'translateX(-50%)';
+            iconContainer.style.display = 'flex';
+            iconContainer.style.gap = '2px';
+            iconContainer.style.pointerEvents = 'none';
+            daySchedules
+              .filter((s) => s.type !== '시험')
+              .forEach((s) => {
+                let svgIcon = '';
+                if (s.type === '시험') {
+                  svgIcon = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 9 9" style="width:8.051px;height:8.05px;flex-shrink:0;aspect-ratio:8.05/8.05;transform:translateY(1px);" fill="none"><path fill-rule="evenodd" clip-rule="evenodd" d="M5.25699 2.79265L4.02536 0L2.79374 2.79265L0 4.02427L2.79374 5.25589L4.02536 8.05L5.25699 5.25589L8.05073 4.02427L5.25699 2.79265Z" fill="#574AD3"/></svg>`;
+                } else if (s.type === '과제') {
+                  svgIcon = `
     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 3 3"
          style="width:3px;height:3px;aspect-ratio:1/1;transform: translateY(3px);"
          fill="none">
       <circle cx="1.5" cy="1.5" r="1.5" fill="#574AD3"/>
     </svg>`;
-								}
-								if (svgIcon) iconContainer.innerHTML += svgIcon;
-							});
-						daySchedules
-							.filter((s) => s.type === '시험')
-							.forEach((s) => {
-								let svgIcon = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 9 9" style="width:8.051px;height:8.05px;flex-shrink:0;aspect-ratio:8.05/8.05;transform:translateY(1px);" fill="none"><path fill-rule="evenodd" clip-rule="evenodd" d="M5.25699 2.79265L4.02536 0L2.79374 2.79265L0 4.02427L2.79374 5.25589L4.02536 8.05L5.25699 5.25589L8.05073 4.02427L5.25699 2.79265Z" fill="#574AD3"/></svg>`; // 시험 아이콘(별)
-								if (svgIcon) iconContainer.innerHTML += svgIcon;
-							});
-						dayElem.appendChild(iconContainer);
-					}
-					dayElem.addEventListener('click', () => openPanelWithSchedules(date));
-				},
-			});
-			// 드롭다운 열기/닫기
-			document.addEventListener('DOMContentLoaded', () => {
-				const inviteBtn = document.getElementById('inviteBtn');
-				const menu = document.getElementById('inviteDropdownMenu');
-				inviteBtn.addEventListener('click', function (e) {
-					e.stopPropagation();
-					menu.style.display = menu.style.display === 'flex' ? 'none' : 'flex';
-				});
-				document.addEventListener('click', function (e) {
-					menu.style.display = 'none';
-				});
-				menu.addEventListener('click', function (e) {
-					e.stopPropagation();
-				});
-			});
+                }
+                if (svgIcon) iconContainer.innerHTML += svgIcon;
+              });
+            daySchedules
+              .filter((s) => s.type === '시험')
+              .forEach((s) => {
+                let svgIcon = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 9 9" style="width:8.051px;height:8.05px;flex-shrink:0;aspect-ratio:8.05/8.05;transform:translateY(1px);" fill="none"><path fill-rule="evenodd" clip-rule="evenodd" d="M5.25699 2.79265L4.02536 0L2.79374 2.79265L0 4.02427L2.79374 5.25589L4.02536 8.05L5.25699 5.25589L8.05073 4.02427L5.25699 2.79265Z" fill="#574AD3"/></svg>`; // 시험 아이콘(별)
+                if (svgIcon) iconContainer.innerHTML += svgIcon;
+              });
+            dayElem.appendChild(iconContainer);
+          }
+          dayElem.addEventListener('click', () => openPanelWithSchedules(date));
+        },
+      });
+      // 드롭다운 열기/닫기
+      document.addEventListener('DOMContentLoaded', () => {
+        const inviteBtn = document.getElementById('inviteBtn');
+        const menu = document.getElementById('inviteDropdownMenu');
+        inviteBtn.addEventListener('click', function (e) {
+          e.stopPropagation();
+          menu.style.display = menu.style.display === 'flex' ? 'none' : 'flex';
+        });
+        document.addEventListener('click', function (e) {
+          menu.style.display = 'none';
+        });
+        menu.addEventListener('click', function (e) {
+          e.stopPropagation();
+        });
+      });
 
-			// 예시 함수 – 필요에 맞게 연결해라
-			function openInviteMember() {
-				alert('팀원 초대하기 창 띄우기');
-			}
-			function openMemberList() {
-				alert('팀원 확인하기 창 띄우기');
-			}
-			function openInviteList() {
-				alert('초대장 확인하기 창 띄우기');
-			}
-			// 초대 모달 열기
-			function openInviteMember() {
-				document.getElementById('inviteModal').style.display = 'flex';
-			}
-			// 모달 닫기(완료)
-			document.getElementById('inviteDoneBtn').onclick = function () {
-				document.getElementById('inviteModal').style.display = 'none';
-				// 완료 시, 추가된 이메일 리스트 보여주는 로직(추후 구현)
-			};
-			// 추가(이메일 더미 리스트에 저장, input 비움)
-			let dummyInviteList = [];
-			document.getElementById('inviteAddBtn').onclick = function () {
-				const email = document.getElementById('inviteEmailInput').value.trim();
-				if (email) {
-					dummyInviteList.push(email);
-					document.getElementById('inviteEmailInput').value = '';
-					alert('추가됨: ' + email); // 개발중이니 확인용
-				}
-			};
-		</script>
-	</body>
+      // 예시 함수 – 필요에 맞게 연결해라
+      function openInviteMember() {
+        alert('팀원 초대하기 창 띄우기');
+      }
+      function openMemberList() {
+        alert('팀원 확인하기 창 띄우기');
+      }
+      function openInviteList() {
+        alert('초대장 확인하기 창 띄우기');
+      }
+      // 초대 모달 열기
+      function openInviteMember() {
+        document.getElementById('inviteModal').style.display = 'flex';
+      }
+      // 모달 닫기(완료)
+      document.getElementById('inviteDoneBtn').onclick = function () {
+        document.getElementById('inviteModal').style.display = 'none';
+        // 완료 시, 추가된 이메일 리스트 보여주는 로직(추후 구현)
+      };
+      // 추가(이메일 더미 리스트에 저장, input 비움)
+      let dummyInviteList = [];
+      document.getElementById('inviteAddBtn').onclick = function () {
+        const email = document.getElementById('inviteEmailInput').value.trim();
+        if (email) {
+          dummyInviteList.push(email);
+          document.getElementById('inviteEmailInput').value = '';
+          alert('추가됨: ' + email); // 개발중이니 확인용
+        }
+      };
+    </script>
+  </body>
 </html>
