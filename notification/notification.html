@@ -1,267 +1,267 @@
 <!DOCTYPE html>
 <html lang="ko">
-	<head>
-		<meta charset="UTF-8" />
-		<meta name="viewport" content="width=393, initial-scale=1.0" />
-		<title>알림</title>
-		<style>
-			html,
-			body {
-				margin: 0;
-				padding: 0;
-				width: 100vw;
-				height: 100vh;
-				font-family: 'Pretendard', Arial, sans-serif;
-				background: #eee;
-				overflow: hidden;
-				display: flex;
-				justify-content: center;
-				align-items: center;
-			}
-			.container {
-				width: 393px;
-				height: 852px;
-				margin: 0 auto;
-				border-radius: 30px;
-				display: flex;
-				flex-direction: column;
-				position: relative;
-				background: #fff;
-				box-shadow: 0 8px 32px rgba(70, 50, 150, 0.13),
-					0 1.5px 4px rgba(70, 50, 150, 0.05);
-			}
-			.header {
-				padding: 32px 0 0 0;
-				background: #fff;
-				display: flex;
-				flex-direction: column;
-				align-items: flex-start;
-				width: 100%;
-				border-top-left-radius: 30px; /* 위쪽 왼쪽 모서리 둥글게 */
-				border-top-right-radius: 30px; /* 위쪽 오른쪽 모서리 둥글게 */
-				border-bottom-left-radius: 0; /* 아래쪽 모서리는 각지게 */
-				border-bottom-right-radius: 0;
-			}
-			.logo {
-				font-family: 'Pretendard', Arial, sans-serif;
-				font-size: 26px;
-				font-weight: bold;
-				color: #8b85f9;
-				padding-left: 24px;
-				margin-bottom: 10px;
-				display: flex;
-				align-items: baseline;
-			}
-			.logo .days {
-				font-family: 'Pretendard', Arial, sans-serif;
-				font-weight: 400;
-				font-size: 16px;
-				color: #8b85f9;
-				margin-left: 4px;
-			}
-			.main-title {
-				font-size: 22px;
-				font-weight: bold;
-				color: #5b44c0;
-				margin-bottom: 20px;
-				padding-left: 24px;
-				margin-top: 4px;
-			}
-			.notification-list {
-				flex: 1;
-				padding: 0 0 60px 0;
-				width: 100%;
-				box-sizing: border-box;
-			}
-			.notification-item {
-				display: flex;
-				align-items: center;
-				font-size: 16px;
-				color: #262b3a;
-				margin-bottom: 16px;
-				margin-left: 24px;
-			}
-			.notification-item .icon {
-				color: #b7b7f9;
-				font-size: 18px;
-				margin-right: 8px;
-			}
-			.notification-item .text {
-				font-weight: 500;
-				color: #262b3a;
-			}
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=393, initial-scale=1.0" />
+    <title>알림</title>
+    <style>
+      html,
+      body {
+        margin: 0;
+        padding: 0;
+        width: 100vw;
+        height: 100vh;
+        font-family: 'Pretendard', Arial, sans-serif;
+        background: #eee;
+        overflow: hidden;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+      }
+      .container {
+        width: 393px;
+        min-height: 100vh;
+        margin: 0 auto;
+        border-radius: 30px;
+        display: flex;
+        flex-direction: column;
+        position: relative;
+        background: #fff;
+        box-shadow: 0 8px 32px rgba(70, 50, 150, 0.13),
+          0 1.5px 4px rgba(70, 50, 150, 0.05);
+      }
+      .header {
+        padding: 32px 0 0 0;
+        background: #fff;
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+        width: 100%;
+        border-top-left-radius: 30px; /* 위쪽 왼쪽 모서리 둥글게 */
+        border-top-right-radius: 30px; /* 위쪽 오른쪽 모서리 둥글게 */
+        border-bottom-left-radius: 0; /* 아래쪽 모서리는 각지게 */
+        border-bottom-right-radius: 0;
+      }
+      .logo {
+        font-family: 'Pretendard', Arial, sans-serif;
+        font-size: 26px;
+        font-weight: bold;
+        color: #8b85f9;
+        padding-left: 24px;
+        margin-bottom: 10px;
+        display: flex;
+        align-items: baseline;
+      }
+      .logo .days {
+        font-family: 'Pretendard', Arial, sans-serif;
+        font-weight: 400;
+        font-size: 16px;
+        color: #8b85f9;
+        margin-left: 4px;
+      }
+      .main-title {
+        font-size: 22px;
+        font-weight: bold;
+        color: #5b44c0;
+        margin-bottom: 20px;
+        padding-left: 24px;
+        margin-top: 4px;
+      }
+      .notification-list {
+        flex: 1;
+        padding: 0 0 60px 0;
+        width: 100%;
+        box-sizing: border-box;
+      }
+      .notification-item {
+        display: flex;
+        align-items: center;
+        font-size: 16px;
+        color: #262b3a;
+        margin-bottom: 16px;
+        margin-left: 24px;
+      }
+      .notification-item .icon {
+        color: #b7b7f9;
+        font-size: 18px;
+        margin-right: 8px;
+      }
+      .notification-item .text {
+        font-weight: 500;
+        color: #262b3a;
+      }
 
-			/* ✅ bottom-nav: 원형 스타일로 수정 */
-			.bottom-bar {
-				position: absolute;
-				bottom: 0;
-				left: 0;
-				width: 393px;
-				height: 49px;
-				background: #b7b7f9;
-				border-top-left-radius: 0px; /* 위쪽 왼쪽 모서리 둥글게 */
-				border-top-right-radius: 0px; /* 위쪽 오른쪽 모서리 둥글게 */
-				border-bottom-left-radius: 30px; /* 아래쪽 모서리는 각지게 */
-				border-bottom-right-radius: 30px;
-			}
-			.bottom-nav {
-				position: absolute;
-				bottom: 0;
-				left: 0;
-				width: 393px;
-				height: 98px;
-				display: flex;
-				justify-content: space-around;
+      /* ✅ bottom-nav: 원형 스타일로 수정 */
+      .bottom-bar {
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        width: 393px;
+        height: 49px;
+        background: #b7b7f9;
+        border-top-left-radius: 0px; /* 위쪽 왼쪽 모서리 둥글게 */
+        border-top-right-radius: 0px; /* 위쪽 오른쪽 모서리 둥글게 */
+        border-bottom-left-radius: 30px; /* 아래쪽 모서리는 각지게 */
+        border-bottom-right-radius: 30px;
+      }
+      .bottom-nav {
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        width: 393px;
+        height: 98px;
+        display: flex;
+        justify-content: space-around;
 
-				align-items: center;
-			}
-			.nav-circle {
-				width: 63px;
-				height: 63px;
-				background: #b7b7f9;
-				border-radius: 50%;
-				display: flex;
-				flex-direction: column;
-				justify-content: center;
-				align-items: center;
-				position: relative;
-				transition: all 0.3s;
-			}
-			.nav-item.active .nav-circle {
-				background: #8b85f9;
-				border: 4px solid white;
-			}
-			.nav-circle img {
-				width: 24px;
-				height: 24px;
-			}
-			.circle-label {
-				font-size: 10px;
-				color: white;
-				margin-top: 2px;
-			}
-		</style>
-	</head>
-	<body>
-		<div class="container">
-			<footer>
-				<div class="bottom-bar"></div>
-				<div class="bottom-nav">
-					<div class="nav-item" onclick="location.href='../basic/home.html'">
-						<div class="nav-circle">
-							<img
-								src="https://img.icons8.com/ios-filled/50/ffffff/home.png"
-								alt="피드"
-							/>
-							<span class="circle-label">피드</span>
-						</div>
-					</div>
-					<div
-						class="nav-item"
-						onclick="location.href='../kimgabelow/homepage2.html'"
-					>
-						<div class="nav-circle">
-							<img
-								src="https://img.icons8.com/ios-filled/50/ffffff/compass--v1.png"
-								alt="공지"
-							/>
-							<span class="circle-label">공지</span>
-						</div>
-					</div>
-					<div class="nav-item active">
-						<div class="nav-circle">
-							<img
-								src="https://img.icons8.com/ios-filled/50/ffffff/appointment-reminders.png"
-								alt="알림"
-							/>
-							<span class="circle-label">알림</span>
-						</div>
-					</div>
-					<div class="nav-item" onclick="location.href='../Mypage/mypage.html'">
-						<div class="nav-circle">
-							<img
-								src="https://img.icons8.com/ios-filled/50/ffffff/user.png"
-								alt="MY"
-							/>
-							<span class="circle-label">MY</span>
-						</div>
-					</div>
-				</div>
-			</footer>
-			<div class="header">
-				<div class="logo">
-					<!-- 네 기존 SVG 로고 유지 -->
-					<svg
-						xmlns="http://www.w3.org/2000/svg"
-						width="82"
-						height="28"
-						viewBox="0 0 82 28"
-						fill="none"
-					>
-						<path
-							d="M17.0274 20.3464V22.7293H7.5361C2.95003 22.7293 0 19.9276 0 15.7394V3.1748H2.75739V15.5459C2.75739 18.4776 4.64932 20.3464 7.5361 20.3464C10.4229 20.3464 12.3148 18.4776 12.3148 15.5459V3.1748H15.0722V15.7394C15.0722 17.8017 14.3333 19.347 13.3729 20.3464H17.0274Z"
-							fill="#8B85F9"
-						/>
-						<path
-							d="M16.706 22.7314V20.3485L16.9619 20.3167C18.02 20.1867 18.4685 19.5744 18.4685 18.3179V9.04033H21.1627V10.3603C22.1259 9.26563 23.5664 8.68506 25.3318 8.68506C28.8598 8.68506 31.137 11.0045 31.137 14.6439V18.315C31.137 19.5715 31.5856 20.1838 32.6437 20.3138L32.8996 20.3456V22.7285H32.5459C29.7253 22.7285 28.44 20.9897 28.44 18.315V14.8345C28.44 12.4833 26.9017 11.1287 24.7855 11.1287C22.6693 11.1287 21.1627 12.6739 21.1627 14.8345V18.315C21.1627 20.9897 19.8803 22.7285 17.0568 22.7285H16.7031L16.706 22.7314Z"
-							fill="#8B85F9"
-						/>
-						<path
-							d="M38.8002 20.3448V22.7277H32.5781V20.3448H34.3407V9.03662H37.0348V20.3448H38.7974H38.8002Z"
-							fill="#8B85F9"
-						/>
-						<path
-							d="M52.3977 21.1983V22.683H52.0785C51.2591 22.683 50.4396 22.3826 49.9623 21.4179C49.4218 22.1804 48.1653 22.683 46.926 22.683H41.5723V21.1983H43.631C42.9524 20.4762 42.593 19.5144 42.593 18.3706C42.593 15.9039 44.3498 14.0957 46.8887 14.0957C47.527 14.0957 48.1279 14.1766 48.6253 14.3961V15.8808C48.0848 15.7017 47.6075 15.6208 46.9663 15.6208C45.4079 15.6208 44.2693 16.7849 44.2693 18.3908C44.2693 19.9968 45.3676 21.1983 46.926 21.1983C48.4844 21.1983 49.623 20.0343 49.623 18.4486V10.1011H51.3022V19.9332C51.3022 20.716 51.5811 21.0972 52.2395 21.1781L52.4006 21.1983H52.3977Z"
-							fill="#8B85F9"
-						/>
-						<path
-							d="M52.2012 22.6859V21.2012H54.2771C53.5784 20.4589 53.219 19.4971 53.219 18.3937C53.219 15.8866 55.0362 14.0986 57.5521 14.0986C58.0926 14.0986 58.59 14.1795 59.0501 14.3586V15.8837C58.5699 15.7046 58.0322 15.6237 57.5923 15.6237C55.9735 15.6237 54.8953 16.7473 54.8953 18.3937C54.8953 20.0401 55.9937 21.2012 57.5923 21.2012C59.191 21.2012 60.2491 20.0979 60.2491 18.4312V14.1564H61.9282V19.5346C61.9282 20.5773 62.2071 21.1001 62.8656 21.181L63.0266 21.2012V22.6859H62.7074C61.6493 22.6859 60.9104 22.2237 60.5912 21.4208C60.0708 22.1429 58.8143 22.6859 57.5952 22.6859H52.2012Z"
-							fill="#8B85F9"
-						/>
-						<path
-							d="M63.9801 24.1294V24.0081C63.9801 23.1849 63.6006 22.6852 62.9824 22.6852V21.2006C64.6788 21.1804 65.6794 22.1826 65.6794 24.0486V24.1294C65.6794 25.4928 66.657 26.4979 68.017 26.4979C69.377 26.4979 70.3546 25.4957 70.3546 24.1294V21.0388C69.8745 21.5414 68.8767 21.9025 67.9566 21.9025C65.619 21.9025 64.0233 20.3572 64.0233 18.0898V14.1558H65.7024V18.1071C65.7024 19.4704 66.6599 20.4149 67.9998 20.4149C69.3397 20.4149 70.3575 19.4733 70.3575 18.1273V14.1558H72.0367V21.5385C72.2753 21.3392 72.7354 21.1977 73.1753 21.1977V22.6823C72.4363 22.7026 72.0367 23.1445 72.0367 23.8262V24.1266C72.0367 26.3737 70.3403 27.9999 68.0228 27.9999C65.7053 27.9999 63.9888 26.3737 63.9888 24.1266L63.9801 24.1294Z"
-							fill="#8B85F9"
-						/>
-						<path
-							d="M81.6167 21.1985V22.6831H73.1289V21.1985H77.8616C78.9398 21.1985 79.2791 20.7565 79.2791 20.1962C79.2791 19.6358 78.799 19.0928 76.7633 18.7722C74.5665 18.4314 73.7873 17.4869 73.7873 16.2448C73.7873 14.8613 74.7074 13.937 76.4844 13.937H80.32V15.4217H76.4642C75.7857 15.4217 75.4665 15.722 75.4665 16.2448C75.4665 16.8081 75.8863 17.1691 77.9622 17.5504C80.1388 17.9519 80.9985 18.934 80.9985 20.1384C80.9985 20.5399 80.9382 20.8808 80.8001 21.2014H81.6196L81.6167 21.1985Z"
-							fill="#8B85F9"
-						/>
-						<g opacity="0.99">
-							<path
-								d="M39.5051 3.75493C36.095 3.93113 35.9484 4.07843 35.7673 7.50409C35.5919 4.07843 35.4452 3.93112 32.0352 3.74915C35.4452 3.57296 35.5919 3.42565 35.773 0C35.9484 3.42565 36.095 3.57296 39.5051 3.75493Z"
-								fill="#8B85F9"
-							/>
-						</g>
-					</svg>
-				</div>
-				<div class="main-title">알림</div>
-			</div>
-			<div class="notification-list" id="notificationList"></div>
-		</div>
+        align-items: center;
+      }
+      .nav-circle {
+        width: 63px;
+        height: 63px;
+        background: #b7b7f9;
+        border-radius: 50%;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        position: relative;
+        transition: all 0.3s;
+      }
+      .nav-item.active .nav-circle {
+        background: #8b85f9;
+        border: 4px solid white;
+      }
+      .nav-circle img {
+        width: 24px;
+        height: 24px;
+      }
+      .circle-label {
+        font-size: 10px;
+        color: white;
+        margin-top: 2px;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <footer>
+        <div class="bottom-bar"></div>
+        <div class="bottom-nav">
+          <div class="nav-item" onclick="location.href='../basic/home.html'">
+            <div class="nav-circle">
+              <img
+                src="https://img.icons8.com/ios-filled/50/ffffff/home.png"
+                alt="피드"
+              />
+              <span class="circle-label">피드</span>
+            </div>
+          </div>
+          <div
+            class="nav-item"
+            onclick="location.href='../kimgabelow/homepage2.html'"
+          >
+            <div class="nav-circle">
+              <img
+                src="https://img.icons8.com/ios-filled/50/ffffff/compass--v1.png"
+                alt="공지"
+              />
+              <span class="circle-label">공지</span>
+            </div>
+          </div>
+          <div class="nav-item active">
+            <div class="nav-circle">
+              <img
+                src="https://img.icons8.com/ios-filled/50/ffffff/appointment-reminders.png"
+                alt="알림"
+              />
+              <span class="circle-label">알림</span>
+            </div>
+          </div>
+          <div class="nav-item" onclick="location.href='../Mypage/mypage.html'">
+            <div class="nav-circle">
+              <img
+                src="https://img.icons8.com/ios-filled/50/ffffff/user.png"
+                alt="MY"
+              />
+              <span class="circle-label">MY</span>
+            </div>
+          </div>
+        </div>
+      </footer>
+      <div class="header">
+        <div class="logo">
+          <!-- 네 기존 SVG 로고 유지 -->
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            width="82"
+            height="28"
+            viewBox="0 0 82 28"
+            fill="none"
+          >
+            <path
+              d="M17.0274 20.3464V22.7293H7.5361C2.95003 22.7293 0 19.9276 0 15.7394V3.1748H2.75739V15.5459C2.75739 18.4776 4.64932 20.3464 7.5361 20.3464C10.4229 20.3464 12.3148 18.4776 12.3148 15.5459V3.1748H15.0722V15.7394C15.0722 17.8017 14.3333 19.347 13.3729 20.3464H17.0274Z"
+              fill="#8B85F9"
+            />
+            <path
+              d="M16.706 22.7314V20.3485L16.9619 20.3167C18.02 20.1867 18.4685 19.5744 18.4685 18.3179V9.04033H21.1627V10.3603C22.1259 9.26563 23.5664 8.68506 25.3318 8.68506C28.8598 8.68506 31.137 11.0045 31.137 14.6439V18.315C31.137 19.5715 31.5856 20.1838 32.6437 20.3138L32.8996 20.3456V22.7285H32.5459C29.7253 22.7285 28.44 20.9897 28.44 18.315V14.8345C28.44 12.4833 26.9017 11.1287 24.7855 11.1287C22.6693 11.1287 21.1627 12.6739 21.1627 14.8345V18.315C21.1627 20.9897 19.8803 22.7285 17.0568 22.7285H16.7031L16.706 22.7314Z"
+              fill="#8B85F9"
+            />
+            <path
+              d="M38.8002 20.3448V22.7277H32.5781V20.3448H34.3407V9.03662H37.0348V20.3448H38.7974H38.8002Z"
+              fill="#8B85F9"
+            />
+            <path
+              d="M52.3977 21.1983V22.683H52.0785C51.2591 22.683 50.4396 22.3826 49.9623 21.4179C49.4218 22.1804 48.1653 22.683 46.926 22.683H41.5723V21.1983H43.631C42.9524 20.4762 42.593 19.5144 42.593 18.3706C42.593 15.9039 44.3498 14.0957 46.8887 14.0957C47.527 14.0957 48.1279 14.1766 48.6253 14.3961V15.8808C48.0848 15.7017 47.6075 15.6208 46.9663 15.6208C45.4079 15.6208 44.2693 16.7849 44.2693 18.3908C44.2693 19.9968 45.3676 21.1983 46.926 21.1983C48.4844 21.1983 49.623 20.0343 49.623 18.4486V10.1011H51.3022V19.9332C51.3022 20.716 51.5811 21.0972 52.2395 21.1781L52.4006 21.1983H52.3977Z"
+              fill="#8B85F9"
+            />
+            <path
+              d="M52.2012 22.6859V21.2012H54.2771C53.5784 20.4589 53.219 19.4971 53.219 18.3937C53.219 15.8866 55.0362 14.0986 57.5521 14.0986C58.0926 14.0986 58.59 14.1795 59.0501 14.3586V15.8837C58.5699 15.7046 58.0322 15.6237 57.5923 15.6237C55.9735 15.6237 54.8953 16.7473 54.8953 18.3937C54.8953 20.0401 55.9937 21.2012 57.5923 21.2012C59.191 21.2012 60.2491 20.0979 60.2491 18.4312V14.1564H61.9282V19.5346C61.9282 20.5773 62.2071 21.1001 62.8656 21.181L63.0266 21.2012V22.6859H62.7074C61.6493 22.6859 60.9104 22.2237 60.5912 21.4208C60.0708 22.1429 58.8143 22.6859 57.5952 22.6859H52.2012Z"
+              fill="#8B85F9"
+            />
+            <path
+              d="M63.9801 24.1294V24.0081C63.9801 23.1849 63.6006 22.6852 62.9824 22.6852V21.2006C64.6788 21.1804 65.6794 22.1826 65.6794 24.0486V24.1294C65.6794 25.4928 66.657 26.4979 68.017 26.4979C69.377 26.4979 70.3546 25.4957 70.3546 24.1294V21.0388C69.8745 21.5414 68.8767 21.9025 67.9566 21.9025C65.619 21.9025 64.0233 20.3572 64.0233 18.0898V14.1558H65.7024V18.1071C65.7024 19.4704 66.6599 20.4149 67.9998 20.4149C69.3397 20.4149 70.3575 19.4733 70.3575 18.1273V14.1558H72.0367V21.5385C72.2753 21.3392 72.7354 21.1977 73.1753 21.1977V22.6823C72.4363 22.7026 72.0367 23.1445 72.0367 23.8262V24.1266C72.0367 26.3737 70.3403 27.9999 68.0228 27.9999C65.7053 27.9999 63.9888 26.3737 63.9888 24.1266L63.9801 24.1294Z"
+              fill="#8B85F9"
+            />
+            <path
+              d="M81.6167 21.1985V22.6831H73.1289V21.1985H77.8616C78.9398 21.1985 79.2791 20.7565 79.2791 20.1962C79.2791 19.6358 78.799 19.0928 76.7633 18.7722C74.5665 18.4314 73.7873 17.4869 73.7873 16.2448C73.7873 14.8613 74.7074 13.937 76.4844 13.937H80.32V15.4217H76.4642C75.7857 15.4217 75.4665 15.722 75.4665 16.2448C75.4665 16.8081 75.8863 17.1691 77.9622 17.5504C80.1388 17.9519 80.9985 18.934 80.9985 20.1384C80.9985 20.5399 80.9382 20.8808 80.8001 21.2014H81.6196L81.6167 21.1985Z"
+              fill="#8B85F9"
+            />
+            <g opacity="0.99">
+              <path
+                d="M39.5051 3.75493C36.095 3.93113 35.9484 4.07843 35.7673 7.50409C35.5919 4.07843 35.4452 3.93112 32.0352 3.74915C35.4452 3.57296 35.5919 3.42565 35.773 0C35.9484 3.42565 36.095 3.57296 39.5051 3.75493Z"
+                fill="#8B85F9"
+              />
+            </g>
+          </svg>
+        </div>
+        <div class="main-title">알림</div>
+      </div>
+      <div class="notification-list" id="notificationList"></div>
+    </div>
 
-		<script>
-			document.addEventListener('DOMContentLoaded', () => {
-				const today = new Date();
-				today.setHours(0, 0, 0, 0);
-				let schedules = JSON.parse(localStorage.getItem('schedules') || '[]');
-				schedules = schedules.filter(
-					(s) => new Date(s.date).getTime() >= today.getTime()
-				);
-				localStorage.setItem('schedules', JSON.stringify(schedules));
+    <script>
+      document.addEventListener('DOMContentLoaded', () => {
+        const today = new Date();
+        today.setHours(0, 0, 0, 0);
+        let schedules = JSON.parse(localStorage.getItem('schedules') || '[]');
+        schedules = schedules.filter(
+          (s) => new Date(s.date).getTime() >= today.getTime()
+        );
+        localStorage.setItem('schedules', JSON.stringify(schedules));
 
-				const weekTasks = schedules
-					.map((s) => {
-						const target = new Date(s.date);
-						target.setHours(0, 0, 0, 0);
-						const diff = Math.floor((target - today) / (1000 * 60 * 60 * 24));
-						return { ...s, dday: diff };
-					})
-					.filter((s) => s.dday >= 1 && s.dday <= 7)
-					.sort((a, b) => a.dday - b.dday);
+        const weekTasks = schedules
+          .map((s) => {
+            const target = new Date(s.date);
+            target.setHours(0, 0, 0, 0);
+            const diff = Math.floor((target - today) / (1000 * 60 * 60 * 24));
+            return { ...s, dday: diff };
+          })
+          .filter((s) => s.dday >= 1 && s.dday <= 7)
+          .sort((a, b) => a.dday - b.dday);
 
-				const listEl = document.getElementById('notificationList');
-				if (weekTasks.length === 0) {
-					listEl.innerHTML = `<div class='notification-item'>
+        const listEl = document.getElementById('notificationList');
+        if (weekTasks.length === 0) {
+          listEl.innerHTML = `<div class='notification-item'>
           <span class='icon' style="display:flex;align-items:center;">
             <svg xmlns="http://www.w3.org/2000/svg" width="20" height="21" viewBox="0 0 20 21" fill="none">
               <path d="M9 0C8.46957 0 7.96086 0.210714 7.58579 0.585786C7.21071 0.960859 7 1.46957 7 2C6.99298 2.09654 6.99298 2.19346 7 2.29C4.12 3.14 2 5.82 2 9V15L0 17V18H18V17L16 15V9C16 5.82 13.88 3.14 11 2.29C11.007 2.19346 11.007 2.09654 11 2C11 1.46957 10.7893 0.960859 10.4142 0.585786C10.0391 0.210714 9.53043 0 9 0ZM9 4C10.3261 4 11.5979 4.52678 12.5355 5.46447C13.4732 6.40215 14 7.67392 14 9V16H4V9C4 7.67392 4.52678 6.40215 5.46447 5.46447C6.40215 4.52678 7.67392 4 9 4Z" fill="#B7B7F9"/>
@@ -269,10 +269,10 @@
           </span>
           <span class='text'>예정된 알림이 없습니다.</span>
         </div>`;
-				} else {
-					listEl.innerHTML = weekTasks
-						.map(
-							(s) => `<div class="notification-item">
+        } else {
+          listEl.innerHTML = weekTasks
+            .map(
+              (s) => `<div class="notification-item">
             <span class="icon" style="display:flex;align-items:center;">
               <svg xmlns="http://www.w3.org/2000/svg" width="20" height="21" viewBox="0 0 20 21" fill="none">
                 <path d="M9 0C8.46957 0 7.96086 0.210714 7.58579 0.585786C7.21071 0.960859 7 1.46957 7 2C6.99298 2.09654 6.99298 2.19346 7 2.29C4.12 3.14 2 5.82 2 9V15L0 17V18H18V17L16 15V9C16 5.82 13.88 3.14 11 2.29C11.007 2.19346 11.007 2.09654 11 2C11 1.46957 10.7893 0.960859 10.4142 0.585786C10.0391 0.210714 9.53043 0 9 0ZM9 4C10.3261 4 11.5979 4.52678 12.5355 5.46447C13.4732 6.40215 14 7.67392 14 9V16H4V9C4 7.67392 4.52678 6.40215 5.46447 5.46447C6.40215 4.52678 7.67392 4 9 4Z" fill="#B7B7F9"/>
@@ -280,10 +280,10 @@
             </span>
             <span class="text">'${s.subject}' ${s.type} D-${s.dday} 남았어요!</span>
           </div>`
-						)
-						.join('');
-				}
-			});
-		</script>
-	</body>
+            )
+            .join('');
+        }
+      });
+    </script>
+  </body>
 </html>

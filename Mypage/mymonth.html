@@ -1,465 +1,465 @@
 <!DOCTYPE html>
 <html lang="ko">
-	<head>
-		<meta charset="UTF-8" />
-		<meta name="viewport" content="width=393, initial-scale=1.0" />
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=393, initial-scale=1.0" />
 
-		<link
-			href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard.css"
-			rel="stylesheet"
-		/>
-		<title>Uni Month</title>
-		<style>
-			* {
-				box-sizing: border-box;
-				margin: 0;
-				padding: 0;
-			}
-			html,
-			body {
-				width: 100%;
-				min-height: 100vh;
-				display: flex;
-				justify-content: center;
-				align-items: center;
-				background: #eee;
-				margin: 0;
-			}
+    <link
+      href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard.css"
+      rel="stylesheet"
+    />
+    <title>Uni Month</title>
+    <style>
+      * {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+      }
+      html,
+      body {
+        width: 100%;
+        min-height: 100vh;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        background: #eee;
+        margin: 0;
+      }
 
-			.container {
-				width: 393px;
-				height: 852px;
-				margin: 0 auto;
-				background: #e6e6f2;
-				display: flex;
-				flex-direction: column;
-				border: 1px solid #ccc;
-				box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
-				position: relative; /* 이 줄 추가! */
-				padding-bottom: 83px; /* bottom-nav 높이만큼 패딩 추가 */
-			}
+      .container {
+        width: 393px;
+        height: 852px;
+        margin: 0 auto;
+        background: #e6e6f2;
+        display: flex;
+        flex-direction: column;
+        border: 1px solid #ccc;
+        box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+        position: relative; /* 이 줄 추가! */
+        padding-bottom: 83px; /* bottom-nav 높이만큼 패딩 추가 */
+      }
 
-			.header {
-				padding: 16px;
-				display: flex;
-				justify-content: flex-start;
-				align-items: center;
-				background-color: #e6e6f2;
-			}
-			.logo-text {
-				font-size: 16px;
-				color: #8b85f9;
-				font-weight: bold;
-			}
-			.title.uni-title {
-				width: 77px;
-				height: 24px;
-				display: inline-block;
-				color: #000;
-				font-family: 'Pretendard', sans-serif;
-				font-weight: 700;
-				font-size: 20px;
-				line-height: 24px; /* 100% of 24px */
-				letter-spacing: -1.5%;
-				text-align: center;
-				vertical-align: middle;
-				white-space: nowrap;
-			}
-			.title-box {
-				width: 100%;
-				text-align: center;
-				margin-top: -4px; /* 위치 보정 */
-				margin-bottom: 8px;
-				padding-right: 32px;
-			}
-			.month-selector {
-				display: flex;
-				width: 349px;
-				padding: 5px 20px 0px 20px;
-				justify-content: space-between;
-				align-items: center;
-				margin: 0 auto 8px auto;
-				margin-top: 24px;
-			}
-			.month-title {
-				color: #000;
-				font-family: 'Pretendard', sans-serif;
-				font-size: 20px;
-				font-style: normal;
-				font-weight: 500;
-				line-height: normal;
-				letter-spacing: -0.3px;
-			}
-			.schedule-list {
-				flex: 1;
-				overflow-y: auto;
-				padding: 0 16px;
-				padding-bottom: 100px;
-				margin-top: 20px;
-			}
-			.schedule-item {
-				background: #fff;
-				border-radius: 6px;
-				padding: 10px 12px;
-				margin-bottom: 10px;
-				display: flex;
-				align-items: center;
-				gap: 0px;
-				font-size: 20px;
-				box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
-				font-family: 'Pretendard', sans-serif;
-			}
-			.schedule-icon {
-				font-size: 26px;
-				color: #d2d6f9;
-			}
-			.schedule-date {
-				font-size: 12px;
-				color: #8b85f9;
-				/* min-width: 50px; 삭제! */
-				text-align: center; /* 가운데 정렬도 추가하면 좋아 */
-			}
-			.schedule-title {
-				font-weight: 500;
-				color: #000;
-				margin-left: 12px;
-				font-family: 'Pretendard', sans-serif;
-				font-weight: 500;
-			}
+      .header {
+        padding: 16px;
+        display: flex;
+        justify-content: flex-start;
+        align-items: center;
+        background-color: #e6e6f2;
+      }
+      .logo-text {
+        font-size: 16px;
+        color: #8b85f9;
+        font-weight: bold;
+      }
+      .title.uni-title {
+        width: 77px;
+        height: 24px;
+        display: inline-block;
+        color: #000;
+        font-family: 'Pretendard', sans-serif;
+        font-weight: 700;
+        font-size: 20px;
+        line-height: 24px; /* 100% of 24px */
+        letter-spacing: -1.5%;
+        text-align: center;
+        vertical-align: middle;
+        white-space: nowrap;
+      }
+      .title-box {
+        width: 100%;
+        text-align: center;
+        margin-top: -4px; /* 위치 보정 */
+        margin-bottom: 8px;
+        padding-right: 32px;
+      }
+      .month-selector {
+        display: flex;
+        width: 349px;
+        padding: 5px 20px 0px 20px;
+        justify-content: space-between;
+        align-items: center;
+        margin: 0 auto 8px auto;
+        margin-top: 24px;
+      }
+      .month-title {
+        color: #000;
+        font-family: 'Pretendard', sans-serif;
+        font-size: 20px;
+        font-style: normal;
+        font-weight: 500;
+        line-height: normal;
+        letter-spacing: -0.3px;
+      }
+      .schedule-list {
+        flex: 1;
+        overflow-y: auto;
+        padding: 0 16px;
+        padding-bottom: 100px;
+        margin-top: 20px;
+      }
+      .schedule-item {
+        background: #fff;
+        border-radius: 6px;
+        padding: 10px 12px;
+        margin-bottom: 10px;
+        display: flex;
+        align-items: center;
+        gap: 0px;
+        font-size: 20px;
+        box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+        font-family: 'Pretendard', sans-serif;
+      }
+      .schedule-icon {
+        font-size: 26px;
+        color: #d2d6f9;
+      }
+      .schedule-date {
+        font-size: 12px;
+        color: #8b85f9;
+        /* min-width: 50px; 삭제! */
+        text-align: center; /* 가운데 정렬도 추가하면 좋아 */
+      }
+      .schedule-title {
+        font-weight: 500;
+        color: #000;
+        margin-left: 12px;
+        font-family: 'Pretendard', sans-serif;
+        font-weight: 500;
+      }
 
-			.bottom-nav {
-				width: 393px;
-				height: 49px;
-				background: #b7b7f9;
-				display: flex;
-				justify-content: space-around;
-				align-items: flex-start;
-				padding-top: 16px;
-				position: fixed;
-				bottom: 0;
-				left: 50%;
-				transform: translateX(-50%);
-				z-index: 10;
-			}
-			html,
-			body,
-			.container {
-				scrollbar-width: none; /* 파이어폭스 */
-				-ms-overflow-style: none; /* IE, Edge */
-			}
-			html::-webkit-scrollbar,
-			body::-webkit-scrollbar,
-			.container::-webkit-scrollbar {
-				display: none; /* 크롬, 사파리, 오페라 */
-			}
-			.bottom-bar {
-				position: absolute;
-				bottom: 0;
-				left: 0;
-				width: 393px;
-				height: 49px;
-				background: #b7b7f9;
-				border-bottom-left-radius: 30px;
-				border-bottom-right-radius: 30px;
-			}
-			.nav-item {
-				position: relative;
-			}
+      .bottom-nav {
+        width: 393px;
+        height: 49px;
+        background: #b7b7f9;
+        display: flex;
+        justify-content: space-around;
+        align-items: flex-start;
+        padding-top: 16px;
+        position: fixed;
+        bottom: 0;
+        left: 50%;
+        transform: translateX(-50%);
+        z-index: 10;
+      }
+      html,
+      body,
+      .container {
+        scrollbar-width: none; /* 파이어폭스 */
+        -ms-overflow-style: none; /* IE, Edge */
+      }
+      html::-webkit-scrollbar,
+      body::-webkit-scrollbar,
+      .container::-webkit-scrollbar {
+        display: none; /* 크롬, 사파리, 오페라 */
+      }
+      .bottom-bar {
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        width: 393px;
+        height: 49px;
+        background: #b7b7f9;
+        border-bottom-left-radius: 30px;
+        border-bottom-right-radius: 30px;
+      }
+      .nav-item {
+        position: relative;
+      }
 
-			.nav-circle {
-				width: 63px;
-				height: 63px;
-				background: #b7b7f9;
-				border-radius: 50%;
-				display: flex;
-				flex-direction: column;
-				align-items: center;
-				justify-content: center;
+      .nav-circle {
+        width: 63px;
+        height: 63px;
+        background: #b7b7f9;
+        border-radius: 50%;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
 
-				position: relative;
-				top: -50px; /* 하단 바 위로 반쯤 올라오게 */
-				z-index: 11;
-			}
+        position: relative;
+        top: -50px; /* 하단 바 위로 반쯤 올라오게 */
+        z-index: 11;
+      }
 
-			.arrow-icon {
-				width: 24px;
-				height: 24px;
-				flex-shrink: 0;
-			}
-			.nav-item.active .nav-circle {
-				background: #8b85f9;
-				border: 4px solid white;
-			}
+      .arrow-icon {
+        width: 24px;
+        height: 24px;
+        flex-shrink: 0;
+      }
+      .nav-item.active .nav-circle {
+        background: #8b85f9;
+        border: 4px solid white;
+      }
 
-			.nav-circle img {
-				width: 24px;
-				height: 24px;
-				margin-bottom: 5px;
-			}
+      .nav-circle img {
+        width: 24px;
+        height: 24px;
+        margin-bottom: 5px;
+      }
 
-			.circle-label {
-				font-size: 9.5px;
-				color: white;
-				font-family: 'Pretendard', sans-serif;
-				line-height: 1;
-				margin-top: 2px;
-			}
-			.schedule-meta {
-				display: flex;
-				flex-direction: column; /* 위아래로 쌓이게 설정 */
-				align-items: center; /* 가운데 정렬 */
-				gap: 0px; /* 아이콘-날짜 간격 */
-			}
-		</style>
-	</head>
-	<body>
-		<div class="container">
-			<div class="header">
-				<div class="logo-text">
-					<span style="font-weight: normal"
-						><svg
-							xmlns="http://www.w3.org/2000/svg"
-							width="82"
-							height="28"
-							viewBox="0 0 82 28"
-							fill="none"
-						>
-							<path
-								d="M17.0274 20.3462V22.7291H7.5361C2.95003 22.7291 0 19.9273 0 15.7391V3.17456H2.75739V15.5456C2.75739 18.4774 4.64932 20.3462 7.5361 20.3462C10.4229 20.3462 12.3148 18.4774 12.3148 15.5456V3.17456H15.0722V15.7391C15.0722 17.8015 14.3333 19.3468 13.3729 20.3462H17.0274Z"
-								fill="#8B85F9"
-							/>
-							<path
-								d="M16.706 22.7314V20.3485L16.9619 20.3167C18.02 20.1867 18.4685 19.5744 18.4685 18.3179V9.04033H21.1627V10.3603C22.1259 9.26563 23.5664 8.68506 25.3318 8.68506C28.8598 8.68506 31.137 11.0045 31.137 14.6439V18.315C31.137 19.5715 31.5856 20.1838 32.6437 20.3138L32.8996 20.3456V22.7285H32.5459C29.7253 22.7285 28.44 20.9897 28.44 18.315V14.8345C28.44 12.4833 26.9017 11.1287 24.7855 11.1287C22.6693 11.1287 21.1627 12.6739 21.1627 14.8345V18.315C21.1627 20.9897 19.8803 22.7285 17.0568 22.7285H16.7031L16.706 22.7314Z"
-								fill="#8B85F9"
-							/>
-							<path
-								d="M38.8002 20.3448V22.7277H32.5781V20.3448H34.3407V9.03662H37.0348V20.3448H38.7974H38.8002Z"
-								fill="#8B85F9"
-							/>
-							<path
-								d="M52.3977 21.1986V22.6832H52.0785C51.2591 22.6832 50.4396 22.3828 49.9623 21.4181C49.4218 22.1806 48.1653 22.6832 46.926 22.6832H41.5723V21.1986H43.631C42.9524 20.4765 42.593 19.5146 42.593 18.3708C42.593 15.9041 44.3498 14.096 46.8887 14.096C47.527 14.096 48.1279 14.1769 48.6253 14.3964V15.881C48.0848 15.7019 47.6075 15.6211 46.9663 15.6211C45.4079 15.6211 44.2693 16.7851 44.2693 18.3911C44.2693 19.997 45.3676 21.1986 46.926 21.1986C48.4844 21.1986 49.623 20.0346 49.623 18.4488V10.1013H51.3022V19.9335C51.3022 20.7162 51.5811 21.0975 52.2395 21.1784L52.4006 21.1986H52.3977Z"
-								fill="#8B85F9"
-							/>
-							<path
-								d="M52.2012 22.6859V21.2012H54.2771C53.5784 20.4589 53.219 19.4971 53.219 18.3937C53.219 15.8866 55.0362 14.0986 57.5521 14.0986C58.0926 14.0986 58.59 14.1795 59.0501 14.3586V15.8837C58.5699 15.7046 58.0322 15.6237 57.5923 15.6237C55.9735 15.6237 54.8953 16.7473 54.8953 18.3937C54.8953 20.0401 55.9937 21.2012 57.5923 21.2012C59.191 21.2012 60.2491 20.0979 60.2491 18.4312V14.1564H61.9282V19.5346C61.9282 20.5773 62.2071 21.1001 62.8656 21.181L63.0266 21.2012V22.6859H62.7074C61.6493 22.6859 60.9104 22.2237 60.5912 21.4208C60.0708 22.1429 58.8143 22.6859 57.5952 22.6859H52.2012Z"
-								fill="#8B85F9"
-							/>
-							<path
-								d="M63.9801 24.1294V24.0081C63.9801 23.1849 63.6006 22.6852 62.9824 22.6852V21.2006C64.6788 21.1804 65.6794 22.1826 65.6794 24.0486V24.1294C65.6794 25.4928 66.657 26.4979 68.017 26.4979C69.377 26.4979 70.3546 25.4957 70.3546 24.1294V21.0388C69.8745 21.5414 68.8767 21.9025 67.9566 21.9025C65.619 21.9025 64.0233 20.3572 64.0233 18.0898V14.1558H65.7024V18.1071C65.7024 19.4704 66.6599 20.4149 67.9998 20.4149C69.3397 20.4149 70.3575 19.4733 70.3575 18.1273V14.1558H72.0367V21.5385C72.2753 21.3392 72.7354 21.1977 73.1753 21.1977V22.6823C72.4363 22.7026 72.0367 23.1445 72.0367 23.8262V24.1266C72.0367 26.3737 70.3403 27.9999 68.0228 27.9999C65.7053 27.9999 63.9888 26.3737 63.9888 24.1266L63.9801 24.1294Z"
-								fill="#8B85F9"
-							/>
-							<path
-								d="M81.6167 21.1985V22.6831H73.1289V21.1985H77.8616C78.9398 21.1985 79.2791 20.7565 79.2791 20.1962C79.2791 19.6358 78.799 19.0928 76.7633 18.7722C74.5665 18.4314 73.7873 17.4869 73.7873 16.2448C73.7873 14.8613 74.7074 13.937 76.4844 13.937H80.32V15.4217H76.4642C75.7857 15.4217 75.4665 15.722 75.4665 16.2448C75.4665 16.8081 75.8863 17.1691 77.9622 17.5504C80.1388 17.9519 80.9985 18.934 80.9985 20.1384C80.9985 20.5399 80.9382 20.8808 80.8001 21.2014H81.6196L81.6167 21.1985Z"
-								fill="#8B85F9"
-							/>
-							<g opacity="0.99">
-								<path
-									d="M39.5051 3.75493C36.095 3.93113 35.9484 4.07843 35.7673 7.50409C35.5919 4.07843 35.4452 3.93112 32.0352 3.74915C35.4452 3.57296 35.5919 3.42565 35.773 0C35.9484 3.42565 36.095 3.57296 39.5051 3.75493Z"
-									fill="#8B85F9"
-								/>
-							</g>
-						</svg>
-					</span>
-				</div>
-			</div>
-			<div class="title-box">
-				<div class="title uni-title">Uni Month</div>
-			</div>
+      .circle-label {
+        font-size: 9.5px;
+        color: white;
+        font-family: 'Pretendard', sans-serif;
+        line-height: 1;
+        margin-top: 2px;
+      }
+      .schedule-meta {
+        display: flex;
+        flex-direction: column; /* 위아래로 쌓이게 설정 */
+        align-items: center; /* 가운데 정렬 */
+        gap: 0px; /* 아이콘-날짜 간격 */
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <div class="header">
+        <div class="logo-text">
+          <span style="font-weight: normal"
+            ><svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="82"
+              height="28"
+              viewBox="0 0 82 28"
+              fill="none"
+            >
+              <path
+                d="M17.0274 20.3462V22.7291H7.5361C2.95003 22.7291 0 19.9273 0 15.7391V3.17456H2.75739V15.5456C2.75739 18.4774 4.64932 20.3462 7.5361 20.3462C10.4229 20.3462 12.3148 18.4774 12.3148 15.5456V3.17456H15.0722V15.7391C15.0722 17.8015 14.3333 19.3468 13.3729 20.3462H17.0274Z"
+                fill="#8B85F9"
+              />
+              <path
+                d="M16.706 22.7314V20.3485L16.9619 20.3167C18.02 20.1867 18.4685 19.5744 18.4685 18.3179V9.04033H21.1627V10.3603C22.1259 9.26563 23.5664 8.68506 25.3318 8.68506C28.8598 8.68506 31.137 11.0045 31.137 14.6439V18.315C31.137 19.5715 31.5856 20.1838 32.6437 20.3138L32.8996 20.3456V22.7285H32.5459C29.7253 22.7285 28.44 20.9897 28.44 18.315V14.8345C28.44 12.4833 26.9017 11.1287 24.7855 11.1287C22.6693 11.1287 21.1627 12.6739 21.1627 14.8345V18.315C21.1627 20.9897 19.8803 22.7285 17.0568 22.7285H16.7031L16.706 22.7314Z"
+                fill="#8B85F9"
+              />
+              <path
+                d="M38.8002 20.3448V22.7277H32.5781V20.3448H34.3407V9.03662H37.0348V20.3448H38.7974H38.8002Z"
+                fill="#8B85F9"
+              />
+              <path
+                d="M52.3977 21.1986V22.6832H52.0785C51.2591 22.6832 50.4396 22.3828 49.9623 21.4181C49.4218 22.1806 48.1653 22.6832 46.926 22.6832H41.5723V21.1986H43.631C42.9524 20.4765 42.593 19.5146 42.593 18.3708C42.593 15.9041 44.3498 14.096 46.8887 14.096C47.527 14.096 48.1279 14.1769 48.6253 14.3964V15.881C48.0848 15.7019 47.6075 15.6211 46.9663 15.6211C45.4079 15.6211 44.2693 16.7851 44.2693 18.3911C44.2693 19.997 45.3676 21.1986 46.926 21.1986C48.4844 21.1986 49.623 20.0346 49.623 18.4488V10.1013H51.3022V19.9335C51.3022 20.7162 51.5811 21.0975 52.2395 21.1784L52.4006 21.1986H52.3977Z"
+                fill="#8B85F9"
+              />
+              <path
+                d="M52.2012 22.6859V21.2012H54.2771C53.5784 20.4589 53.219 19.4971 53.219 18.3937C53.219 15.8866 55.0362 14.0986 57.5521 14.0986C58.0926 14.0986 58.59 14.1795 59.0501 14.3586V15.8837C58.5699 15.7046 58.0322 15.6237 57.5923 15.6237C55.9735 15.6237 54.8953 16.7473 54.8953 18.3937C54.8953 20.0401 55.9937 21.2012 57.5923 21.2012C59.191 21.2012 60.2491 20.0979 60.2491 18.4312V14.1564H61.9282V19.5346C61.9282 20.5773 62.2071 21.1001 62.8656 21.181L63.0266 21.2012V22.6859H62.7074C61.6493 22.6859 60.9104 22.2237 60.5912 21.4208C60.0708 22.1429 58.8143 22.6859 57.5952 22.6859H52.2012Z"
+                fill="#8B85F9"
+              />
+              <path
+                d="M63.9801 24.1294V24.0081C63.9801 23.1849 63.6006 22.6852 62.9824 22.6852V21.2006C64.6788 21.1804 65.6794 22.1826 65.6794 24.0486V24.1294C65.6794 25.4928 66.657 26.4979 68.017 26.4979C69.377 26.4979 70.3546 25.4957 70.3546 24.1294V21.0388C69.8745 21.5414 68.8767 21.9025 67.9566 21.9025C65.619 21.9025 64.0233 20.3572 64.0233 18.0898V14.1558H65.7024V18.1071C65.7024 19.4704 66.6599 20.4149 67.9998 20.4149C69.3397 20.4149 70.3575 19.4733 70.3575 18.1273V14.1558H72.0367V21.5385C72.2753 21.3392 72.7354 21.1977 73.1753 21.1977V22.6823C72.4363 22.7026 72.0367 23.1445 72.0367 23.8262V24.1266C72.0367 26.3737 70.3403 27.9999 68.0228 27.9999C65.7053 27.9999 63.9888 26.3737 63.9888 24.1266L63.9801 24.1294Z"
+                fill="#8B85F9"
+              />
+              <path
+                d="M81.6167 21.1985V22.6831H73.1289V21.1985H77.8616C78.9398 21.1985 79.2791 20.7565 79.2791 20.1962C79.2791 19.6358 78.799 19.0928 76.7633 18.7722C74.5665 18.4314 73.7873 17.4869 73.7873 16.2448C73.7873 14.8613 74.7074 13.937 76.4844 13.937H80.32V15.4217H76.4642C75.7857 15.4217 75.4665 15.722 75.4665 16.2448C75.4665 16.8081 75.8863 17.1691 77.9622 17.5504C80.1388 17.9519 80.9985 18.934 80.9985 20.1384C80.9985 20.5399 80.9382 20.8808 80.8001 21.2014H81.6196L81.6167 21.1985Z"
+                fill="#8B85F9"
+              />
+              <g opacity="0.99">
+                <path
+                  d="M39.5051 3.75493C36.095 3.93113 35.9484 4.07843 35.7673 7.50409C35.5919 4.07843 35.4452 3.93112 32.0352 3.74915C35.4452 3.57296 35.5919 3.42565 35.773 0C35.9484 3.42565 36.095 3.57296 39.5051 3.75493Z"
+                  fill="#8B85F9"
+                />
+              </g>
+            </svg>
+          </span>
+        </div>
+      </div>
+      <div class="title-box">
+        <div class="title uni-title">Uni Month</div>
+      </div>
 
-			<div class="month-selector">
-				<svg
-					class="arrow-icon"
-					xmlns="http://www.w3.org/2000/svg"
-					width="24"
-					height="24"
-					viewBox="0 0 24 24"
-					fill="none"
-				>
-					<path
-						d="M15 5L9 12L15 19"
-						stroke="#757575"
-						stroke-width="2.5"
-						stroke-linecap="round"
-						stroke-linejoin="round"
-					/>
-				</svg>
-				<span class="month-title">July</span>
-				<svg
-					class="arrow-icon"
-					xmlns="http://www.w3.org/2000/svg"
-					width="24"
-					height="24"
-					viewBox="0 0 24 24"
-					fill="none"
-				>
-					<path
-						d="M9 5L15 12L9 19"
-						stroke="#757575"
-						stroke-width="2.5"
-						stroke-linecap="round"
-						stroke-linejoin="round"
-					/>
-				</svg>
-			</div>
+      <div class="month-selector">
+        <svg
+          class="arrow-icon"
+          xmlns="http://www.w3.org/2000/svg"
+          width="24"
+          height="24"
+          viewBox="0 0 24 24"
+          fill="none"
+        >
+          <path
+            d="M15 5L9 12L15 19"
+            stroke="#757575"
+            stroke-width="2.5"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          />
+        </svg>
+        <span class="month-title">July</span>
+        <svg
+          class="arrow-icon"
+          xmlns="http://www.w3.org/2000/svg"
+          width="24"
+          height="24"
+          viewBox="0 0 24 24"
+          fill="none"
+        >
+          <path
+            d="M9 5L15 12L9 19"
+            stroke="#757575"
+            stroke-width="2.5"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          />
+        </svg>
+      </div>
 
-			<div class="schedule-list">
-				<div class="schedule-item">
-					<div class="schedule-meta">
-						<div class="schedule-icon">★</div>
-						<div class="schedule-date">4 (금)</div>
-					</div>
-					<div class="schedule-title">창의적 사고와 코딩 시험</div>
-				</div>
-				<div class="schedule-item">
-					<div class="schedule-meta">
-						<div class="schedule-icon">●</div>
-						<div class="schedule-date">10 (월)</div>
-					</div>
-					<div class="schedule-title">피피티 제작</div>
-				</div>
-				<div class="schedule-item">
-					<div class="schedule-meta">
-						<div class="schedule-icon">●</div>
-						<div class="schedule-date">12 (수)</div>
-					</div>
-					<div class="schedule-title">학교 체육대회 배드민턴</div>
-				</div>
-				<div class="schedule-item">
-					<div class="schedule-meta">
-						<div class="schedule-icon">●</div>
-						<div class="schedule-date">14 (금)</div>
-					</div>
-					<div class="schedule-title">팀별 기획서 제작</div>
-				</div>
-				<div class="schedule-item">
-					<div class="schedule-meta">
-						<div class="schedule-icon">●</div>
-						<div class="schedule-date">16 (일)</div>
-					</div>
-					<div class="schedule-title">이번달 해야할 일 5</div>
-				</div>
-			</div>
+      <div class="schedule-list">
+        <div class="schedule-item">
+          <div class="schedule-meta">
+            <div class="schedule-icon">★</div>
+            <div class="schedule-date">4 (금)</div>
+          </div>
+          <div class="schedule-title">창의적 사고와 코딩 시험</div>
+        </div>
+        <div class="schedule-item">
+          <div class="schedule-meta">
+            <div class="schedule-icon">●</div>
+            <div class="schedule-date">10 (월)</div>
+          </div>
+          <div class="schedule-title">피피티 제작</div>
+        </div>
+        <div class="schedule-item">
+          <div class="schedule-meta">
+            <div class="schedule-icon">●</div>
+            <div class="schedule-date">12 (수)</div>
+          </div>
+          <div class="schedule-title">학교 체육대회 배드민턴</div>
+        </div>
+        <div class="schedule-item">
+          <div class="schedule-meta">
+            <div class="schedule-icon">●</div>
+            <div class="schedule-date">14 (금)</div>
+          </div>
+          <div class="schedule-title">팀별 기획서 제작</div>
+        </div>
+        <div class="schedule-item">
+          <div class="schedule-meta">
+            <div class="schedule-icon">●</div>
+            <div class="schedule-date">16 (일)</div>
+          </div>
+          <div class="schedule-title">이번달 해야할 일 5</div>
+        </div>
+      </div>
 
-			<footer>
-				<div class="bottom-nav">
-					<div class="nav-item">
-						<div
-							class="nav-circle"
-							onclick="location.href='../basic/home.html'"
-						>
-							<img
-								src="https://img.icons8.com/ios-filled/50/ffffff/home.png"
-								alt="피드"
-							/>
-							<span class="circle-label">피드</span>
-						</div>
-					</div>
-					<div class="nav-item">
-						<div
-							class="nav-circle"
-							onclick="location.href='../kimgabelow/homepage2.html'"
-						>
-							<img
-								src="https://img.icons8.com/ios-filled/50/ffffff/compass--v1.png"
-								alt="공지"
-							/>
-							<span class="circle-label">공지</span>
-						</div>
-					</div>
-					<div class="nav-item">
-						<div
-							class="nav-circle"
-							onclick="location.href='../notification/notification.html'"
-						>
-							<img
-								src="https://img.icons8.com/ios-filled/50/ffffff/appointment-reminders.png"
-								alt="알림"
-							/>
-							<span class="circle-label">알림</span>
-						</div>
-					</div>
-					<div class="nav-item active">
-						<div
-							class="nav-circle active-circle"
-							onclick="location.href='mypage.html'"
-						>
-							<img
-								src="https://img.icons8.com/ios-filled/50/ffffff/user.png"
-								alt="MY"
-							/>
-							<span class="circle-label">MY</span>
-						</div>
-					</div>
-				</div>
-			</footer>
-		</div>
+      <footer>
+        <div class="bottom-nav">
+          <div class="nav-item">
+            <div
+              class="nav-circle"
+              onclick="location.href='../basic/home.html'"
+            >
+              <img
+                src="https://img.icons8.com/ios-filled/50/ffffff/home.png"
+                alt="피드"
+              />
+              <span class="circle-label">피드</span>
+            </div>
+          </div>
+          <div class="nav-item">
+            <div
+              class="nav-circle"
+              onclick="location.href='../kimgabelow/homepage2.html'"
+            >
+              <img
+                src="https://img.icons8.com/ios-filled/50/ffffff/compass--v1.png"
+                alt="공지"
+              />
+              <span class="circle-label">공지</span>
+            </div>
+          </div>
+          <div class="nav-item">
+            <div
+              class="nav-circle"
+              onclick="location.href='../notification/notification.html'"
+            >
+              <img
+                src="https://img.icons8.com/ios-filled/50/ffffff/appointment-reminders.png"
+                alt="알림"
+              />
+              <span class="circle-label">알림</span>
+            </div>
+          </div>
+          <div class="nav-item active">
+            <div
+              class="nav-circle active-circle"
+              onclick="location.href='mypage.html'"
+            >
+              <img
+                src="https://img.icons8.com/ios-filled/50/ffffff/user.png"
+                alt="MY"
+              />
+              <span class="circle-label">MY</span>
+            </div>
+          </div>
+        </div>
+      </footer>
+    </div>
 
-		<script>
-			document.addEventListener('DOMContentLoaded', () => {
-				const scheduleListEl = document.querySelector('.schedule-list');
-				const monthTitleEl = document.querySelector('.month-title');
-				const arrowIcons = document.querySelectorAll('.arrow-icon');
+    <script>
+      document.addEventListener('DOMContentLoaded', () => {
+        const scheduleListEl = document.querySelector('.schedule-list');
+        const monthTitleEl = document.querySelector('.month-title');
+        const arrowIcons = document.querySelectorAll('.arrow-icon');
 
-				if (!scheduleListEl || !monthTitleEl || arrowIcons.length < 2) return;
+        if (!scheduleListEl || !monthTitleEl || arrowIcons.length < 2) return;
 
-				const leftArrow = arrowIcons[0];
-				const rightArrow = arrowIcons[1];
+        const leftArrow = arrowIcons[0];
+        const rightArrow = arrowIcons[1];
 
-				const schedules = JSON.parse(localStorage.getItem('schedules') || '[]');
-				const today = new Date();
-				today.setHours(0, 0, 0, 0);
+        const schedules = JSON.parse(localStorage.getItem('schedules') || '[]');
+        const today = new Date();
+        today.setHours(0, 0, 0, 0);
 
-				let currentMonth = new Date(today.getFullYear(), today.getMonth(), 1);
+        let currentMonth = new Date(today.getFullYear(), today.getMonth(), 1);
 
-				const monthNames = [
-					'January',
-					'February',
-					'March',
-					'April',
-					'May',
-					'June',
-					'July',
-					'August',
-					'September',
-					'October',
-					'November',
-					'December',
-				];
+        const monthNames = [
+          'January',
+          'February',
+          'March',
+          'April',
+          'May',
+          'June',
+          'July',
+          'August',
+          'September',
+          'October',
+          'November',
+          'December',
+        ];
 
-				const STAR_SVG = `
+        const STAR_SVG = `
 		<svg xmlns="http://www.w3.org/2000/svg" width="21" height="21" viewBox="0 0 21 21" fill="none">
 			<path fill-rule="evenodd" clip-rule="evenodd" d="M7.28736 13.7148L10.5 21L13.7126 13.7148L21 10.5019L13.7126 7.28897L10.5 0L7.28736 7.28897L0 10.5019L7.28736 13.7148Z" fill="#B7B7F9"/>
 		</svg>
 	`;
 
-				function renderScheduleList() {
-					const year = currentMonth.getFullYear();
-					const month = currentMonth.getMonth();
+        function renderScheduleList() {
+          const year = currentMonth.getFullYear();
+          const month = currentMonth.getMonth();
 
-					monthTitleEl.textContent = monthNames[month];
+          monthTitleEl.textContent = monthNames[month];
 
-					const filtered = schedules
-						.map((s) => {
-							const dateObj = new Date(s.date);
-							dateObj.setHours(0, 0, 0, 0);
-							return { ...s, dateObj };
-						})
-						.filter((s) => {
-							const sameMonth =
-								s.dateObj.getFullYear() === year &&
-								s.dateObj.getMonth() === month;
-							const notPast = s.dateObj >= today;
-							return sameMonth && notPast;
-						})
-						.sort((a, b) => a.dateObj - b.dateObj);
+          const filtered = schedules
+            .map((s) => {
+              const dateObj = new Date(s.date);
+              dateObj.setHours(0, 0, 0, 0);
+              return { ...s, dateObj };
+            })
+            .filter((s) => {
+              const sameMonth =
+                s.dateObj.getFullYear() === year &&
+                s.dateObj.getMonth() === month;
+              const notPast = s.dateObj >= today;
+              return sameMonth && notPast;
+            })
+            .sort((a, b) => a.dateObj - b.dateObj);
 
-					if (filtered.length === 0) {
-						scheduleListEl.innerHTML =
-							"<div class='schedule-item'>일정이 없습니다.</div>";
-					} else {
-						scheduleListEl.innerHTML = filtered
-							.map(
-								(s) => `
+          if (filtered.length === 0) {
+            scheduleListEl.innerHTML =
+              "<div class='schedule-item'>일정이 없습니다.</div>";
+          } else {
+            scheduleListEl.innerHTML = filtered
+              .map(
+                (s) => `
 					<div class="schedule-item">
 						<div class="schedule-meta">
 							<div class="schedule-icon">
@@ -470,29 +470,29 @@
 						<div class="schedule-title">${s.subject} ${s.type}</div>
 					</div>
 				`
-							)
-							.join('');
-					}
-				}
+              )
+              .join('');
+          }
+        }
 
-				function formatDate(dateObj) {
-					const dayNames = ['일', '월', '화', '수', '목', '금', '토'];
-					const day = dayNames[dateObj.getDay()];
-					return `${dateObj.getDate()} (${day})`;
-				}
+        function formatDate(dateObj) {
+          const dayNames = ['일', '월', '화', '수', '목', '금', '토'];
+          const day = dayNames[dateObj.getDay()];
+          return `${dateObj.getDate()} (${day})`;
+        }
 
-				leftArrow.addEventListener('click', () => {
-					currentMonth.setMonth(currentMonth.getMonth() - 1);
-					renderScheduleList();
-				});
+        leftArrow.addEventListener('click', () => {
+          currentMonth.setMonth(currentMonth.getMonth() - 1);
+          renderScheduleList();
+        });
 
-				rightArrow.addEventListener('click', () => {
-					currentMonth.setMonth(currentMonth.getMonth() + 1);
-					renderScheduleList();
-				});
+        rightArrow.addEventListener('click', () => {
+          currentMonth.setMonth(currentMonth.getMonth() + 1);
+          renderScheduleList();
+        });
 
-				renderScheduleList();
-			});
-		</script>
-	</body>
+        renderScheduleList();
+      });
+    </script>
+  </body>
 </html>
