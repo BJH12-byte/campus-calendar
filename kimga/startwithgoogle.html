@@ -104,12 +104,12 @@
         if (googleButton) {
           googleButton.addEventListener('click', () => {
             window.location.href =
-              'http://unidays-project.com:8080/oauth2/authorization/google'; // 구글 로그인 페이지 이동
+              'https://unidays-project.com:8080/oauth2/authorization/google'; // 구글 로그인 페이지 이동
           });
         }
       });
       window.onload = function () {
-        fetch('http://unidays-project.com:8080/api/user/me', {
+        fetch('https://unidays-project.com:8080/api/user/me', {
           credentials: 'include',
         })
           .then((res) => {
