@@ -8,36 +8,30 @@
     />
     <title>알림</title>
     <style>
-      html {
-        margin: 0;
-        padding: 0;
-        font-family: Arial, sans-serif;
-        background-color: #f3f4f6;
-        width: 100vw;
-        height: 100vh;
-        display: flex;
-        overflow: hidden;
-        flex-direction: column;
-        align-items: center;
-        height: 100%;
-        overflow-y: auto;
-      }
+      html,
       body {
+        width: 100%;
+        min-height: 100vh;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        background: #eee;
         margin: 0;
         padding: 0;
-        font-family: Arial, sans-serif;
-        background-color: #f3f4f6;
-        width: 100vw;
-        height: 100vh;
+        overflow: auto;
+      }
+
+      .container {
+        width: 393px;
+        height: 852px;
+        background: #fff; /* 기존 디자인 유지 */
+        border-radius: 30px;
+        box-shadow: 0 8px 32px rgba(70, 50, 150, 0.13),
+          0 1.5px 4px rgba(70, 50, 150, 0.05);
         display: flex;
-        overflow: hidden;
         flex-direction: column;
-        align-items: center;
-        scrollbar-width: none; /* Firefox */
-        -ms-overflow-style: none;
-        height: 100%;
+        position: relative;
         overflow: hidden;
-        overflow-y: auto;
       }
       .container {
         width: 393px;

@@ -8,54 +8,35 @@
     />
     <title>Uni MY Page</title>
     <style>
-      html {
-        margin: 0;
-        padding: 0;
-        font-family: Arial, sans-serif;
-        background-color: #f3f4f6;
-        width: 100vw;
-        height: 100vh;
-        display: flex;
-        overflow: hidden;
-        flex-direction: column;
-        align-items: center;
-        height: 100%;
-        overflow-y: auto;
-      }
+      html,
       body {
+        width: 100%;
+        min-height: 100vh;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        background: #eee;
         margin: 0;
         padding: 0;
-        font-family: Arial, sans-serif;
-        background-color: #f3f4f6;
-        width: 100vw;
-        height: 100vh;
+        overflow: auto;
+      }
+
+      .container {
+        width: 393px;
+        height: 852px;
+        background: #fff;
+        border-radius: 30px;
+        box-shadow: 0 8px 32px rgba(70, 50, 150, 0.13),
+          0 1.5px 4px rgba(70, 50, 150, 0.05);
         display: flex;
-        overflow: hidden;
         flex-direction: column;
-        align-items: center;
-        scrollbar-width: none; /* Firefox */
-        -ms-overflow-style: none;
-        height: 100%;
+        position: relative;
         overflow: hidden;
-        overflow-y: auto;
       }
       * {
         box-sizing: border-box;
       }
 
-      .container {
-        width: 393px;
-        min-height: 100vh; /* height: 852px; 지우고 min-height 추가! */
-        border-radius: 30px;
-        background: #fff;
-        margin: 0 auto;
-        display: flex;
-        flex-direction: column;
-        position: relative;
-        box-shadow: 0 8px 32px rgba(70, 50, 150, 0.13),
-          0 1.5px 4px rgba(70, 50, 150, 0.05);
-        overflow: hidden;
-      }
       .header {
         width: 393px;
         box-sizing: border-box; /* ✅ padding 포함되도록 수정 */
