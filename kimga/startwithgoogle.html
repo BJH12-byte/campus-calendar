@@ -108,6 +108,30 @@
           });
         }
       });
+      window.onload = function () {
+        fetch('http://unidays-project.com:8080/api/user/me', {
+          credentials: 'include',
+        })
+          .then((res) => {
+            if (res.status === 401) {
+              window.location.href = '/startwithgoogle.html';
+              return;
+            }
+            if (res.status === 403) {
+              window.location.href = '/signup.html';
+              return;
+            }
+            return res.json();
+          })
+          .then((user) => {
+            if (!user) return;
+            if (!user.hasSubjects) {
+              window.location.href = '/subject-register.html';
+            } else {
+              // 정상 진입. mainboard.html 등 네가 원하는 곳으로
+            }
+          });
+      };
     </script>
   </body>
 </html>
