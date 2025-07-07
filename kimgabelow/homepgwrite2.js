@@ -31,25 +31,22 @@ document.addEventListener('DOMContentLoaded', () => {
     showYesNoPopup(
       window.popupMessages?.writePageConfirm || '일정확인 제대로 하셨나요?',
       () => {
-        // ✅ 날짜 변환: YYYY.MM.DD -> YYYY-MM-DD (html의 date-display 이용)
+        // 날짜 변환: YYYY.MM.DD -> YYYY-MM-DD
         let dateText = dateDisplay ? dateDisplay.textContent.trim() : '';
         let date = '';
         if (/^\d{4}\.\d{2}\.\d{2}$/.test(dateText)) {
           date = dateText.replace(/\./g, '-');
         } else {
-          // 혹시라도 형식이 다르면 오늘 날짜로 대체
           const now = new Date();
           date = now.toISOString().slice(0, 10);
         }
 
-        // ✅ 업로드된 이미지 또는 파일 URL 가져오기 (fileUrl, imageUrl은 서버 연동 없으면 null)
         let fileUrl = null;
         let imageUrl = null;
 
         const uploadedImage = localStorage.getItem('uploadedImage') || '';
         if (uploadedImage) {
-          // 실제로 서버 업로드 연동 필요하면 이 부분 구현
-          imageUrl = uploadedImage; // 일단 미사용
+          imageUrl = uploadedImage;
         }
 
         const payload = {
@@ -61,7 +58,7 @@ document.addEventListener('DOMContentLoaded', () => {
           type: 'SCHOOL',
         };
 
-        // ✅ 글쓰기 → 백엔드 전송 (POST /api/notices)
+        // 공지 등록
         fetch('https://unidays-project.com/api/notices', {
           method: 'POST',
           credentials: 'include',
@@ -75,7 +72,7 @@ document.addEventListener('DOMContentLoaded', () => {
             return res.json();
           })
           .then((data) => {
-            // 1. 공지 등록 성공 시, OCR 일정 등록 API 호출
+            // OCR 일정 등록 자동 호출
             fetch(`https://unidays-project.com/api/notices/${data.id}/save`, {
               method: 'POST',
               credentials: 'include',
@@ -88,8 +85,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 return ocrRes.text();
               })
               .then((msg) => {
-                // 필요하면 팝업 안내(선택)
-                // showCustomPopup(msg);
+                // 필요시 showCustomPopup(msg);
                 window.location.href = `homepg-written.html?id=${data.id}`;
               })
               .catch((ocrError) => {
@@ -101,7 +97,6 @@ document.addEventListener('DOMContentLoaded', () => {
             showCustomPopup('공지 등록 중 오류 발생: ' + error.message);
           });
 
-        // uploadedImage 제거(이미지 업로드 기능과 연동 필요)
         localStorage.removeItem('uploadedImage');
       },
       () => {
@@ -110,7 +105,7 @@ document.addEventListener('DOMContentLoaded', () => {
     );
   });
 
-  // 첨부 기능(로컬에 이미지 저장만, 서버 업로드는 별도 구현 필요)
+  // 첨부 기능(로컬에 이미지 저장만)
   const cameraInput = document.getElementById('camera-input');
   const fileInput = document.getElementById('file-input');
 
