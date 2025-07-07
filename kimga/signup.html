@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=393, user-scalable=no" />
     <title>회원가입</title>
     <style>
+      /* 기존 스타일 그대로 복붙 */
       body {
         margin: 0;
         display: flex;
@@ -13,7 +14,6 @@
         height: 100vh;
         background: #f5f5f5;
       }
-
       .signup-container {
         width: 393px;
         height: 856px;
@@ -23,14 +23,12 @@
         flex-direction: column;
         justify-content: space-between;
       }
-
       .form-wrapper {
-        padding: 160px 35px 0 35px;
+        padding: 60px 35px 0 35px;
         display: flex;
         flex-direction: column;
         gap: 25px;
       }
-
       .input-group {
         display: flex;
         flex-direction: column;
@@ -40,47 +38,20 @@
         outline-offset: -3px;
         padding: 14px 29px;
       }
-
       .input-group label {
         font-family: Pretendard, sans-serif;
         font-size: 14px;
         color: #505050;
         font-weight: 500;
       }
-
-      .input-group input {
+      .input-group input,
+      .input-group select {
         border: none;
         font-family: Pretendard, sans-serif;
         font-size: 16px;
         color: #8b8686;
         outline: none;
       }
-
-      #major-select {
-        position: relative;
-        cursor: pointer;
-      }
-
-      .major-display {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-      }
-
-      .major-options {
-        display: none;
-        flex-direction: column;
-        gap: 15px;
-        margin-top: 10px;
-      }
-
-      .major-options li {
-        font-family: Pretendard, sans-serif;
-        font-size: 16px;
-        color: #8b8686;
-        cursor: pointer;
-      }
-
       .next-button {
         width: 100%;
         height: 62px;
@@ -143,30 +114,32 @@
             maxlength="10"
           />
         </div>
-        <div class="input-group" id="major-select">
-          <label>전공</label>
-          <div class="major-display" onclick="toggleMajorOptions()">
-            <span id="selectedMajor">전공 선택</span>
-            <svg class="arrow" width="24" height="24" viewBox="0 0 24 24">
-              <path
-                d="M19 9L12 15L5 9"
-                stroke="#757575"
-                stroke-width="2.5"
-                stroke-linecap="round"
-                stroke-linejoin="round"
-              />
-            </svg>
-          </div>
-          <ul class="major-options" id="majorOptions">
-            <li onclick="selectMajor('전공1')">전공1</li>
-            <li onclick="selectMajor('전공2')">전공2</li>
-            <li onclick="selectMajor('전공3')">전공3</li>
-            <li onclick="selectMajor('전공4')">전공4</li>
-            <li onclick="selectMajor('전공5')">전공5</li>
-          </ul>
+        <div class="input-group">
+          <label for="major">전공</label>
+          <select id="major">
+            <option value="">전공 선택</option>
+            <option value="의료IT학과">의료IT학과</option>
+            <option value="전공2">전공2</option>
+            <option value="전공3">전공3</option>
+          </select>
+        </div>
+        <div class="input-group">
+          <label for="grade">학년</label>
+          <select id="grade">
+            <option value="">학년 선택</option>
+            <option value="1">1학년</option>
+            <option value="2">2학년</option>
+            <option value="3">3학년</option>
+            <option value="4">4학년</option>
+          </select>
+        </div>
+        <div class="input-group">
+          <label for="subject">과목 선택</label>
+          <select id="subject">
+            <option value="">전공/학년을 선택하세요</option>
+          </select>
         </div>
       </div>
-
       <button class="next-button" onclick="submitForm()">다음</button>
     </div>
     <div id="alertModal" class="modal">
@@ -190,23 +163,64 @@
           alertCallback = null;
         }
       }
-      function toggleMajorOptions() {
-        const options = document.getElementById('majorOptions');
-        options.style.display =
-          options.style.display === 'flex' ? 'none' : 'flex';
-      }
 
-      function selectMajor(major) {
-        document.getElementById('selectedMajor').innerText = major;
-        toggleMajorOptions();
+      // 전공, 학년 변경 시 과목 리스트 갱신
+      document
+        .getElementById('major')
+        .addEventListener('change', updateSubjects);
+      document
+        .getElementById('grade')
+        .addEventListener('change', updateSubjects);
+
+      async function updateSubjects() {
+        const major = document.getElementById('major').value;
+        const grade = document.getElementById('grade').value;
+        const subjectSelect = document.getElementById('subject');
+        subjectSelect.innerHTML = '<option value="">로딩중...</option>';
+        if (!major || !grade) {
+          subjectSelect.innerHTML =
+            '<option value="">전공/학년을 선택하세요</option>';
+          return;
+        }
+        try {
+          // 1. 내 전공 과목 전체 GET
+          const res = await fetch(
+            'https://unidays-project.com/api/subjects/major?major=' +
+              encodeURIComponent(major),
+            { credentials: 'include' }
+          );
+          const subjects = await res.json();
+          // 2. 선택한 학년만 필터
+          const filtered = subjects.filter(
+            (s) => String(s.grade) === String(grade)
+          );
+          if (filtered.length === 0) {
+            subjectSelect.innerHTML = '<option value="">과목 없음</option>';
+            return;
+          }
+          subjectSelect.innerHTML = filtered
+            .map(
+              (s) => `<option value="${s.id}">${s.name} (${s.time})</option>`
+            )
+            .join('');
+          subjectSelect.insertAdjacentHTML(
+            'afterbegin',
+            `<option value="">과목 선택</option>`
+          );
+        } catch (err) {
+          subjectSelect.innerHTML =
+            '<option value="">과목 불러오기 실패</option>';
+        }
       }
 
       async function submitForm() {
         const name = document.getElementById('name').value.trim();
         const studentId = document.getElementById('studentId').value.trim();
-        const major = document.getElementById('selectedMajor').innerText;
+        const major = document.getElementById('major').value;
+        const grade = document.getElementById('grade').value;
+        const subjectId = document.getElementById('subject').value;
 
-        if (!name || !studentId || major === '전공 선택') {
+        if (!name || !studentId || !major || !grade || !subjectId) {
           showAlert('모든 항목을 입력해주세요.');
           return;
         }
@@ -215,6 +229,7 @@
           return;
         }
         try {
+          // 1. 추가 정보 등록
           const res = await fetch(
             'https://unidays-project.com/api/user/additional-info',
             {
@@ -228,6 +243,21 @@
             showAlert('정보 등록 실패. 다시 시도하세요.');
             return;
           }
+          // 2. 과목 등록 (usersubjects)
+          const registerRes = await fetch(
+            'https://unidays-project.com/api/usersubjects',
+            {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              credentials: 'include',
+              body: JSON.stringify({ subject: { id: Number(subjectId) } }),
+            }
+          );
+          if (!registerRes.ok) {
+            showAlert('과목 등록 실패. 다시 시도하세요.');
+            return;
+          }
+          // 3. 메인으로 이동
           window.location.href = 'mainboard.html';
         } catch (err) {
           showAlert('서버 통신 오류. 네트워크 확인하세요.');
