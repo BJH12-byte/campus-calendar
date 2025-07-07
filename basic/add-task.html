@@ -686,15 +686,13 @@
           }
         }
 
-      const scheduleObj = {
+const scheduleObj = {
   title: title,
   date: selectedDateStr,
-  type: (selectedType === "시험") ? "EXAM"
-       : (selectedType === "과제" ? "TASK" : "ETC"),
-  subject: selectedSubject ? { id: selectedSubject.id } : null
+  type: (selectedType === "시험") ? "EXAM" : (selectedType === "과제" ? "TASK" : "ETC"),
 };
-    if (selectedSubject && selectedSubject.id) {
-  scheduleObj.subject = { id: selectedSubject.id };
+if (selectedSubject && selectedSubject.id) {
+  scheduleObj.subjectId = selectedSubject.id;
 }
 
 console.log('보내는 scheduleObj:', scheduleObj);
