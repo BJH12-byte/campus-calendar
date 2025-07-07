@@ -112,22 +112,31 @@ body {
   margin-left: 0 !important;
 }
 .icon-dot {
+  position: absolute;
+  left: 50%;
+  bottom: 0px; /* 딱 숫자 밑에 붙여 */
+  transform: translateX(-50%);
   display: flex;
-  gap: 2px;
-  justify-content: center;
-  align-items: center;
-  width: 100%;
-  height: 12px;
-  font-size: 12px;
-  margin-top: -4px;
+  flex-direction: row;
+  align-items: flex-end;
+  gap: 3px; /* 아이콘 사이 약간 띄움 */
   pointer-events: none;
+  z-index: 2;
 }
-.icon-dot span {
-  width: 10px;
-  height: 10px;
+.calendar-icon-svg {
+  width: 8px !important;
+  height: 8px !important;
+  min-width: 8px !important;
+  min-height: 8px !important;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  /* svg가 꽉 차게 */
+}
+.icon-dot svg {
+  width: 8px !important;
+  height: 8px !important;
   display: block;
-  text-align: center;
-  line-height: 10px;
 }
 .slide-up-panel {
   position: fixed;

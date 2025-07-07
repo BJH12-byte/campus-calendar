@@ -5,11 +5,11 @@ function getSvgIcon(type) {
     </svg>`;
   } else if (type === '과제' || type === 'TASK') {
     return `<svg xmlns="http://www.w3.org/2000/svg" width="11" height="11" viewBox="0 0 11 11" fill="none">
-      <circle cx="5.5" cy="5.5" r="5.5" fill="#B7B7F9"/>
+      <circle cx="5.5" cy="5.5" r="5.5" fill="#574AD3"/>
     </svg>`;
   } else if (type === '기타' || type === 'ETC') {
     return `<svg xmlns="http://www.w3.org/2000/svg" width="11" height="11" viewBox="0 0 11 11" fill="none">
-      <circle cx="5.5" cy="5.5" r="5.5" fill="#B7B7F9"/>
+      <circle cx="5.5" cy="5.5" r="5.5" fill="#574AD3"/>
     </svg>`;
   }
   return '';
@@ -93,6 +93,13 @@ window.onload = () => {
             iconContainer.style.pointerEvents = 'none';
             for (let i = 0; i < 3; i++) {
               const span = document.createElement('span');
+              iconContainer.style.position = 'absolute';
+              iconContainer.style.bottom = '4px';
+              iconContainer.style.left = '50%';
+              iconContainer.style.transform = 'translateX(-50%)';
+              iconContainer.style.display = 'flex';
+              iconContainer.style.gap = '2px';
+              iconContainer.style.pointerEvents = 'none';
               span.innerHTML = icons[i] ? getSvgIcon(icons[i].type) : '';
               iconContainer.appendChild(span);
             }
@@ -117,33 +124,6 @@ window.onload = () => {
 };
 
 // 🔥 여기가 중요! 오늘 날짜의 schedule-item들로 today-task-card 복붙!
-function renderTodayTasks(schedules) {
-  const today = new Date().toISOString().slice(0, 10);
-  const daily = schedules.filter((s) => {
-    let d = s.date;
-    if (d.length > 10) d = d.slice(0, 10);
-    d = d.replace(/\//g, '-');
-    return d === today;
-  });
-
-  const container = document.getElementById('todayTasksContainer');
-  // 오늘 schedule이 하나라도 있으면 전부 복붙!
-  if (daily.length > 0) {
-    // schedule-item 형태가 아니라 today-task-card로만 복붙!
-    container.innerHTML = daily
-      .map(
-        (s) =>
-          `<div class='today-task-card'>
-             <span>${s.title ? '(' + s.title + ') ' : ''}${
-            s.subject?.name || ''
-          } ${s.type}</span>
-           </div>`
-      )
-      .join('');
-  } else {
-    container.innerHTML = "<div class='today-task-card'>오늘 일정 없음</div>";
-  }
-}
 
 function renderUpcomingSchedules(schedules) {
   const today = new Date();
