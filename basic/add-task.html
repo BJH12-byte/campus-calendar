@@ -507,6 +507,8 @@
     <script>
       window.selectedType = null;
       window.selectedSubject = null;
+      let originalDate = null;
+      let originalSchedule = null;
       const urlParams = new URLSearchParams(window.location.search);
       const isEditMode = !!editId;
       flatpickr('#date-picker', {
@@ -575,18 +577,7 @@
   // 삭제 버튼 보여주기
   if (isEditMode) document.getElementById('deleteBtn').style.display = 'block';
 };
-   function selectSubject(el, subjectObj = null) {
-    document.querySelectorAll('#subject-list .list-item').forEach(item => item.classList.remove('selected'));
-    el.classList.add('selected');
-    window.selectedSubject = subjectObj ? subjectObj : { id: null, name: '없음(기타)' };
-  }
 
-  function selectType(el, typeKor) {
-    document.querySelectorAll('#schedule-section .list-item').forEach(item => item.classList.remove('selected'));
-    el.classList.add('selected');
-    window.selectedType = typeKor;
-    document.getElementById('date-section').style.display = 'block';
-  }
 // 등록/수정 둘 다 처리
 function registerSchedule() {
   const selectedDateStr = document.getElementById('date-picker').value.trim();
@@ -643,7 +634,7 @@ function registerSchedule() {
     });
 }
       
-       
+      
       let alertCallback = null;
 
       function showAlertModal(message, callback) {
