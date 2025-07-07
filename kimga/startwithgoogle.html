@@ -91,8 +91,18 @@
       </button>
     </div>
     <script>
-      window.location.href =
-        'https://unidays-project.com/oauth2/authorization/google';
+      const clientId =
+        '960063024247-hu3t1v2o5nis6nr3221gmo9amue9vlbe.apps.googleusercontent.com';
+      const redirectUri =
+        'https://zesty-mermaid-f2b857.netlify.app/kimga/startwithgoogle.html'; // 네 콘솔에 등록한 주소 그대로
+      const scope = 'email profile';
+      const googleUrl =
+        `https://accounts.google.com/o/oauth2/v2/auth` +
+        `?client_id=${clientId}` +
+        `&redirect_uri=${redirectUri}` +
+        `&response_type=code` +
+        `&scope=${scope}`;
+
       // 1. 버튼 클릭시만 OAuth2 진입
       document.addEventListener('DOMContentLoaded', () => {
         document
