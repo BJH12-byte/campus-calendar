@@ -741,54 +741,56 @@
       function getSvgIcon(type) {
         if (type === '시험') {
           return `<svg xmlns="http://www.w3.org/2000/svg" width="14" height="15" viewBox="0 0 14 15" fill="none">
-              <path fill-rule="evenodd" clip-rule="evenodd" d="M9.14176 5.35678L7 0.5L4.85824 5.35678L0 7.49873L4.85824 9.64068L7 14.5L9.14176 9.64068L14 7.49873L9.14176 5.35678Z" fill="#574AD3"/>
-            </svg>`;
+                  <path fill-rule="evenodd" clip-rule="evenodd" d="M9.14176 5.35678L7 0.5L4.85824 5.35678L0 7.49873L4.85824 9.64068L7 14.5L9.14176 9.64068L14 7.49873L9.14176 5.35678Z" fill="#574AD3"/>
+                </svg>`;
         } else if (type === '과제') {
           return `<svg xmlns="http://www.w3.org/2000/svg" width="11" height="11" viewBox="0 0 11 11" fill="none">
-              <circle cx="5.5" cy="5.5" r="5.5" fill="#B7B7F9"/>
-            </svg>`;
+                  <circle cx="5.5" cy="5.5" r="5.5" fill="#B7B7F9"/>
+                </svg>`;
         } else if (type === '기타') {
           return `<svg xmlns="http://www.w3.org/2000/svg" width="11" height="11" viewBox="0 0 11 11" fill="none">
-              <circle cx="5.5" cy="5.5" r="5.5" fill="#B7B7F9"/>
-            </svg>`;
+                  <circle cx="5.5" cy="5.5" r="5.5" fill="#B7B7F9"/>
+                </svg>`;
         }
 
         return '';
       }
       function openPanelWithSchedules(date) {
-        const schedules = JSON.parse(localStorage.getItem('schedules') || '[]');
-        const daily = schedules.filter((s) => s.date === date);
-        document.getElementById(
-          'scheduleDate'
-        ).textContent = `${date} 일정 (${daily.length})`;
-        const listEl = document.getElementById('scheduleList');
-        listEl.innerHTML = '';
-        daily.forEach((s, idx) => {
-          const item = document.createElement('div');
-          item.className = 'schedule-item';
-          const iconHtml = getSvgIcon(s.type);
-          item.innerHTML = `
-        <div class="schedule-item-icon">${iconHtml}</div>
-        <span>${s.title ? '(' + s.title + ') ' : ''}${s.subject} ${
-            s.type
-          }</span>
-        <div class="schedule-item-buttons">
-        </div>`;
-          listEl.appendChild(item);
-          item.addEventListener('click', () => {
-            window.location.href = `add-task.html?edit=${date}&index=${idx}`;
+        fetch('/api/schedules', { credentials: 'include' })
+          .then((res) => res.json())
+          .then((schedules) => {
+            const daily = schedules.filter((s) => s.date === date);
+            document.getElementById(
+              'scheduleDate'
+            ).textContent = `${date} 일정 (${daily.length})`;
+            const listEl = document.getElementById('scheduleList');
+            listEl.innerHTML = '';
+            daily.forEach((s, idx) => {
+              const item = document.createElement('div');
+              item.className = 'schedule-item';
+              const iconHtml = getSvgIcon(s.type);
+              item.innerHTML = `
+              <div class="schedule-item-icon">${iconHtml}</div>
+              <span>${s.title ? '(' + s.title + ') ' : ''}${
+                s.subject?.name || ''
+              } ${s.type}</span>
+              <div class="schedule-item-buttons"></div>`;
+              listEl.appendChild(item);
+              item.addEventListener('click', () => {
+                window.location.href = `add-task.html?edit=${s.id}`;
+              });
+            });
+            const newEl = document.createElement('div');
+            newEl.style =
+              'width:100%;text-align:center;font-weight:bold;color:#6b7280;padding:1rem 0;cursor:pointer;';
+            newEl.textContent = '+ 새 일정 만들기';
+            newEl.onclick = () =>
+              (window.location.href = `add-task.html?date=${date}`);
+            listEl.appendChild(newEl);
+            document.getElementById('schedulePanel').classList.add('active');
           });
-          listEl.appendChild(item);
-        });
-        const newEl = document.createElement('div');
-        newEl.style =
-          'width:100%;text-align:center;font-weight:bold;color:#6b7280;padding:1rem 0;cursor:pointer;';
-        newEl.textContent = '+ 새 일정 만들기';
-        newEl.onclick = () =>
-          (window.location.href = `add-task.html?date=${date}`);
-        listEl.appendChild(newEl);
-        document.getElementById('schedulePanel').classList.add('active');
       }
+
       function showAlertModal(message, callback) {
         document.getElementById('alertMessage').textContent = message;
         document.getElementById('alertModal').style.display = 'flex';
@@ -815,33 +817,94 @@
           .addEventListener('click', closePanel);
       });
 
-      function deleteSchedule(date, index) {
-        const schedules = JSON.parse(localStorage.getItem('schedules') || '[]');
-        const daily = schedules.filter((s) => s.date === date);
-        const target = daily[index];
-        const rmIdx = schedules.findIndex(
-          (s) =>
-            s.date === target.date &&
-            s.subject === target.subject &&
-            s.type === target.type
-        );
-        if (rmIdx > -1) {
-          schedules.splice(rmIdx, 1);
-          localStorage.setItem('schedules', JSON.stringify(schedules));
-          location.reload();
-        }
+      function deleteSchedule(scheduleId) {
+        fetch(`/api/schedules/${scheduleId}`, {
+          method: 'DELETE',
+          credentials: 'include',
+        }).then((res) => {
+          if (res.ok) location.reload();
+          else showAlertModal('삭제 실패', null);
+        });
       }
 
       function editSchedule(date, index) {
         window.location.href = `add-task.html?edit=${date}&index=${index}`;
       }
       window.onload = () => {
-        renderTodayTasks();
-        const user = JSON.parse(localStorage.getItem('user') || '{}');
-        if (user && user.name) {
-          document.getElementById('userName').innerText = user.name + '님';
-        }
-        renderUpcomingSchedules();
+        fetch('/api/schedules', { credentials: 'include' })
+          .then((res) => res.json())
+          .then((schedules) => {
+            window.allSchedules = schedules;
+            renderTodayTasks();
+            renderUpcomingSchedules();
+            // flatpickr 달력도 다시 렌더
+            flatpickr('#calendar', {
+              defaultDate: new Date(),
+              inline: true,
+              monthSelectorType: 'static',
+              onDayCreate: function (_, __, fp, dayElem) {
+                const date = fp.formatDate(dayElem.dateObj, 'Y-m-d');
+                const daySchedules = (window.allSchedules || []).filter(
+                  (s) => s.date === date
+                );
+                if (daySchedules.length > 0) {
+                  dayElem.style.position = 'relative';
+                  const iconContainer = document.createElement('div');
+                  iconContainer.style.position = 'absolute';
+                  iconContainer.style.bottom = '4px';
+                  iconContainer.style.left = '50%';
+                  iconContainer.style.transform = 'translateX(-50%)';
+                  iconContainer.style.display = 'flex';
+                  iconContainer.style.gap = '2px';
+                  iconContainer.style.pointerEvents = 'none';
+                  daySchedules
+                    .filter((s) => s.type !== '시험')
+                    .forEach((s) => {
+                      let svgIcon = '';
+                      if (s.type === '시험') {
+                        svgIcon = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 9 9" style="width:8.051px;height:8.05px;flex-shrink:0;aspect-ratio:8.05/8.05;transform:translateY(1px);" fill="none"><path fill-rule="evenodd" clip-rule="evenodd" d="M5.25699 2.79265L4.02536 0L2.79374 2.79265L0 4.02427L2.79374 5.25589L4.02536 8.05L5.25699 5.25589L8.05073 4.02427L5.25699 2.79265Z" fill="#574AD3"/></svg>`;
+                      } else if (s.type === '과제') {
+                        // 기존 style 뒤에 transform 추가
+                        svgIcon = `
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 3 3"
+               style="width:4px;height:4px;aspect-ratio:1/1;transform: translateY(3px);"
+               fill="none">
+            <circle cx="1.5" cy="1.5" r="1.5" fill="#574AD3"/>
+          </svg>`;
+                      } else if (s.type === '기타') {
+                        // 기존 style 뒤에 transform 추가
+                        svgIcon = `
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 3 3"
+               style="width:4px;height:4px;aspect-ratio:1/1;transform: translateY(-2px);"
+               fill="none">
+            <circle cx="1.5" cy="1.5" r="1.8" fill="#574AD3"/>
+          </svg>`;
+                      }
+                      if (svgIcon) iconContainer.innerHTML += svgIcon;
+                    });
+                  daySchedules
+                    .filter((s) => s.type === '시험')
+                    .forEach((s) => {
+                      let svgIcon = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 9 9" style="width:8.051px;height:8.05px;flex-shrink:0;aspect-ratio:8.05/8.05;transform:translateY(1px);" fill="none"><path fill-rule="evenodd" clip-rule="evenodd" d="M5.25699 2.79265L4.02536 0L2.79374 2.79265L0 4.02427L2.79374 5.25589L4.02536 8.05L5.25699 5.25589L8.05073 4.02427L5.25699 2.79265Z" fill="#574AD3"/></svg>`; // 시험 아이콘(별)
+                      if (svgIcon) iconContainer.innerHTML += svgIcon;
+                    });
+                  dayElem.appendChild(iconContainer);
+                }
+
+                dayElem.addEventListener('click', () =>
+                  openPanelWithSchedules(date)
+                );
+              },
+            });
+          });
+
+        fetch('/api/user/me', { credentials: 'include' })
+          .then((res) => res.json())
+          .then((user) => {
+            if (user && user.name) {
+              document.getElementById('userName').innerText = user.name + '님';
+            }
+          });
       };
       document.addEventListener('DOMContentLoaded', () => {
         const dragHandle = document.getElementById('dragHandle');
@@ -853,10 +916,9 @@
         monthSelectorType: 'static',
         onDayCreate: function (_, __, fp, dayElem) {
           const date = fp.formatDate(dayElem.dateObj, 'Y-m-d');
-          const schedules = JSON.parse(
-            localStorage.getItem('schedules') || '[]'
+          const daySchedules = (window.allSchedules || []).filter(
+            (s) => s.date === date
           );
-          const daySchedules = schedules.filter((s) => s.date === date);
           if (daySchedules.length > 0) {
             dayElem.style.position = 'relative';
             const iconContainer = document.createElement('div');
@@ -876,19 +938,19 @@
                 } else if (s.type === '과제') {
                   // 기존 style 뒤에 transform 추가
                   svgIcon = `
-      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 3 3"
-           style="width:4px;height:4px;aspect-ratio:1/1;transform: translateY(3px);"
-           fill="none">
-        <circle cx="1.5" cy="1.5" r="1.5" fill="#574AD3"/>
-      </svg>`;
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 3 3"
+               style="width:4px;height:4px;aspect-ratio:1/1;transform: translateY(3px);"
+               fill="none">
+            <circle cx="1.5" cy="1.5" r="1.5" fill="#574AD3"/>
+          </svg>`;
                 } else if (s.type === '기타') {
                   // 기존 style 뒤에 transform 추가
                   svgIcon = `
-      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 3 3"
-           style="width:4px;height:4px;aspect-ratio:1/1;transform: translateY(-2px);"
-           fill="none">
-        <circle cx="1.5" cy="1.5" r="1.8" fill="#574AD3"/>
-      </svg>`;
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 3 3"
+               style="width:4px;height:4px;aspect-ratio:1/1;transform: translateY(-2px);"
+               fill="none">
+            <circle cx="1.5" cy="1.5" r="1.8" fill="#574AD3"/>
+          </svg>`;
                 }
                 if (svgIcon) iconContainer.innerHTML += svgIcon;
               });
@@ -906,60 +968,58 @@
       });
 
       function renderTodayTasks() {
-        const schedules = JSON.parse(localStorage.getItem('schedules') || '[]');
-        const today = new Date().toISOString().slice(0, 10);
-        const tasks = schedules.filter((s) => s.date === today);
-        const container = document.getElementById('todayTasksContainer');
-        container.innerHTML =
-          tasks.length > 0
-            ? tasks
-                .map(
-                  (s) =>
-                    `<div class='today-task-card'>
-                   <span>${s.title ? '(' + s.title + ') ' : ''}${s.subject} ${
-                      s.type
-                    }</span>
-                 </div>`
-                )
-                .join('')
-            : "<div class='today-task-card'>오늘 일정 없음</div>";
+        fetch('/api/schedules', { credentials: 'include' })
+          .then((res) => res.json())
+          .then((schedules) => {
+            const today = new Date().toISOString().slice(0, 10);
+            const tasks = schedules.filter((s) => s.date === today);
+            const container = document.getElementById('todayTasksContainer');
+            container.innerHTML =
+              tasks.length > 0
+                ? tasks
+                    .map(
+                      (s) =>
+                        `<div class='today-task-card'>
+                       <span>${s.title ? '(' + s.title + ') ' : ''}${
+                          s.subject?.name || ''
+                        } ${s.type}</span>
+                     </div>`
+                    )
+                    .join('')
+                : "<div class='today-task-card'>오늘 일정 없음</div>";
+          });
       }
       function renderUpcomingSchedules() {
-        const schedules = JSON.parse(localStorage.getItem('schedules') || '[]');
-        const today = new Date().setHours(0, 0, 0, 0);
-        const future = schedules.filter(
-          (s) => new Date(s.date).getTime() > today
-        );
-        const sorted = future.sort(
-          (a, b) => new Date(a.date) - new Date(b.date)
-        );
+        fetch('/api/schedules', { credentials: 'include' })
+          .then((res) => res.json())
+          .then((schedules) => {
+            const today = new Date();
+            today.setHours(0, 0, 0, 0);
 
-        // 상단 배너용 D-1 알림만 필터링
-        const d1Alerts = schedules.filter((s) => {
-          const taskDate = new Date(s.date);
-          taskDate.setHours(0, 0, 0, 0);
-          const diff = (taskDate - today) / (1000 * 60 * 60 * 24);
-          return diff === 1; // 정확히 하루 뒤인 경우만
-        });
+            const d1Alerts = schedules.filter((s) => {
+              const target = new Date(s.date);
+              target.setHours(0, 0, 0, 0);
+              const diff = (target - today) / (1000 * 60 * 60 * 24);
+              return diff === 1;
+            });
 
-        if (d1Alerts.length > 0) {
-          const alertHTML = `
+            if (d1Alerts.length > 0) {
+              const alertHTML = `
             <div class="alert-banner">
               📢 내일 마감!<br />
               <div style="font-weight:normal;">
                 ${d1Alerts
-                  .map((s) => `- ${s.subject} ${s.type} (D-1)`)
+                  .map((s) => `- ${s.subject?.name || ''} ${s.type} (D-1)`)
                   .join('<br />')}
               </div>
               <button onclick="this.parentElement.remove()">×</button>
             </div>
           `;
-          document.getElementById('alertContainer').innerHTML = alertHTML;
-        }
-
-        // 메인에서는 더 이상 D-1 ~ D-3 일정 박스 출력 안 함
-        const upcomingContainer = document.getElementById('upcomingDdays');
-        if (upcomingContainer) upcomingContainer.innerHTML = '';
+              document.getElementById('alertContainer').innerHTML = alertHTML;
+            } else {
+              document.getElementById('alertContainer').innerHTML = '';
+            }
+          });
       }
       document.querySelector('.team-btn').addEventListener('click', () => {
         const menu = document.getElementById('teamMenu');
