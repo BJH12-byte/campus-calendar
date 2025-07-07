@@ -645,12 +645,12 @@ fetch('https://unidays-project.com/api/usersubjects', { credentials: 'include' }
     showWarning('지난 날짜에는 일정을 등록할 수 없습니다.');
     return;
   }
-  const payload = {
+  console.log('payload:', {
     title: title,
     date: selectedDateStr,
     type: selectedType === '과제' ? 'TASK' : selectedType === '시험' ? 'EXAM' : 'ETC',
     subject: selectedSubject ? selectedSubject.id : null,
-  };
+  });
 
   fetch('https://unidays-project.com/api/schedules', {
     method: 'POST',
