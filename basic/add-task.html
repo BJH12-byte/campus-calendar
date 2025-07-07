@@ -689,10 +689,11 @@
 const scheduleObj = {
   title: "테스트",
   date: "2025-07-09",
-  type: "TASK",  // "EXAM" or "ETC" 도 됨
-  subject: selectedSubject ? { id: selectedSubject.id } : null,
-  alertBeforeDays: 1 // 옵션, 혹시 모르면 붙여
+  type: "TASK",
+  subject: { id: 213 }, // 실제 id 확인
+  alertBeforeDays: 1
 };
+console.log("보내는 scheduleObj", scheduleObj);
 
 fetch('https://unidays-project.com/api/schedules', {
   method: 'POST',
@@ -707,10 +708,7 @@ fetch('https://unidays-project.com/api/schedules', {
   return res.json();
 })
 .then(data => {
-  showAlertModal(
-    isEditMode ? '일정이 수정되었습니다.' : '일정이 등록되었습니다.',
-    () => (window.location.href = 'home.html')
-  );
+  showAlertModal('일정이 등록되었습니다.', () => (window.location.href = 'home.html'));
 })
 .catch(err => {
   showWarning('일정 등록 실패! ' + err.message);
