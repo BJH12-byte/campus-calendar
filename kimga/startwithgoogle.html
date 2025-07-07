@@ -91,12 +91,16 @@
       </button>
     </div>
     <script>
-      document.querySelector('.google-button').addEventListener('click', () => {
-        window.location.href =
-          'https://unidays-project.com/oauth2/authorization/google';
+      document.addEventListener('DOMContentLoaded', () => {
+        const googleButton = document.querySelector('.google-button');
+        if (googleButton) {
+          googleButton.addEventListener('click', () => {
+            window.location.href =
+              'https://unidays-project.com/oauth2/authorization/google';
+          });
+        }
       });
 
-      // 2. 로그인 후 진입 시 세션 체크
       window.onload = function () {
         fetch('https://unidays-project.com/api/user/me', {
           credentials: 'include',
@@ -107,37 +111,20 @@
               return;
             }
             if (res.status === 403) {
-              // 아직 추가정보 입력 안한 상태
-              window.location.href = 'signup.html';
+              window.location.href = 'signup.html'; // 추가정보 입력
               return;
             }
-            // 200 OK: 추가정보 다 입력된 상태
             return res.json();
           })
           .then((user) => {
-            // user 정보 없으면 아무것도 하지 않음
             if (!user) return;
             if (!user.hasSubjects) {
-              window.location.href = 'mainboard.html';
+              window.location.href = 'subject-register.html'; // 과목 등록
             } else {
-              window.location.href = 'mainboard.html';
+              window.location.href = 'mainboard.html'; // 메인
             }
           });
       };
-
-      // 3. 로그아웃 (예시)
-      function logout() {
-        fetch('https://unidays-project.com/logout', {
-          method: 'POST',
-          credentials: 'include',
-        }).then(() => {
-          window.location.href = 'https://accounts.google.com/logout';
-          // 로그아웃 후 로그인 페이지로 리다이렉트
-          setTimeout(() => {
-            window.location.href = 'startwithgoogle.html';
-          }, 1000);
-        });
-      }
     </script>
   </body>
 </html>
