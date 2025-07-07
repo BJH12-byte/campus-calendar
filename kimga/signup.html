@@ -5,7 +5,6 @@
     <meta name="viewport" content="width=393, user-scalable=no" />
     <title>회원가입</title>
     <style>
-      /* 기존 스타일 그대로 복붙 */
       body {
         margin: 0;
         display: flex;
@@ -133,12 +132,6 @@
             <option value="4">4학년</option>
           </select>
         </div>
-        <div class="input-group">
-          <label for="subject">과목 선택</label>
-          <select id="subject">
-            <option value="">전공/학년을 선택하세요</option>
-          </select>
-        </div>
       </div>
       <button class="next-button" onclick="submitForm()">다음</button>
     </div>
@@ -163,64 +156,12 @@
           alertCallback = null;
         }
       }
-
-      // 전공, 학년 변경 시 과목 리스트 갱신
-      document
-        .getElementById('major')
-        .addEventListener('change', updateSubjects);
-      document
-        .getElementById('grade')
-        .addEventListener('change', updateSubjects);
-
-      async function updateSubjects() {
-        const major = document.getElementById('major').value;
-        const grade = document.getElementById('grade').value;
-        const subjectSelect = document.getElementById('subject');
-        subjectSelect.innerHTML = '<option value="">로딩중...</option>';
-        if (!major || !grade) {
-          subjectSelect.innerHTML =
-            '<option value="">전공/학년을 선택하세요</option>';
-          return;
-        }
-        try {
-          // 1. 내 전공 과목 전체 GET
-          const res = await fetch(
-            'https://unidays-project.com/api/subjects/major?major=' +
-              encodeURIComponent(major),
-            { credentials: 'include' }
-          );
-          const subjects = await res.json();
-          // 2. 선택한 학년만 필터
-          const filtered = subjects.filter(
-            (s) => String(s.grade) === String(grade)
-          );
-          if (filtered.length === 0) {
-            subjectSelect.innerHTML = '<option value="">과목 없음</option>';
-            return;
-          }
-          subjectSelect.innerHTML = filtered
-            .map(
-              (s) => `<option value="${s.id}">${s.name} (${s.time})</option>`
-            )
-            .join('');
-          subjectSelect.insertAdjacentHTML(
-            'afterbegin',
-            `<option value="">과목 선택</option>`
-          );
-        } catch (err) {
-          subjectSelect.innerHTML =
-            '<option value="">과목 불러오기 실패</option>';
-        }
-      }
-
       async function submitForm() {
         const name = document.getElementById('name').value.trim();
         const studentId = document.getElementById('studentId').value.trim();
         const major = document.getElementById('major').value;
         const grade = document.getElementById('grade').value;
-        const subjectId = document.getElementById('subject').value;
-
-        if (!name || !studentId || !major || !grade || !subjectId) {
+        if (!name || !studentId || !major || !grade) {
           showAlert('모든 항목을 입력해주세요.');
           return;
         }
@@ -229,35 +170,19 @@
           return;
         }
         try {
-          // 1. 추가 정보 등록
           const res = await fetch(
             'https://unidays-project.com/api/user/additional-info',
             {
               method: 'POST',
               headers: { 'Content-Type': 'application/json' },
               credentials: 'include',
-              body: JSON.stringify({ name, studentId, major }),
+              body: JSON.stringify({ name, studentId, major, grade }),
             }
           );
           if (!res.ok) {
             showAlert('정보 등록 실패. 다시 시도하세요.');
             return;
           }
-          // 2. 과목 등록 (usersubjects)
-          const registerRes = await fetch(
-            'https://unidays-project.com/api/usersubjects',
-            {
-              method: 'POST',
-              headers: { 'Content-Type': 'application/json' },
-              credentials: 'include',
-              body: JSON.stringify({ subject: { id: Number(subjectId) } }),
-            }
-          );
-          if (!registerRes.ok) {
-            showAlert('과목 등록 실패. 다시 시도하세요.');
-            return;
-          }
-          // 3. 메인으로 이동
           window.location.href = 'mainboard.html';
         } catch (err) {
           showAlert('서버 통신 오류. 네트워크 확인하세요.');
