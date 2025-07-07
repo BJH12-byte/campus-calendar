@@ -92,28 +92,34 @@ window.onload = () => {
       }
     });
 };
+
+// 🔥 여기가 중요! 오늘 날짜의 schedule-item들로 today-task-card 복붙!
 function renderTodayTasks(schedules) {
   const today = new Date().toISOString().slice(0, 10);
-  const tasks = schedules.filter((s) => {
+  const daily = schedules.filter((s) => {
     let d = s.date;
     if (d.length > 10) d = d.slice(0, 10);
     d = d.replace(/\//g, '-');
     return d === today;
   });
+
   const container = document.getElementById('todayTasksContainer');
-  container.innerHTML =
-    tasks.length > 0
-      ? tasks
-          .map(
-            (s) =>
-              `<div class='today-task-card'>
-                 <span>${s.title ? '(' + s.title + ') ' : ''}${
-                s.subject?.name || ''
-              } ${s.type}</span>
-               </div>`
-          )
-          .join('')
-      : "<div class='today-task-card'>오늘 일정 없음</div>";
+  // 오늘 schedule이 하나라도 있으면 전부 복붙!
+  if (daily.length > 0) {
+    // schedule-item 형태가 아니라 today-task-card로만 복붙!
+    container.innerHTML = daily
+      .map(
+        (s) =>
+          `<div class='today-task-card'>
+             <span>${s.title ? '(' + s.title + ') ' : ''}${
+            s.subject?.name || ''
+          } ${s.type}</span>
+           </div>`
+      )
+      .join('');
+  } else {
+    container.innerHTML = "<div class='today-task-card'>오늘 일정 없음</div>";
+  }
 }
 
 function renderUpcomingSchedules(schedules) {
