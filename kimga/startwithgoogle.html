@@ -23,7 +23,7 @@
         display: flex;
         flex-direction: column;
         align-items: center;
-        padding-top: 230px; /* 로고 위치 보정 */
+        padding-top: 230px;
         box-sizing: border-box;
       }
       .logo-wrapper {
@@ -84,34 +84,30 @@
       </button>
     </div>
     <script>
-      // 1. 구글 로그인 버튼 클릭 시 OAuth2 인증 진입
-      document.addEventListener('DOMContentLoaded', () => {
-        const btn = document.querySelector('.google-button');
-        if (btn) {
-          btn.addEventListener('click', () => {
-            window.location.href =
-              'https://unidays-project.com/oauth2/authorization/google';
-          });
-        }
-      });
+      // 버튼 클릭 시 구글 로그인 진입
+      document
+        .querySelector('.google-button')
+        .addEventListener('click', function () {
+          window.location.href =
+            'https://unidays-project.com/oauth2/authorization/google';
+        });
 
-      // 2. 구글 OAuth2 콜백일 때만 세션 체크 (code 파라미터 체크)
+      // code 파라미터가 있으면 인증 콜백
       window.onload = function () {
         const urlParams = new URLSearchParams(window.location.search);
         if (urlParams.has('code')) {
-          // 구글 인증 후 세션 쿠키 발급된 상태
           fetch('https://unidays-project.com/api/user/me', {
             credentials: 'include',
           })
             .then((res) => {
               if (res.status === 401) {
-                // 로그인 안된 상태 → 로그인 페이지
-                window.location.href = '/startwithgoogle.html';
+                // 세션 없음: 무한루프 방지
+                window.location.href = 'startwithgoogle.html';
                 return;
               }
               if (res.status === 403) {
                 // 추가 정보 미입력
-                window.location.href = '/signup.html';
+                window.location.href = 'signup.html';
                 return;
               }
               return res.json();
@@ -119,13 +115,13 @@
             .then((user) => {
               if (!user) return;
               if (!user.hasSubjects) {
-                window.location.href = '/subject-register.html';
+                window.location.href = 'subject-register.html';
               } else {
-                window.location.href = '/mainboard.html';
+                window.location.href = 'mainboard.html';
               }
             });
         }
-        // code 없으면(처음 방문, 로그아웃) → 버튼만 보이고 아무 동작 안 함
+        // code 없으면 아무 동작 없이 버튼만 노출
       };
     </script>
   </body>
