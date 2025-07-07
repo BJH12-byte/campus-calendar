@@ -84,7 +84,6 @@
       </button>
     </div>
     <script>
-      // 버튼 클릭 시 구글 로그인 진입
       document
         .querySelector('.google-button')
         .addEventListener('click', function () {
@@ -92,31 +91,42 @@
             'https://unidays-project.com/oauth2/authorization/google';
         });
 
-      // code 파라미터가 있으면 인증 콜백
       window.onload = function () {
         const urlParams = new URLSearchParams(window.location.search);
         if (urlParams.has('code')) {
-          fetch('https://unidays-project.com/api/user/me', {
-            credentials: 'include',
-          })
-            .then((res) => {
-              if (res.status === 401) {
-                window.location.href = '/kimga/startwithgoogle.html';
-                return;
+          // 1. 백엔드에서 JSON으로 redirectUrl 줌
+          fetch(window.location.href)
+            .then((res) => res.json())
+            .then((data) => {
+              if (data.redirectUrl) {
+                // 2. redirectUrl로 이동시켜줌
+                window.location.href = data.redirectUrl;
               }
-              if (res.status === 403) {
-                window.location.href = '/kimga/signup.html';
-                return;
-              }
-              return res.json();
             })
-            .then((user) => {
-              if (!user) return;
-              if (!user.hasSubjects) {
-                window.location.href = '/kimga/subject-register.html';
-              } else {
-                window.location.href = '/kimga/mainboard.html';
-              }
+            .catch(() => {
+              // 혹시 실패하면 원래 flow로 fallback
+              fetch('https://unidays-project.com/api/user/me', {
+                credentials: 'include',
+              })
+                .then((res) => {
+                  if (res.status === 401) {
+                    window.location.href = '/kimga/startwithgoogle.html';
+                    return;
+                  }
+                  if (res.status === 403) {
+                    window.location.href = '/kimga/signup.html';
+                    return;
+                  }
+                  return res.json();
+                })
+                .then((user) => {
+                  if (!user) return;
+                  if (!user.hasSubjects) {
+                    window.location.href = '/kimga/subject-register.html';
+                  } else {
+                    window.location.href = '/kimga/mainboard.html';
+                  }
+                });
             });
         }
       };
