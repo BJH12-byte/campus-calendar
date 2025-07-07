@@ -39,13 +39,17 @@ window.onload = () => {
         subjectListDiv.appendChild(item);
       });
 
-      // 수정 모드면 기존 정보 세팅
+      // 수정 모드면 전체 일정 리스트에서 해당 일정 찾아서 값 세팅
       if (isEditMode) {
-        fetch(`https://unidays-project.com/api/schedules/${editId}`, {
+        fetch('https://unidays-project.com/api/schedules', {
           credentials: 'include',
         })
           .then((res) => res.json())
-          .then((data) => {
+          .then((list) => {
+            const data = list.find(
+              (item) => String(item.id) === String(editId)
+            );
+            if (!data) return;
             document.getElementById('schedule-title').value = data.title || '';
             document.getElementById('date-picker').value = data.date || '';
             window.selectedType =
