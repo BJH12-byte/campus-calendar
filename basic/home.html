@@ -817,10 +817,6 @@
         }
       }
 
-      function editSchedule(date, index) {
-        window.location.href = `add-task.html?edit=${date}&index=${index}`;
-      }
-
       function renderTodayTasks() {
         const today = new Date().toISOString().slice(0, 10);
         const tasks = schedules.filter((s) => s.date === today);
@@ -841,7 +837,6 @@
       }
 
       function renderUpcomingSchedules() {
-        const schedules = JSON.parse(localStorage.getItem('schedules') || '[]');
         const today = new Date().setHours(0, 0, 0, 0);
         const d1Alerts = schedules.filter((s) => {
           const taskDate = new Date(s.date);
@@ -887,6 +882,52 @@
           showAlertModal('일정 불러오기 실패');
           return [];
         }
+      }
+
+      function setupCalendar() {
+        flatpickr('#calendar', {
+          defaultDate: new Date(),
+          inline: true,
+          monthSelectorType: 'static',
+          onDayCreate: function (_, __, fp, dayElem) {
+            const date = fp.formatDate(dayElem.dateObj, 'Y-m-d');
+            const daySchedules = schedules.filter((s) => s.date === date);
+            if (daySchedules.length > 0) {
+              dayElem.style.position = 'relative';
+              const iconContainer = document.createElement('div');
+              iconContainer.style.position = 'absolute';
+              iconContainer.style.bottom = '4px';
+              iconContainer.style.left = '50%';
+              iconContainer.style.transform = 'translateX(-50%)';
+              iconContainer.style.display = 'flex';
+              iconContainer.style.gap = '2px';
+              iconContainer.style.pointerEvents = 'none';
+              daySchedules
+                .filter((s) => s.type !== '시험')
+                .forEach((s) => {
+                  let svgIcon = '';
+                  if (s.type === '과제' || s.type === '기타') {
+                    svgIcon = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 3 3"
+                  style="width:4px;height:4px;aspect-ratio:1/1;transform: translateY(3px);"
+                  fill="none">
+                <circle cx="1.5" cy="1.5" r="1.5" fill="#574AD3"/>
+              </svg>`;
+                  }
+                  if (svgIcon) iconContainer.innerHTML += svgIcon;
+                });
+              daySchedules
+                .filter((s) => s.type === '시험')
+                .forEach((s) => {
+                  let svgIcon = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 9 9" style="width:8.051px;height:8.05px;flex-shrink:0;aspect-ratio:8.05/8.05;transform:translateY(1px);" fill="none"><path fill-rule="evenodd" clip-rule="evenodd" d="M5.25699 2.79265L4.02536 0L2.79374 2.79265L0 4.02427L2.79374 5.25589L4.02536 8.05L5.25699 5.25589L8.05073 4.02427L5.25699 2.79265Z" fill="#574AD3"/></svg>`;
+                  if (svgIcon) iconContainer.innerHTML += svgIcon;
+                });
+              dayElem.appendChild(iconContainer);
+            }
+            dayElem.addEventListener('click', () =>
+              openPanelWithSchedules(date)
+            );
+          },
+        });
       }
 
       document.addEventListener('DOMContentLoaded', () => {
@@ -950,51 +991,6 @@
           }
 
           // flatpickr 셋업 (달력 아이콘, 일정 표시, 클릭)
-          function setupCalendar() {
-            flatpickr('#calendar', {
-              defaultDate: new Date(),
-              inline: true,
-              monthSelectorType: 'static',
-              onDayCreate: function (_, __, fp, dayElem) {
-                const date = fp.formatDate(dayElem.dateObj, 'Y-m-d');
-                const daySchedules = schedules.filter((s) => s.date === date);
-                if (daySchedules.length > 0) {
-                  dayElem.style.position = 'relative';
-                  const iconContainer = document.createElement('div');
-                  iconContainer.style.position = 'absolute';
-                  iconContainer.style.bottom = '4px';
-                  iconContainer.style.left = '50%';
-                  iconContainer.style.transform = 'translateX(-50%)';
-                  iconContainer.style.display = 'flex';
-                  iconContainer.style.gap = '2px';
-                  iconContainer.style.pointerEvents = 'none';
-                  daySchedules
-                    .filter((s) => s.type !== '시험')
-                    .forEach((s) => {
-                      let svgIcon = '';
-                      if (s.type === '과제' || s.type === '기타') {
-                        svgIcon = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 3 3"
-                  style="width:4px;height:4px;aspect-ratio:1/1;transform: translateY(3px);"
-                  fill="none">
-                <circle cx="1.5" cy="1.5" r="1.5" fill="#574AD3"/>
-              </svg>`;
-                      }
-                      if (svgIcon) iconContainer.innerHTML += svgIcon;
-                    });
-                  daySchedules
-                    .filter((s) => s.type === '시험')
-                    .forEach((s) => {
-                      let svgIcon = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 9 9" style="width:8.051px;height:8.05px;flex-shrink:0;aspect-ratio:8.05/8.05;transform:translateY(1px);" fill="none"><path fill-rule="evenodd" clip-rule="evenodd" d="M5.25699 2.79265L4.02536 0L2.79374 2.79265L0 4.02427L2.79374 5.25589L4.02536 8.05L5.25699 5.25589L8.05073 4.02427L5.25699 2.79265Z" fill="#574AD3"/></svg>`;
-                      if (svgIcon) iconContainer.innerHTML += svgIcon;
-                    });
-                  dayElem.appendChild(iconContainer);
-                }
-                dayElem.addEventListener('click', () =>
-                  openPanelWithSchedules(date)
-                );
-              },
-            });
-          }
         })();
       });
 
