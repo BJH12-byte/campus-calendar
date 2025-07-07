@@ -178,6 +178,7 @@ function renderTodayTasks() {
   })
     .then((res) => res.json())
     .then((schedules) => {
+      console.log(schedules);
       const today = new Date().toISOString().slice(0, 10);
       const tasks = schedules.filter((s) => {
         let d = s.date;
