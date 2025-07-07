@@ -5,11 +5,11 @@ function getSvgIcon(type) {
     </svg>`;
   } else if (type === '과제' || type === 'TASK') {
     return `<svg xmlns="http://www.w3.org/2000/svg" width="11" height="11" viewBox="0 0 11 11" fill="none">
-      <circle cx="5.5" cy="5.5" r="5.5" fill="#574AD3"/>
+      <circle cx="5.5" cy="5.5" r="5.5" fill="#B7B7F9"/>
     </svg>`;
   } else if (type === '기타' || type === 'ETC') {
     return `<svg xmlns="http://www.w3.org/2000/svg" width="11" height="11" viewBox="0 0 11 11" fill="none">
-      <circle cx="5.5" cy="5.5" r="5.5" fill="#574AD3"/>
+      <circle cx="5.5" cy="5.5" r="5.5" fill="#B7B7F9"/>
     </svg>`;
   }
   return '';
@@ -93,13 +93,6 @@ window.onload = () => {
             iconContainer.style.pointerEvents = 'none';
             for (let i = 0; i < 3; i++) {
               const span = document.createElement('span');
-              iconContainer.style.position = 'absolute';
-              iconContainer.style.bottom = '4px';
-              iconContainer.style.left = '50%';
-              iconContainer.style.transform = 'translateX(-50%)';
-              iconContainer.style.display = 'flex';
-              iconContainer.style.gap = '2px';
-              iconContainer.style.pointerEvents = 'none';
               span.innerHTML = icons[i] ? getSvgIcon(icons[i].type) : '';
               iconContainer.appendChild(span);
             }
