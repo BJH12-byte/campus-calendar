@@ -1,6 +1,6 @@
 function getSvgIcon(type) {
   if (type === '시험' || type === 'EXAM') {
-    return `<svg xmlns="http://www.w3.org/2000/svg" width="8" height="8" viewBox="0 0 14 15" fill="none">
+    return `<svg xmlns="http://www.w3.org/2000/svg" width="8" height="8" viewBox="0 0 11 11" fill="none">
       <path fill-rule="evenodd" clip-rule="evenodd" d="M9.14176 5.35678L7 0.5L4.85824 5.35678L0 7.49873L4.85824 9.64068L7 14.5L9.14176 9.64068L14 7.49873L9.14176 5.35678Z" fill="#574AD3"/>
     </svg>`;
   } else if (type === '과제' || type === 'TASK') {
