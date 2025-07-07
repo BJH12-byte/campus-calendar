@@ -179,7 +179,14 @@ function renderTodayTasks() {
     .then((res) => res.json())
     .then((schedules) => {
       const today = new Date().toISOString().slice(0, 10);
-      const tasks = schedules.filter((s) => s.date === today);
+      const tasks = schedules.filter((s) => {
+        let d = s.date;
+        // 시간 붙어 있으면 앞 10글자만 자르기
+        if (d.length > 10) d = d.slice(0, 10);
+        // 혹시 /로 되어 있으면 -로 바꾸기
+        d = d.replace(/\//g, '-');
+        return d === today;
+      });
       const container = document.getElementById('todayTasksContainer');
       container.innerHTML =
         tasks.length > 0
