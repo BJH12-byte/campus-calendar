@@ -125,9 +125,9 @@
           .then((user) => {
             if (!user) return;
             if (!user.hasSubjects) {
-              window.location.href = '/kimga/subject-register.html';
-            } else {
               window.location.href = '/kimga/mainboard.html';
+            } else {
+              window.location.href = '/basic/home.html';
             }
           })
           .catch((err) => {
