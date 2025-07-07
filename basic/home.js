@@ -34,7 +34,6 @@ window.onload = () => {
           const daySchedules = (window.allSchedules || []).filter((s) => {
             let d = s.date;
             if (d.length > 10) d = d.slice(0, 10);
-            console.log('오늘', today);
             d = d.replace(/\//g, '-');
             return d === date;
           });
