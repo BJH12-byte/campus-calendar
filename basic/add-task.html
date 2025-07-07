@@ -517,11 +517,14 @@
        flatpickr('#date-picker', {
       dateFormat: 'Y-m-d',
       position: 'auto left',
-      defaultDate: dateParam || new Date()
+      defaultDate: dateParam || null,
     });
 
        window.onload = async () => {
       // 1. 유저 정보 불러오기
+       if (dateParam) {
+      document.getElementById('date-picker').value = dateParam;
+    }
       try {
         const userRes = await fetch('https://unidays-project.com/api/user/me', { credentials: 'include' });
         if (!userRes.ok) throw new Error();
