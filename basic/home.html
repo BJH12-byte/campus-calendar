@@ -756,7 +756,7 @@
         return '';
       }
       function openPanelWithSchedules(date) {
-        fetch('http://unidays-project.com/api/scheldules', {
+        fetch('https://unidays-project.com/api/schedules', {
           credentials: 'include',
         })
           .then((res) => res.json())
@@ -820,7 +820,7 @@
       });
 
       function deleteSchedule(scheduleId) {
-        fetch(`http://unidays-project.com/api/scheldules/${scheduleId}`, {
+        fetch(`https://unidays-project.com/api/schedules/${scheduleId}`, {
           method: 'DELETE',
           credentials: 'include',
         }).then((res) => {
@@ -833,7 +833,7 @@
         window.location.href = `add-task.html?edit=${date}&index=${index}`;
       }
       window.onload = () => {
-        fetch('http://unidays-project.com/api/scheldules', {
+        fetch('https://unidays-project.com/api/schedules', {
           credentials: 'include',
         })
           .then((res) => res.json())
@@ -902,7 +902,7 @@
             });
           });
 
-        fetch('http://unidays-project.com/api/user/me', {
+        fetch('https://unidays-project.com/api/user/me', {
           credentials: 'include',
         })
           .then((res) => res.json())
@@ -974,7 +974,7 @@
       });
 
       function renderTodayTasks() {
-        fetch('http://unidays-project.com/api/scheldules', {
+        fetch('https://unidays-project.com/api/schedules', {
           credentials: 'include',
         })
           .then((res) => res.json())
@@ -998,7 +998,7 @@
           });
       }
       function renderUpcomingSchedules() {
-        fetch('http://unidays-project.com/api/scheldules', {
+        fetch('https://unidays-project.com/api/schedules', {
           credentials: 'include',
         })
           .then((res) => res.json())
