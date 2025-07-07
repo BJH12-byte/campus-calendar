@@ -739,6 +739,7 @@
     <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
     <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
     <script>
+      let schedules = [];
       function getSvgIcon(type) {
         if (type === '시험') {
           return `<svg xmlns="http://www.w3.org/2000/svg" width="14" height="15" viewBox="0 0 14 15" fill="none">
@@ -753,7 +754,6 @@
       }
 
       function openPanelWithSchedules(date) {
-        const schedules = JSON.parse(localStorage.getItem('schedules') || '[]');
         const daily = schedules.filter((s) => s.date === date);
         document.getElementById(
           'scheduleDate'
@@ -765,13 +765,14 @@
           item.className = 'schedule-item';
           const iconHtml = getSvgIcon(s.type);
           item.innerHTML = `
-        <div class="schedule-item-icon">${iconHtml}</div>
-        <span>${s.title ? '(' + s.title + ') ' : ''}${s.subject} ${
+            <div class="schedule-item-icon">${iconHtml}</div>
+            <span>${s.title ? '(' + s.title + ') ' : ''}${s.subject.name} ${
             s.type
           }</span>
-        <div class="schedule-item-buttons"></div>`;
+            <div class="schedule-item-buttons"></div>
+          `;
           item.addEventListener('click', () => {
-            window.location.href = `add-task.html?edit=${date}&index=${idx}`;
+            window.location.href = `add-task.html?edit=${s.id}`;
           });
           listEl.appendChild(item);
         });
@@ -804,20 +805,15 @@
         document.getElementById('schedulePanel').classList.remove('active');
       }
 
-      function deleteSchedule(date, index) {
-        const schedules = JSON.parse(localStorage.getItem('schedules') || '[]');
-        const daily = schedules.filter((s) => s.date === date);
-        const target = daily[index];
-        const rmIdx = schedules.findIndex(
-          (s) =>
-            s.date === target.date &&
-            s.subject === target.subject &&
-            s.type === target.type
-        );
-        if (rmIdx > -1) {
-          schedules.splice(rmIdx, 1);
-          localStorage.setItem('schedules', JSON.stringify(schedules));
-          location.reload();
+      async function deleteSchedule(id) {
+        try {
+          await fetch(`https://unidays-project.com/api/schedules/${id}`, {
+            method: 'DELETE',
+            credentials: 'include',
+          });
+          showAlertModal('삭제되었습니다.', true);
+        } catch {
+          showAlertModal('삭제 실패');
         }
       }
 
@@ -826,7 +822,6 @@
       }
 
       function renderTodayTasks() {
-        const schedules = JSON.parse(localStorage.getItem('schedules') || '[]');
         const today = new Date().toISOString().slice(0, 10);
         const tasks = schedules.filter((s) => s.date === today);
         const container = document.getElementById('todayTasksContainer');
@@ -836,10 +831,10 @@
                 .map(
                   (s) =>
                     `<div class='today-task-card'>
-                   <span>${s.title ? '(' + s.title + ') ' : ''}${s.subject} ${
-                      s.type
-                    }</span>
-                 </div>`
+                      <span>${s.title ? '(' + s.title + ') ' : ''}${
+                      s.subject.name
+                    } ${s.type}</span>
+                    </div>`
                 )
                 .join('')
             : "<div class='today-task-card'>오늘 일정 없음</div>";
@@ -872,111 +867,135 @@
         const upcomingContainer = document.getElementById('upcomingDdays');
         if (upcomingContainer) upcomingContainer.innerHTML = '';
       }
+      async function loadSchedules() {
+        try {
+          const res = await fetch('https://unidays-project.com/api/schedules', {
+            credentials: 'include',
+          });
+          if (res.status === 401) {
+            window.location.href = '/kimga/startwithgoogle.html';
+            return [];
+          }
+          if (res.status === 403) {
+            window.location.href = '/kimga/signup.html';
+            return [];
+          }
+          const data = await res.json();
+          schedules = Array.isArray(data) ? data : [];
+          return schedules;
+        } catch (e) {
+          showAlertModal('일정 불러오기 실패');
+          return [];
+        }
+      }
 
       document.addEventListener('DOMContentLoaded', () => {
-        // 1. 사용자 이름 fetch해서 표시
-        fetch('https://unidays-project.com/api/user/me', {
-          credentials: 'include',
-        })
-          .then((res) => {
-            if (res.status === 401) {
+        (async () => {
+          // 1. 사용자 이름 fetch해서 표시
+          fetch('https://unidays-project.com/api/user/me', {
+            credentials: 'include',
+          })
+            .then((res) => {
+              if (res.status === 401) {
+                window.location.href = '/kimga/startwithgoogle.html';
+                return;
+              }
+              if (res.status === 403) {
+                window.location.href = '/kimga/signup.html';
+                return;
+              }
+              return res.json();
+            })
+            .then((user) => {
+              if (!user) return;
+              document.getElementById('userName').textContent =
+                (user.name || '사용자') + '님';
+            })
+            .catch(() => {
               window.location.href = '/kimga/startwithgoogle.html';
-              return;
-            }
-            if (res.status === 403) {
-              window.location.href = '/kimga/signup.html';
-              return;
-            }
-            return res.json();
-          })
-          .then((user) => {
-            if (!user) return;
-            document.getElementById('userName').textContent =
-              (user.name || '사용자') + '님';
-          })
-          .catch(() => {
-            window.location.href = '/kimga/startwithgoogle.html';
-          });
+            });
 
-        // 2. 오늘 일정, D-1, 패널 닫기 등 모든 이벤트 한 번에 처리
-        renderTodayTasks();
-        renderUpcomingSchedules();
+          // 2. 오늘 일정, D-1, 패널 닫기 등 모든 이벤트 한 번에 처리
+          await loadSchedules();
+          renderTodayTasks();
+          renderUpcomingSchedules();
+          setupCalendar();
 
-        const dragHandle = document.getElementById('dragHandle');
-        if (dragHandle) {
-          dragHandle.addEventListener('click', closePanel);
-        }
+          const dragHandle = document.getElementById('dragHandle');
+          if (dragHandle) {
+            dragHandle.addEventListener('click', closePanel);
+          }
 
-        // 알림탭 (없으면 무시)
-        const notificationTab = document.getElementById('notificationTab');
-        if (notificationTab) {
-          notificationTab.addEventListener('click', () => {
-            window.location.href = '../notification/notification.html';
-          });
-        }
+          // 알림탭 (없으면 무시)
+          const notificationTab = document.getElementById('notificationTab');
+          if (notificationTab) {
+            notificationTab.addEventListener('click', () => {
+              window.location.href = '../notification/notification.html';
+            });
+          }
 
-        // TEAM 드롭다운
-        const teamBtn = document.querySelector('.team-btn');
-        if (teamBtn) {
-          teamBtn.addEventListener('click', () => {
-            const menu = document.getElementById('teamMenu');
-            if (menu.classList.contains('hidden')) {
-              menu.classList.remove('hidden');
-              setTimeout(() => menu.classList.add('show'), 10);
-            } else {
-              menu.classList.remove('show');
-              setTimeout(() => menu.classList.add('hidden'), 300);
-            }
-          });
-        }
+          // TEAM 드롭다운
+          const teamBtn = document.querySelector('.team-btn');
+          if (teamBtn) {
+            teamBtn.addEventListener('click', () => {
+              const menu = document.getElementById('teamMenu');
+              if (menu.classList.contains('hidden')) {
+                menu.classList.remove('hidden');
+                setTimeout(() => menu.classList.add('show'), 10);
+              } else {
+                menu.classList.remove('show');
+                setTimeout(() => menu.classList.add('hidden'), 300);
+              }
+            });
+          }
 
-        // flatpickr 셋업 (달력 아이콘, 일정 표시, 클릭)
-        flatpickr('#calendar', {
-          defaultDate: new Date(),
-          inline: true,
-          monthSelectorType: 'static',
-          onDayCreate: function (_, __, fp, dayElem) {
-            const date = fp.formatDate(dayElem.dateObj, 'Y-m-d');
-            const schedules = JSON.parse(
-              localStorage.getItem('schedules') || '[]'
-            );
-            const daySchedules = schedules.filter((s) => s.date === date);
-            if (daySchedules.length > 0) {
-              dayElem.style.position = 'relative';
-              const iconContainer = document.createElement('div');
-              iconContainer.style.position = 'absolute';
-              iconContainer.style.bottom = '4px';
-              iconContainer.style.left = '50%';
-              iconContainer.style.transform = 'translateX(-50%)';
-              iconContainer.style.display = 'flex';
-              iconContainer.style.gap = '2px';
-              iconContainer.style.pointerEvents = 'none';
-              daySchedules
-                .filter((s) => s.type !== '시험')
-                .forEach((s) => {
-                  let svgIcon = '';
-                  if (s.type === '과제' || s.type === '기타') {
-                    svgIcon = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 3 3"
-                        style="width:4px;height:4px;aspect-ratio:1/1;transform: translateY(3px);"
-                        fill="none">
-                      <circle cx="1.5" cy="1.5" r="1.5" fill="#574AD3"/>
-                    </svg>`;
-                  }
-                  if (svgIcon) iconContainer.innerHTML += svgIcon;
-                });
-              daySchedules
-                .filter((s) => s.type === '시험')
-                .forEach((s) => {
-                  let svgIcon = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 9 9" style="width:8.051px;height:8.05px;flex-shrink:0;aspect-ratio:8.05/8.05;transform:translateY(1px);" fill="none"><path fill-rule="evenodd" clip-rule="evenodd" d="M5.25699 2.79265L4.02536 0L2.79374 2.79265L0 4.02427L2.79374 5.25589L4.02536 8.05L5.25699 5.25589L8.05073 4.02427L5.25699 2.79265Z" fill="#574AD3"/></svg>`;
-                  if (svgIcon) iconContainer.innerHTML += svgIcon;
-                });
-              dayElem.appendChild(iconContainer);
-            }
-            dayElem.addEventListener('click', () =>
-              openPanelWithSchedules(date)
-            );
-          },
-        });
+          // flatpickr 셋업 (달력 아이콘, 일정 표시, 클릭)
+          function setupCalendar() {
+            flatpickr('#calendar', {
+              defaultDate: new Date(),
+              inline: true,
+              monthSelectorType: 'static',
+              onDayCreate: function (_, __, fp, dayElem) {
+                const date = fp.formatDate(dayElem.dateObj, 'Y-m-d');
+                const daySchedules = schedules.filter((s) => s.date === date);
+                if (daySchedules.length > 0) {
+                  dayElem.style.position = 'relative';
+                  const iconContainer = document.createElement('div');
+                  iconContainer.style.position = 'absolute';
+                  iconContainer.style.bottom = '4px';
+                  iconContainer.style.left = '50%';
+                  iconContainer.style.transform = 'translateX(-50%)';
+                  iconContainer.style.display = 'flex';
+                  iconContainer.style.gap = '2px';
+                  iconContainer.style.pointerEvents = 'none';
+                  daySchedules
+                    .filter((s) => s.type !== '시험')
+                    .forEach((s) => {
+                      let svgIcon = '';
+                      if (s.type === '과제' || s.type === '기타') {
+                        svgIcon = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 3 3"
+                  style="width:4px;height:4px;aspect-ratio:1/1;transform: translateY(3px);"
+                  fill="none">
+                <circle cx="1.5" cy="1.5" r="1.5" fill="#574AD3"/>
+              </svg>`;
+                      }
+                      if (svgIcon) iconContainer.innerHTML += svgIcon;
+                    });
+                  daySchedules
+                    .filter((s) => s.type === '시험')
+                    .forEach((s) => {
+                      let svgIcon = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 9 9" style="width:8.051px;height:8.05px;flex-shrink:0;aspect-ratio:8.05/8.05;transform:translateY(1px);" fill="none"><path fill-rule="evenodd" clip-rule="evenodd" d="M5.25699 2.79265L4.02536 0L2.79374 2.79265L0 4.02427L2.79374 5.25589L4.02536 8.05L5.25699 5.25589L8.05073 4.02427L5.25699 2.79265Z" fill="#574AD3"/></svg>`;
+                      if (svgIcon) iconContainer.innerHTML += svgIcon;
+                    });
+                  dayElem.appendChild(iconContainer);
+                }
+                dayElem.addEventListener('click', () =>
+                  openPanelWithSchedules(date)
+                );
+              },
+            });
+          }
+        })();
       });
 
       function handleTeamSelect() {
