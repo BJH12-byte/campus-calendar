@@ -505,8 +505,8 @@
     </div>
     <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
     <script>
-      let selectedSubject = null;
-      let selectedType = null;
+      window.selectedType = null;
+      window.selectedSubject = null;
       let originalDate = null;
       let originalSchedule = null;
       let isEditMode = false;
@@ -523,9 +523,9 @@
         const daily = schedules.filter((s) => s.date === originalDate);
 
         if (daily[editIndex]) {
-          originalSchedule = daily[editIndex];
-          selectedSubject = originalSchedule.subject;
-          selectedType = originalSchedule.type;
+            originalSchedule = daily[editIndex];
+  window.selectedSubject = originalSchedule.subject;
+  window.selectedType = originalSchedule.type;
         }
       }
 
@@ -573,11 +573,11 @@ fetch('https://unidays-project.com/api/usersubjects', { credentials: 'include' }
           document.getElementById('deleteBtn').style.display = 'block';
         }
 
-        if (selectedSubject) {
+        if (window.selectedSubject) {
           document
             .querySelectorAll('#subject-list .list-item')
             .forEach((item) => {
-              if (item.textContent === selectedSubject) {
+              if (item.textContent === window.selectedSubject) {
                 item.classList.add('selected');
                 document.getElementById('schedule-section').style.display =
                   'block';
@@ -585,11 +585,11 @@ fetch('https://unidays-project.com/api/usersubjects', { credentials: 'include' }
             });
         }
 
-        if (selectedType) {
+        if (window.selectedType) {
           document
             .querySelectorAll('#schedule-section .list-item')
             .forEach((item) => {
-              if (item.textContent === selectedType) {
+              if (item.textContent === window.selectedType) {
                 item.classList.add('selected');
                 document.getElementById('date-section').style.display = 'block';
               }
@@ -598,18 +598,21 @@ fetch('https://unidays-project.com/api/usersubjects', { credentials: 'include' }
       };
 
       function selectSubject(el, subjectObj = null) {
+        console.log('selectedSubject', window.selectedSubject)
   document.querySelectorAll('#subject-list .list-item').forEach(item => item.classList.remove('selected'));
   el.classList.add('selected');
-  window.selectedSubject = subjectObj;
+    window.selectedSubject = subjectObj;
   document.getElementById('schedule-section').style.display = 'block';
 }
 
       function selectType(el, type) {
+        console.log('selectedType', window.selectedType);
         document
           .querySelectorAll('#schedule-section .list-item')
           .forEach((item) => item.classList.remove('selected'));
         el.classList.add('selected');
-        selectedType = type;
+        window.selectedType = type;
+        document.getElementById('date-section').style.display = 'block';
         // 제거: date-section을 표시하는 코드
       }
       function showWarning(message) {
@@ -625,7 +628,7 @@ fetch('https://unidays-project.com/api/usersubjects', { credentials: 'include' }
         const selectedDateStr = document.getElementById('date-picker').value.trim();
   const title = document.getElementById('schedule-title').value.trim();
 
-  if (!selectedSubject || !selectedType || !selectedDateStr) {
+  if (!window.selectedSubject|| !window.selectedType || !selectedDateStr) {
     showWarning('과목, 일정, 날짜를 모두 선택하세요.');
     return;
   }
@@ -645,12 +648,15 @@ fetch('https://unidays-project.com/api/usersubjects', { credentials: 'include' }
     showWarning('지난 날짜에는 일정을 등록할 수 없습니다.');
     return;
   }
-  console.log('payload:', {
+  const payload = {
     title: title,
     date: selectedDateStr,
-    type: selectedType === '과제' ? 'TASK' : selectedType === '시험' ? 'EXAM' : 'ETC',
-    subject: selectedSubject ? selectedSubject.id : null,
-  });
+    type: window.selectedType === '과제' ? 'TASK'
+        : window.selectedType === '시험' ? 'EXAM'
+        : 'ETC',
+    subject: window.selectedSubject ? window.selectedSubject.id : null,
+  };
+  console.log('payload:', payload);
 
   fetch('https://unidays-project.com/api/schedules', {
     method: 'POST',
