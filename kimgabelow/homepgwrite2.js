@@ -62,7 +62,7 @@ document.addEventListener('DOMContentLoaded', () => {
         };
 
         // ✅ 글쓰기 → 백엔드 전송 (POST /api/notices)
-        fetch('/api/notices', {
+        fetch('https://unidays-project.com/api/notices', {
           method: 'POST',
           credentials: 'include',
           headers: {
