@@ -756,7 +756,9 @@
         return '';
       }
       function openPanelWithSchedules(date) {
-        fetch('/api/schedules', { credentials: 'include' })
+        fetch('http://unidays-project.com/api/scheldules', {
+          credentials: 'include',
+        })
           .then((res) => res.json())
           .then((schedules) => {
             const daily = schedules.filter((s) => s.date === date);
@@ -818,7 +820,7 @@
       });
 
       function deleteSchedule(scheduleId) {
-        fetch(`/api/schedules/${scheduleId}`, {
+        fetch(`http://unidays-project.com/api/scheldules/${scheduleId}`, {
           method: 'DELETE',
           credentials: 'include',
         }).then((res) => {
@@ -831,7 +833,9 @@
         window.location.href = `add-task.html?edit=${date}&index=${index}`;
       }
       window.onload = () => {
-        fetch('/api/schedules', { credentials: 'include' })
+        fetch('http://unidays-project.com/api/scheldules', {
+          credentials: 'include',
+        })
           .then((res) => res.json())
           .then((schedules) => {
             window.allSchedules = schedules;
@@ -898,7 +902,9 @@
             });
           });
 
-        fetch('/api/user/me', { credentials: 'include' })
+        fetch('http://unidays-project.com/api/user/me', {
+          credentials: 'include',
+        })
           .then((res) => res.json())
           .then((user) => {
             if (user && user.name) {
@@ -968,7 +974,9 @@
       });
 
       function renderTodayTasks() {
-        fetch('/api/schedules', { credentials: 'include' })
+        fetch('http://unidays-project.com/api/scheldules', {
+          credentials: 'include',
+        })
           .then((res) => res.json())
           .then((schedules) => {
             const today = new Date().toISOString().slice(0, 10);
@@ -990,7 +998,9 @@
           });
       }
       function renderUpcomingSchedules() {
-        fetch('/api/schedules', { credentials: 'include' })
+        fetch('http://unidays-project.com/api/scheldules', {
+          credentials: 'include',
+        })
           .then((res) => res.json())
           .then((schedules) => {
             const today = new Date();
