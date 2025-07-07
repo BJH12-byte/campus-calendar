@@ -510,12 +510,14 @@
       let isEditMode = false;
       let scheduleId = null;
       const urlParams = new URLSearchParams(window.location.search);
+      const dateParam = urlParams.get('date');
       const editId = urlParams.get('edit');
 
 
        flatpickr('#date-picker', {
       dateFormat: 'Y-m-d',
-      position: 'auto left'
+      position: 'auto left',
+      defaultDate: dateParam || new Date()
     });
 
        window.onload = async () => {
