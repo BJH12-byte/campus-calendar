@@ -94,8 +94,8 @@
 
       // 2. 구글 OAuth 인증 후 (code 파라미터 있을 때) - JSON 방식 수동 리다이렉트
       window.onload = function () {
-        // 1. 화면에 JSON이 뜨면, 그걸 파싱해서 redirectUrl로 이동
         try {
+          // 1. JSON 파싱해서 redirectUrl 있으면 바로 이동
           var data = JSON.parse(
             document.body.innerText || document.body.textContent
           );
@@ -104,20 +104,21 @@
             return;
           }
         } catch (e) {
-          // 그냥 무시, redirectUrl 없으면 아무것도 안 함
+          // do nothing, fallback below
         }
 
-        // 2. fallback - 세션 있는지 검증
+        // 2. 혹시 JSON이 아니면 세션 검증해서 리다이렉트
         fetch('https://unidays-project.com/api/user/me', {
           credentials: 'include',
         })
           .then((res) => {
             if (res.status === 401) {
+              // 로그인 안 된 상태, 다시 로그인 창으로
               window.location.href = '/kimga/startwithgoogle.html';
               return;
             }
             if (res.status === 403) {
-              // 403이면 무조건 signup.html로!
+              // 추가 정보 필요 = 회원가입 페이지로
               window.location.href = '/kimga/signup.html';
               return;
             }
@@ -125,15 +126,16 @@
           })
           .then((user) => {
             if (!user) return;
+            // 과목 등록 여부 따라 이동
             if (!user.hasSubjects) {
               window.location.href = '/kimga/signup.html';
             } else {
               window.location.href = '/kimga/mainboard.html';
             }
           })
-          .catch((err) => {
-            console.log('DAMN ERROR:', err);
-            alert('Something went wrong. Check the console.');
+          .catch(() => {
+            // 진짜 서버 에러 땐 여기로
+            alert('Something went wrong. Try again.');
           });
       };
     </script>
