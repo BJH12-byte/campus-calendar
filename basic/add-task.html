@@ -535,33 +535,48 @@
         position: 'auto left',
       });
 
-      window.onload = () => {
+      window.onload =  async () => {
     const subjectListDiv = document.getElementById('subject-list');
   subjectListDiv.innerHTML = "";
   const etcItem = document.createElement('div');
   etcItem.className = 'list-item';
   etcItem.innerText = '없음(기타)';
-  etcItem.onclick = function() { selectSubject(this); };
+  etcItem.onclick = function() { selectSubject(null,this); };
   subjectListDiv.appendChild(etcItem);
 
   // mySubjects에서 과목 불러오기
   let mySubjects = [];
   try {
-    mySubjects = JSON.parse(localStorage.getItem('mySubjects')) || [];
-  } catch(e) {mySubjects = [];}
+    const res = await fetch('https://unidays-project.com/api/usersubjects', {
+      credentials: 'include'
+    });
+    mySubjects = await res.json(); // [{id, user, subject}, ...]
+  } catch(e) {
+    mySubjects = [];
+  }
+  // 2. 리스트 뿌리기
   mySubjects.forEach(obj => {
     if (!obj.subject || !obj.subject.name) return;
     const item = document.createElement('div');
     item.className = 'list-item';
     item.innerText = obj.subject.name;
     item.setAttribute('data-id', obj.subject.id);
-    item.onclick = function() { selectSubject(this); };
+    item.onclick = function() { selectSubject(obj.subject, this); }; // subject 객체 자체 저장
     subjectListDiv.appendChild(item);
   });
-    const user = JSON.parse(localStorage.getItem('user') || '{}');
-  if (user && user.name) {
-    document.getElementById('userName').innerText = user.name + '님';
-  }
+   try {
+    const userRes = await fetch('https://unidays-project.com/api/user/me', {
+      credentials: 'include'
+    });
+    const user = await userRes.json();
+    if (user && user.name) {
+      document.getElementById('userName').innerText = user.name + '님';
+    }
+  } catch(e) {}
+  // 날짜 설정 등 나머지 기존 코드도 유지
+};
+    
+  
           if (!isEditMode) {
     document.getElementById('date-picker').setAttribute('disabled', true);
   } else {
@@ -601,16 +616,15 @@
               }
             });
         }
-      };
+      
 
-      function selectSubject(el) {
-        document
-          .querySelectorAll('#subject-list .list-item')
-          .forEach((item) => item.classList.remove('selected'));
-        el.classList.add('selected');
-        selectedSubject = el.textContent;
-        // 제거: schedule-section을 표시하는 코드
-      }
+      function selectSubject(subjectObj, el) {
+  document
+    .querySelectorAll('#subject-list .list-item')
+    .forEach((item) => item.classList.remove('selected'));
+  el.classList.add('selected');
+  selectedSubject = subjectObj; // subject 객체 자체 저장
+}
 
       function selectType(el, type) {
         document

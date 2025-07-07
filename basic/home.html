@@ -114,7 +114,6 @@
       .calendar-box input[type='text'] {
         text-align: center;
       }
-
       .flatpickr-calendar {
         position: static !important; /* 절대위치 해제 */
         transform: none !important; /* translateX 등 해제 */
@@ -123,10 +122,6 @@
         height: 100% !important; /* wrapper(346px)에 맞춰 */
         border: none !important; /* 혹시 남아있는 border */
         box-shadow: none !important;
-        padding-left: 0 !important;
-        margin-left: 0 !important;
-      }
-      .flatpickr-innerContainer {
         padding-left: 0 !important;
         margin-left: 0 !important;
       }
@@ -183,6 +178,12 @@
         margin-top: 1rem;
       }
       /* flatpickr의 월 드롭다운 셀렉터 완전 숨김 */
+      .flatpickr-current-month .flatpickr-monthDropdown-months,
+      .flatpickr-current-month
+        .flatpickr-monthDropdown-months
+        + .numInputWrapper {
+        display: none !important;
+      }
       .flatpickr-current-month {
         justify-content: flex-start !important;
         text-align: left !important;
@@ -203,17 +204,11 @@
       }
       /* 월 텍스트만 보이도록 처리 */
       .flatpickr-current-month .cur-month {
-        font-family: 'Pretendard', Arial, sans-serif !important;
-        font-weight: 600 !important;
-        font-size: 24px !important;
-        color: #222;
-        margin-right: 4px;
-        background: none !important;
+        font-size: 1.5rem;
+        font-weight: bold;
         pointer-events: none;
-        line-height: 29px;
-        letter-spacing: -1.5%;
-        padding: 0;
-        display: inline-bloc;
+        background: none !important;
+        color: #333;
       }
 
       .today-info img {
@@ -263,7 +258,7 @@
       }
       .nav-item.active .nav-circle {
         background: #8b85f9;
-        border: 3px solid white;
+        border: 4px solid white;
       }
       .nav-circle img {
         width: 24px;
@@ -505,22 +500,6 @@
       #calendar.flatpickr-input {
         display: none;
       }
-      .flatpickr-current-month input.cur-year {
-        font-family: 'Pretendard', Arial, sans-serif !important;
-        font-weight: 600 !important;
-        font-size: 24px !important;
-        color: #222;
-        width: auto !important;
-        text-align: left !important;
-        background: none !important;
-        border: none !important;
-        margin-left: 0;
-        padding: 0;
-        line-height: 29px;
-        letter-spacing: -1.5%;
-        box-shadow: none !important;
-        display: inline-block;
-      }
       .schedule-item span:first-child {
         font-size: 14px; /* 달력 아이콘 기본 크기와 유사하게 */
         line-height: normal;
@@ -539,7 +518,7 @@
       .schedule-item-icon svg {
         width: 14px;
         height: 14px;
-        margin-top: 20px;
+        margin-top: 10px;
       }
       .drag-handle {
         position: absolute;
@@ -714,7 +693,10 @@
             <span class="circle-label">피드</span>
           </div>
         </div>
-        <div class="nav-item" onclick="location.href='notice.html'">
+        <div
+          class="nav-item"
+          onclick="location.href='../kimgabelow/homepage2.html'"
+        >
           <div class="nav-circle">
             <img
               src="https://img.icons8.com/ios-filled/50/ffffff/compass--v1.png"
@@ -773,9 +755,9 @@
 
         return '';
       }
-      let cachedSchedules = [];
       function openPanelWithSchedules(date) {
-        const daily = cachedSchedules.filter((s) => s.date === date);
+        const schedules = JSON.parse(localStorage.getItem('schedules') || '[]');
+        const daily = schedules.filter((s) => s.date === date);
         document.getElementById(
           'scheduleDate'
         ).textContent = `${date} 일정 (${daily.length})`;
@@ -786,14 +768,15 @@
           item.className = 'schedule-item';
           const iconHtml = getSvgIcon(s.type);
           item.innerHTML = `
-      <div class="schedule-item-icon">${iconHtml}</div>
-      <span>${s.title ? '(' + s.title + ') ' : ''}${s.subject?.name || ''} ${
+        <div class="schedule-item-icon">${iconHtml}</div>
+        <span>${s.title ? '(' + s.title + ') ' : ''}${s.subject} ${
             s.type
           }</span>
-      <div class="schedule-item-buttons"></div>
-    `;
+        <div class="schedule-item-buttons">
+        </div>`;
+          listEl.appendChild(item);
           item.addEventListener('click', () => {
-            window.location.href = `add-task.html?edit=${s.id}`;
+            window.location.href = `add-task.html?edit=${date}&index=${idx}`;
           });
           listEl.appendChild(item);
         });
@@ -832,15 +815,20 @@
           .addEventListener('click', closePanel);
       });
 
-      async function deleteSchedule(scheduleId) {
-        const res = await fetch(`/api/schedules/${scheduleId}`, {
-          method: 'DELETE',
-          credentials: 'include',
-        });
-        if (res.ok) {
+      function deleteSchedule(date, index) {
+        const schedules = JSON.parse(localStorage.getItem('schedules') || '[]');
+        const daily = schedules.filter((s) => s.date === date);
+        const target = daily[index];
+        const rmIdx = schedules.findIndex(
+          (s) =>
+            s.date === target.date &&
+            s.subject === target.subject &&
+            s.type === target.type
+        );
+        if (rmIdx > -1) {
+          schedules.splice(rmIdx, 1);
+          localStorage.setItem('schedules', JSON.stringify(schedules));
           location.reload();
-        } else {
-          showAlertModal('삭제 실패');
         }
       }
 
@@ -859,109 +847,119 @@
         const dragHandle = document.getElementById('dragHandle');
         dragHandle.addEventListener('click', closePanel);
       });
-      fetch('/api/schedules', { credentials: 'include' })
-        .then((res) => res.json())
-        .then((data) => {
-          cachedSchedules = data;
-          flatpickr('#calendar', {
-            defaultDate: new Date(),
-            inline: true,
-            monthSelectorType: 'static',
-            onDayCreate: function (_, __, fp, dayElem) {
-              const date = fp.formatDate(dayElem.dateObj, 'Y-m-d');
-              const daySchedules = cachedSchedules.filter(
-                (s) => s.date === date
-              );
-              // (아이콘 붙이기 코드 그대로)
-              if (daySchedules.length > 0) {
-                dayElem.style.position = 'relative';
-                const iconContainer = document.createElement('div');
-                iconContainer.style.position = 'absolute';
-                iconContainer.style.bottom = '4px';
-                iconContainer.style.left = '50%';
-                iconContainer.style.transform = 'translateX(-50%)';
-                iconContainer.style.display = 'flex';
-                iconContainer.style.gap = '2px';
-                iconContainer.style.pointerEvents = 'none';
-                daySchedules
-                  .filter((s) => s.type !== '시험')
-                  .forEach((s) => {
-                    let svgIcon = '';
-                    if (s.type === '과제') {
-                      svgIcon = `<svg ...></svg>`; // 생략
-                    } else if (s.type === '기타') {
-                      svgIcon = `<svg ...></svg>`; // 생략
-                    }
-                    if (svgIcon) iconContainer.innerHTML += svgIcon;
-                  });
-                daySchedules
-                  .filter((s) => s.type === '시험')
-                  .forEach((s) => {
-                    let svgIcon = `<svg ...></svg>`; // 생략
-                    if (svgIcon) iconContainer.innerHTML += svgIcon;
-                  });
-                dayElem.appendChild(iconContainer);
-              }
-              dayElem.addEventListener('click', () =>
-                openPanelWithSchedules(date)
-              );
-            },
-          });
-        });
+      flatpickr('#calendar', {
+        defaultDate: new Date(),
+        inline: true,
+        monthSelectorType: 'static',
+        onDayCreate: function (_, __, fp, dayElem) {
+          const date = fp.formatDate(dayElem.dateObj, 'Y-m-d');
+          const schedules = JSON.parse(
+            localStorage.getItem('schedules') || '[]'
+          );
+          const daySchedules = schedules.filter((s) => s.date === date);
+          if (daySchedules.length > 0) {
+            dayElem.style.position = 'relative';
+            const iconContainer = document.createElement('div');
+            iconContainer.style.position = 'absolute';
+            iconContainer.style.bottom = '4px';
+            iconContainer.style.left = '50%';
+            iconContainer.style.transform = 'translateX(-50%)';
+            iconContainer.style.display = 'flex';
+            iconContainer.style.gap = '2px';
+            iconContainer.style.pointerEvents = 'none';
+            daySchedules
+              .filter((s) => s.type !== '시험')
+              .forEach((s) => {
+                let svgIcon = '';
+                if (s.type === '시험') {
+                  svgIcon = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 9 9" style="width:8.051px;height:8.05px;flex-shrink:0;aspect-ratio:8.05/8.05;transform:translateY(1px);" fill="none"><path fill-rule="evenodd" clip-rule="evenodd" d="M5.25699 2.79265L4.02536 0L2.79374 2.79265L0 4.02427L2.79374 5.25589L4.02536 8.05L5.25699 5.25589L8.05073 4.02427L5.25699 2.79265Z" fill="#574AD3"/></svg>`;
+                } else if (s.type === '과제') {
+                  // 기존 style 뒤에 transform 추가
+                  svgIcon = `
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 3 3"
+           style="width:4px;height:4px;aspect-ratio:1/1;transform: translateY(3px);"
+           fill="none">
+        <circle cx="1.5" cy="1.5" r="1.5" fill="#574AD3"/>
+      </svg>`;
+                } else if (s.type === '기타') {
+                  // 기존 style 뒤에 transform 추가
+                  svgIcon = `
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 3 3"
+           style="width:4px;height:4px;aspect-ratio:1/1;transform: translateY(-2px);"
+           fill="none">
+        <circle cx="1.5" cy="1.5" r="1.8" fill="#574AD3"/>
+      </svg>`;
+                }
+                if (svgIcon) iconContainer.innerHTML += svgIcon;
+              });
+            daySchedules
+              .filter((s) => s.type === '시험')
+              .forEach((s) => {
+                let svgIcon = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 9 9" style="width:8.051px;height:8.05px;flex-shrink:0;aspect-ratio:8.05/8.05;transform:translateY(1px);" fill="none"><path fill-rule="evenodd" clip-rule="evenodd" d="M5.25699 2.79265L4.02536 0L2.79374 2.79265L0 4.02427L2.79374 5.25589L4.02536 8.05L5.25699 5.25589L8.05073 4.02427L5.25699 2.79265Z" fill="#574AD3"/></svg>`; // 시험 아이콘(별)
+                if (svgIcon) iconContainer.innerHTML += svgIcon;
+              });
+            dayElem.appendChild(iconContainer);
+          }
+
+          dayElem.addEventListener('click', () => openPanelWithSchedules(date));
+        },
+      });
 
       function renderTodayTasks() {
-        fetch('/api/schedules', { credentials: 'include' })
-          .then((res) => res.json())
-          .then((schedules) => {
-            const today = new Date().toISOString().slice(0, 10);
-            const tasks = schedules.filter((s) => s.date === today);
-            const container = document.getElementById('todayTasksContainer');
-            container.innerHTML =
-              tasks.length > 0
-                ? tasks
-                    .map(
-                      (s) =>
-                        `<div class='today-task-card'>
-                   <span>${s.title ? '(' + s.title + ') ' : ''}${
-                          s.subject?.name || ''
-                        } ${s.type}</span>
+        const schedules = JSON.parse(localStorage.getItem('schedules') || '[]');
+        const today = new Date().toISOString().slice(0, 10);
+        const tasks = schedules.filter((s) => s.date === today);
+        const container = document.getElementById('todayTasksContainer');
+        container.innerHTML =
+          tasks.length > 0
+            ? tasks
+                .map(
+                  (s) =>
+                    `<div class='today-task-card'>
+                   <span>${s.title ? '(' + s.title + ') ' : ''}${s.subject} ${
+                      s.type
+                    }</span>
                  </div>`
-                    )
-                    .join('')
-                : "<div class='today-task-card'>오늘 일정 없음</div>";
-          });
+                )
+                .join('')
+            : "<div class='today-task-card'>오늘 일정 없음</div>";
       }
       function renderUpcomingSchedules() {
-        fetch('/api/schedules', { credentials: 'include' })
-          .then((res) => res.json())
-          .then((schedules) => {
-            const today = new Date().setHours(0, 0, 0, 0);
-            // D-1 알림
-            const d1Alerts = schedules.filter((s) => {
-              const taskDate = new Date(s.date);
-              taskDate.setHours(0, 0, 0, 0);
-              const diff = (taskDate - today) / (1000 * 60 * 60 * 24);
-              return diff === 1;
-            });
+        const schedules = JSON.parse(localStorage.getItem('schedules') || '[]');
+        const today = new Date().setHours(0, 0, 0, 0);
+        const future = schedules.filter(
+          (s) => new Date(s.date).getTime() > today
+        );
+        const sorted = future.sort(
+          (a, b) => new Date(a.date) - new Date(b.date)
+        );
 
-            if (d1Alerts.length > 0) {
-              const alertHTML = `
-          <div class="alert-banner">
-            📢 내일 마감!<br />
-            <div style="font-weight:normal;">
-              ${d1Alerts
-                .map((s) => `- ${s.subject?.name || ''} ${s.type} (D-1)`)
-                .join('<br />')}
+        // 상단 배너용 D-1 알림만 필터링
+        const d1Alerts = schedules.filter((s) => {
+          const taskDate = new Date(s.date);
+          taskDate.setHours(0, 0, 0, 0);
+          const diff = (taskDate - today) / (1000 * 60 * 60 * 24);
+          return diff === 1; // 정확히 하루 뒤인 경우만
+        });
+
+        if (d1Alerts.length > 0) {
+          const alertHTML = `
+            <div class="alert-banner">
+              📢 내일 마감!<br />
+              <div style="font-weight:normal;">
+                ${d1Alerts
+                  .map((s) => `- ${s.subject} ${s.type} (D-1)`)
+                  .join('<br />')}
+              </div>
+              <button onclick="this.parentElement.remove()">×</button>
             </div>
-            <button onclick="this.parentElement.remove()">×</button>
-          </div>
-        `;
-              document.getElementById('alertContainer').innerHTML = alertHTML;
-            }
-            // 메인에서는 더 이상 D-1 ~ D-3 일정 박스 출력 안 함
-            const upcomingContainer = document.getElementById('upcomingDdays');
-            if (upcomingContainer) upcomingContainer.innerHTML = '';
-          });
+          `;
+          document.getElementById('alertContainer').innerHTML = alertHTML;
+        }
+
+        // 메인에서는 더 이상 D-1 ~ D-3 일정 박스 출력 안 함
+        const upcomingContainer = document.getElementById('upcomingDdays');
+        if (upcomingContainer) upcomingContainer.innerHTML = '';
       }
       document.querySelector('.team-btn').addEventListener('click', () => {
         const menu = document.getElementById('teamMenu');
