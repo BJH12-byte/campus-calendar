@@ -1,28 +1,28 @@
 function getSvgIcon(type) {
   if (type === '시험' || type === 'EXAM') {
     return `<svg xmlns="http://www.w3.org/2000/svg" width="14" height="15" viewBox="0 0 14 15" fill="none">
-                  <path fill-rule="evenodd" clip-rule="evenodd" d="M9.14176 5.35678L7 0.5L4.85824 5.35678L0 7.49873L4.85824 9.64068L7 14.5L9.14176 9.64068L14 7.49873L9.14176 5.35678Z" fill="#574AD3"/>
-                </svg>`;
+      <path fill-rule="evenodd" clip-rule="evenodd" d="M9.14176 5.35678L7 0.5L4.85824 5.35678L0 7.49873L4.85824 9.64068L7 14.5L9.14176 9.64068L14 7.49873L9.14176 5.35678Z" fill="#574AD3"/>
+    </svg>`;
   } else if (type === '과제' || type === 'TASK') {
     return `<svg xmlns="http://www.w3.org/2000/svg" width="11" height="11" viewBox="0 0 11 11" fill="none">
-                  <circle cx="5.5" cy="5.5" r="5.5" fill="#B7B7F9"/>
-                </svg>`;
+      <circle cx="5.5" cy="5.5" r="5.5" fill="#B7B7F9"/>
+    </svg>`;
   } else if (type === '기타' || type === 'ETC') {
     return `<svg xmlns="http://www.w3.org/2000/svg" width="11" height="11" viewBox="0 0 11 11" fill="none">
-                  <circle cx="5.5" cy="5.5" r="5.5" fill="#B7B7F9"/>
-                </svg>`;
+      <circle cx="5.5" cy="5.5" r="5.5" fill="#B7B7F9"/>
+    </svg>`;
   }
   return '';
 }
 
-// ===== 주 fetch 한 번만! 전역 schedules를 argument로 넘김 =====
+// ===== schedules 전역화 & fetch 한 번만 =====
 window.onload = () => {
   fetch('https://unidays-project.com/api/schedules', {
     credentials: 'include',
   })
     .then((res) => res.json())
     .then((schedules) => {
-      window.allSchedules = schedules; // 혹시 모를 외부 접근 대비
+      window.allSchedules = schedules;
       renderTodayTasks(schedules);
       renderUpcomingSchedules(schedules);
       flatpickr('#calendar', {
@@ -41,7 +41,8 @@ window.onload = () => {
             dayElem.style.position = 'relative';
             const oldIcon = dayElem.querySelector('.icon-dot');
             if (oldIcon) oldIcon.remove();
-            // 우선순위: 시험 > 과제 > 기타
+
+            // 시험 > 과제 > 기타
             const examList = daySchedules.filter(
               (s) => s.type === 'EXAM' || s.type === '시험'
             );
@@ -91,7 +92,6 @@ window.onload = () => {
       }
     });
 };
-
 function renderTodayTasks(schedules) {
   const today = new Date().toISOString().slice(0, 10);
   const tasks = schedules.filter((s) => {
@@ -107,10 +107,10 @@ function renderTodayTasks(schedules) {
           .map(
             (s) =>
               `<div class='today-task-card'>
-                   <span>${s.title ? '(' + s.title + ') ' : ''}${
+                 <span>${s.title ? '(' + s.title + ') ' : ''}${
                 s.subject?.name || ''
               } ${s.type}</span>
-                 </div>`
+               </div>`
           )
           .join('')
       : "<div class='today-task-card'>오늘 일정 없음</div>";
@@ -144,11 +144,10 @@ function renderUpcomingSchedules(schedules) {
     document.getElementById('alertContainer').innerHTML = '';
   }
 }
+
 // 일정 상세 패널 열기 (fetch 중복 제거, 이미 받은 schedules 활용)
 function openPanelWithSchedules(date, schedulesArg) {
-  // schedulesArg가 없으면 window.allSchedules 사용 (유연하게)
   const schedules = schedulesArg || window.allSchedules || [];
-  // 날짜 비교 시 시간 잘라내기 & 포맷 통일
   const daily = schedules.filter((s) => {
     let d = s.date;
     if (d.length > 10) d = d.slice(0, 10);
@@ -175,7 +174,6 @@ function openPanelWithSchedules(date, schedulesArg) {
       window.location.href = `add-task.html?edit=${s.id}`;
     });
   });
-  // 새 일정 만들기
   const newEl = document.createElement('div');
   newEl.style =
     'width:100%;text-align:center;font-weight:bold;color:#6b7280;padding:1rem 0;cursor:pointer;';
@@ -184,6 +182,8 @@ function openPanelWithSchedules(date, schedulesArg) {
   listEl.appendChild(newEl);
   document.getElementById('schedulePanel').classList.add('active');
 }
+
+// 아래부터는 기타 기능 (모달, 팀메뉴 등)
 
 function showAlertModal(message, callback) {
   document.getElementById('alertMessage').textContent = message;
@@ -194,7 +194,7 @@ function showAlertModal(message, callback) {
 function closeAlertModal() {
   document.getElementById('alertModal').style.display = 'none';
   if (document.getElementById('alertModal').dataset.callback === '1') {
-    location.reload(); // 또는 callback(); 사용도 가능
+    location.reload();
   }
 }
 
