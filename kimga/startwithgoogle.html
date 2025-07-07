@@ -101,13 +101,11 @@
           })
             .then((res) => {
               if (res.status === 401) {
-                // 세션 없음: 무한루프 방지
-                window.location.href = 'startwithgoogle.html';
+                window.location.href = '/kimga/startwithgoogle.html';
                 return;
               }
               if (res.status === 403) {
-                // 추가 정보 미입력
-                window.location.href = 'signup.html';
+                window.location.href = '/kimga/signup.html';
                 return;
               }
               return res.json();
@@ -115,13 +113,12 @@
             .then((user) => {
               if (!user) return;
               if (!user.hasSubjects) {
-                window.location.href = 'subject-register.html';
+                window.location.href = '/kimga/subject-register.html';
               } else {
-                window.location.href = 'mainboard.html';
+                window.location.href = '/kimga/mainboard.html';
               }
             });
         }
-        // code 없으면 아무 동작 없이 버튼만 노출
       };
     </script>
   </body>
