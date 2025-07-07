@@ -512,131 +512,148 @@
       const urlParams = new URLSearchParams(window.location.search);
       const editId = urlParams.get('edit');
 
-      
-      window.onload = async () => {
-        // 유저 이름 API
-        try {
-          const userRes = await fetch('https://unidays-project.com/api/user/me', { credentials: 'include' });
-          if (!userRes.ok) throw new Error();
-          const user = await userRes.json();
-          document.getElementById('userName').innerText = (user.name || '사용자') + '님';
-        } catch {
-          document.getElementById('userName').innerText = '로그인 필요';
-        }
 
-        // 과목 리스트 API
-        let subjects = [];
-        try {
-          const subRes = await fetch('https://unidays-project.com/api/subjects', { credentials: 'include' });
-          if (subRes.ok) subjects = await subRes.json();
-        } catch {}
-        const subjectListDiv = document.getElementById('subject-list');
-        subjectListDiv.innerHTML = '';
-        // 기타(없음)
-        const etcItem = document.createElement('div');
-        etcItem.className = 'list-item';
-        etcItem.innerText = '없음(기타)';
-        etcItem.onclick = function() { selectSubject(this, null); };
-        subjectListDiv.appendChild(etcItem);
-        subjects.forEach(sub => {
-          const item = document.createElement('div');
-          item.className = 'list-item';
-          item.innerText = sub.name;
-          item.setAttribute('data-id', sub.id);
-          item.onclick = function() { selectSubject(this, sub); };
-          subjectListDiv.appendChild(item);
-        });
+       flatpickr('#date-picker', {
+      dateFormat: 'Y-m-d',
+      position: 'auto left'
+    });
 
-        // 수정 모드 - 일정 조회
-        if (editId) {
-          isEditMode = true;
-          scheduleId = editId;
-          document.getElementById('deleteBtn').style.display = 'block';
-          try {
-            const res = await fetch(`https://unidays-project.com/api/schedules/${scheduleId}`, { credentials: 'include' });
-            if (res.ok) {
-              const data = await res.json();
-              document.getElementById('schedule-title').value = data.title || '';
-              document.getElementById('date-picker').value = data.date;
-              selectedType = data.type;
-              selectedSubject = data.subject;
-              // 과목, 타입 활성화
-              if (selectedSubject) {
-                document.querySelectorAll('#subject-list .list-item').forEach(item => {
-                  if (item.innerText === selectedSubject.name) item.classList.add('selected');
-                });
-              }
-              if (selectedType) {
-                document.querySelectorAll('#schedule-section .list-item').forEach(item => {
-                  if (item.innerText === selectedType) item.classList.add('selected');
-                });
-              }
-            }
-          } catch {}
-        }
-      };
+       window.onload = async () => {
+      // 1. 유저 정보 불러오기
+      try {
+        const userRes = await fetch('https://unidays-project.com/api/user/me', { credentials: 'include' });
+        if (!userRes.ok) throw new Error();
+        const user = await userRes.json();
+        document.getElementById('userName').innerText = (user.name || '사용자') + '님';
+      } catch {
+        document.getElementById('userName').innerText = '로그인 필요';
+      }
 
-
-
-      flatpickr('#date-picker', {
-        dateFormat: 'Y-m-d',
-        position: 'auto left'
+      // 2. 과목 리스트 불러오기
+      let subjects = [];
+      try {
+        const subRes = await fetch('https://unidays-project.com/api/subjects', { credentials: 'include' });
+        if (subRes.ok) subjects = await subRes.json();
+      } catch {}
+      const subjectListDiv = document.getElementById('subject-list');
+      subjectListDiv.innerHTML = '';
+      // 기타(없음)
+      const etcItem = document.createElement('div');
+      etcItem.className = 'list-item';
+      etcItem.innerText = '없음(기타)';
+      etcItem.onclick = function() { selectSubject(this, null); };
+      subjectListDiv.appendChild(etcItem);
+      subjects.forEach(sub => {
+        const item = document.createElement('div');
+        item.className = 'list-item';
+        item.innerText = sub.name;
+        item.setAttribute('data-id', sub.id);
+        item.onclick = function() { selectSubject(this, sub); };
+        subjectListDiv.appendChild(item);
       });
 
-       function selectSubject(el, subObj) {
-        document.querySelectorAll('#subject-list .list-item').forEach(item => item.classList.remove('selected'));
-        el.classList.add('selected');
-        selectedSubject = subObj; // null or {id, name}
+      // 3. 수정모드라면 일정 정보 조회
+      if (editId) {
+        isEditMode = true;
+        scheduleId = editId;
+        document.getElementById('deleteBtn').style.display = 'block';
+        try {
+          const res = await fetch(`https://unidays-project.com/api/schedules/${scheduleId}`, { credentials: 'include' });
+          if (res.ok) {
+            const data = await res.json();
+            document.getElementById('schedule-title').value = data.title || '';
+            document.getElementById('date-picker').value = data.date;
+            selectedType = data.type;
+            selectedSubject = data.subject;
+            // UI 선택 활성화
+            if (selectedSubject) {
+              document.querySelectorAll('#subject-list .list-item').forEach(item => {
+                if (item.innerText === selectedSubject.name) item.classList.add('selected');
+              });
+            }
+            if (selectedType) {
+              document.querySelectorAll('#schedule-section .list-item').forEach(item => {
+                if (item.innerText === selectedType) item.classList.add('selected');
+              });
+            }
+          }
+        } catch {}
       }
+    };
+
+      function selectSubject(el, subObj) {
+      document.querySelectorAll('#subject-list .list-item').forEach(item => item.classList.remove('selected'));
+      el.classList.add('selected');
+      selectedSubject = subObj; // null 또는 {id, name}
+    }
 
       function selectType(el, type) {
-        document.querySelectorAll('#schedule-section .list-item').forEach(item => item.classList.remove('selected'));
-        el.classList.add('selected');
-        selectedType = type;
-      }
+      document.querySelectorAll('#schedule-section .list-item').forEach(item => item.classList.remove('selected'));
+      el.classList.add('selected');
+      selectedType = type;
+    }
       function showWarning(message) {
-        const warningBox = document.getElementById('warningBox');
-        warningBox.textContent = message;
-        warningBox.style.display = 'block';
-        setTimeout(() => { warningBox.style.display = 'none'; }, 3000);
-      }
+      const warningBox = document.getElementById('warningBox');
+      warningBox.textContent = message;
+      warningBox.style.display = 'block';
+      setTimeout(() => { warningBox.style.display = 'none'; }, 3000);
+    }
 
       async function registerSchedule() {
         const date = document.getElementById('date-picker').value.trim();
-        const title = document.getElementById('schedule-title').value.trim();
-
-        if (!selectedType || !date) {
-          showWarning('일정 종류, 날짜를 모두 선택하세요.');
+        const selectedDateStr = document
+          .getElementById('date-picker')
+          .value.trim();
+        const title = document.getElementById('schedule-title').value.trim(); // 제목 입력값
+        if (!selectedSubject || !selectedType || !selectedDateStr) {
+          showWarning('과목, 일정, 날짜를 모두 선택하세요.');
           return;
         }
-        const payload = {
-          title,
-          date,
-          type: selectedType,
-          subjectId: selectedSubject && selectedSubject.id ? selectedSubject.id : null
-        };
-        try {
-          let url, method;
-          if (isEditMode) {
-            url = `https://unidays-project.com/api/schedules/${scheduleId}`;
-            method = 'PUT';
-          } else {
-            url = 'https://unidays-project.com/api/schedules';
-            method = 'POST';
-          }
-          const res = await fetch(url, {
-            method,
-            credentials: 'include',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify(payload)
-          });
-          if (!res.ok) throw new Error();
-          showAlertModal(isEditMode ? '일정이 수정되었습니다.' : '일정이 등록되었습니다.', () => window.location.href = 'home.html');
-        } catch {
-          showWarning('서버 에러. 다시 시도해라.');
-        }
-      }
 
+        // 날짜 유효성 검사
+        const selectedDate = new Date(selectedDateStr + 'T00:00:00');
+        if (isNaN(selectedDate.getTime())) {
+          showWarning('날짜 형식이 올바르지 않습니다.');
+          return;
+        }
+
+        const today = new Date();
+        today.setHours(0, 0, 0, 0);
+        selectedDate.setHours(0, 0, 0, 0);
+
+        if (selectedDate.getTime() < today.getTime()) {
+          showWarning('지난 날짜에는 일정을 등록할 수 없습니다.');
+          return;
+        }
+
+        const payload = {
+        title,
+        date,
+        icon: selectedType === '시험' ? '★' : '●',
+        type: selectedType,
+        subjectId: selectedSubject && selectedSubject.id ? selectedSubject.id : null
+      };
+      try {
+        let url, method;
+        if (isEditMode) {
+          url = `https://unidays-project.com/api/schedules/${scheduleId}`;
+          method = 'PUT';
+        } else {
+          url = 'https://unidays-project.com/api/schedules';
+          method = 'POST';
+        }
+        const res = await fetch(url, {
+          method,
+          credentials: 'include',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(payload)
+        });
+        if (!res.ok) throw new Error();
+        showAlertModal(isEditMode ? '일정이 수정되었습니다.' : '일정이 등록되었습니다.', () => window.location.href = 'home.html');
+      } catch {
+        showWarning('서버 에러. 다시 시도해라.');
+      }
+    }
       let alertCallback = null;
 
       function showAlertModal(message, callback) {
@@ -662,22 +679,23 @@
       };
 
       // ③ 네: 실제 삭제 로직 실행
-            document.getElementById('confirmDeleteBtn').onclick = async () => {
-        try {
-          const res = await fetch(`https://unidays-project.com/api/schedules/${scheduleId}`, {
-            method: 'DELETE',
-            credentials: 'include'
-          });
-          if (!res.ok) throw new Error();
-          document.getElementById('deleteModal').style.display = 'none';
-          showAlertModal('일정이 삭제되었습니다.', () => {
-            window.location.href = 'home.html';
-          });
-        } catch {
-          showWarning('삭제 실패');
-          document.getElementById('deleteModal').style.display = 'none';
-        }
-      };
+        // schedules 불러오고 target 찾아서 삭제
+        document.getElementById('confirmDeleteBtn').onclick = async () => {
+      try {
+        const res = await fetch(`https://unidays-project.com/api/schedules/${scheduleId}`, {
+          method: 'DELETE',
+          credentials: 'include'
+        });
+        if (!res.ok) throw new Error();
+        document.getElementById('deleteModal').style.display = 'none';
+        showAlertModal('일정이 삭제되었습니다.', () => {
+          window.location.href = 'home.html';
+        });
+      } catch {
+        showWarning('삭제 실패');
+        document.getElementById('deleteModal').style.display = 'none';
+      }
+    }
     </script>
   </body>
 </html>
