@@ -94,9 +94,9 @@
 
       // 2. 구글 OAuth 인증 후 (code 파라미터 있을 때) - JSON 방식 수동 리다이렉트
       window.onload = function () {
-        // 1. JSON 텍스트 페이지 파싱해서 redirect
+        // 1. 화면에 JSON이 뜨면, 그걸 파싱해서 redirectUrl로 이동
         try {
-          const data = JSON.parse(
+          var data = JSON.parse(
             document.body.innerText || document.body.textContent
           );
           if (data.redirectUrl) {
@@ -104,8 +104,9 @@
             return;
           }
         } catch (e) {
-          // Do nothing, fallback to fetch
+          // 그냥 무시, redirectUrl 없으면 아무것도 안 함
         }
+
         // 2. fallback - 세션 있는지 검증
         fetch('https://unidays-project.com/api/user/me', {
           credentials: 'include',
