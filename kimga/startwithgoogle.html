@@ -94,45 +94,42 @@
 
       // 2. 구글 OAuth 인증 후 (code 파라미터 있을 때) - JSON 방식 수동 리다이렉트
       window.onload = function () {
-        const urlParams = new URLSearchParams(window.location.search);
-        if (urlParams.has('code')) {
-          fetch(window.location.href)
-            .then((res) => res.json())
-            .then((data) => {
-              if (data.redirectUrl) {
-                window.location.href = data.redirectUrl;
-              } else {
-                throw new Error('No redirectUrl');
+        // URL이 저 JSON만 보인다면, 이 코드가 실행되어야 한다
+        try {
+          const data = JSON.parse(
+            document.body.innerText || document.body.textContent
+          );
+          if (data.redirectUrl) {
+            window.location.href = data.redirectUrl;
+          } else {
+            throw new Error('redirectUrl not found');
+          }
+        } catch (e) {
+          // 혹시 파싱 실패하면 fallback (예전 flow)
+          fetch('https://unidays-project.com/api/user/me', {
+            credentials: 'include',
+          })
+            .then((res) => {
+              if (res.status === 401) {
+                window.location.href = '/kimga/startwithgoogle.html';
+                return;
               }
+              if (res.status === 403) {
+                window.location.href = '/kimga/signup.html';
+                return;
+              }
+              return res.json();
             })
-            .catch(() => {
-              // Fallback: 기존 방식
-              fetch('https://unidays-project.com/api/user/me', {
-                credentials: 'include',
-              })
-                .then((res) => {
-                  if (res.status === 401) {
-                    window.location.href = '/kimga/startwithgoogle.html';
-                    return;
-                  }
-                  if (res.status === 403) {
-                    window.location.href = '/kimga/signup.html';
-                    return;
-                  }
-                  return res.json();
-                })
-                .then((user) => {
-                  if (!user) return;
-                  if (!user.hasSubjects) {
-                    window.location.href = '/kimga/subject-register.html';
-                  } else {
-                    window.location.href = '/kimga/mainboard.html';
-                  }
-                });
+            .then((user) => {
+              if (!user) return;
+              if (!user.hasSubjects) {
+                window.location.href = '/kimga/subject-register.html';
+              } else {
+                window.location.href = '/kimga/mainboard.html';
+              }
             });
         }
       };
-      console.log('load!');
     </script>
   </body>
 </html>
