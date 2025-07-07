@@ -1,0 +1,555 @@
+html {
+  margin: 0;
+  padding: 0;
+  font-family: Arial, sans-serif;
+  background-color: #f3f4f6;
+  width: 100vw;
+  height: 100vh;
+  display: flex;
+  overflow: hidden;
+  flex-direction: column;
+  align-items: center;
+  height: 100%;
+  overflow-y: auto;
+}
+body {
+  margin: 0;
+  padding: 0;
+  font-family: Arial, sans-serif;
+  background-color: #f3f4f6;
+  width: 100vw;
+  height: 100vh;
+  display: flex;
+  overflow: hidden;
+  flex-direction: column;
+  align-items: center;
+  scrollbar-width: none; /* Firefox */
+  -ms-overflow-style: none;
+  height: 100%;
+  overflow: hidden;
+  overflow-y: auto;
+}
+.header {
+  position: relative;
+  width: 393px;
+  height: 130px;
+  flex-shrink: 0;
+  background: #b7b7f9;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 16px 0 173px;
+  flex-direction: column;
+}
+.title {
+  position: absolute;
+  top: 16px; /* header 패딩만큼 떨어뜨려 줌 */
+  left: 16px;
+  width: 81.62px;
+  height: 28px;
+  flex-shrink: 0;
+}
+.title svg {
+  width: 81.62px;
+  height: 28px;
+}
+.flatpickr-day.selected,
+.flatpickr-day.today.selected {
+  background: #b7b7f9 !important;
+}
+.flatpickr-day.today:not(.selected) {
+  background: #e6e6f2 !important;
+  border: none !important;
+}
+.team-btn {
+  display: flex;
+  width: 107px;
+  height: 32px;
+  padding: 2px 14px;
+  justify-content: center;
+  align-items: center;
+  gap: 1px;
+  flex-shrink: 0;
+  border-radius: 40px;
+  border: 3px solid #fff;
+  background: transparent;
+  color: #fff;
+  cursor: pointer;
+}
+.container-wrapper {
+  padding: 0 1rem 100px;
+  box-sizing: border-box;
+  width: 100%;
+  max-width: 500px;
+}
+.calendar-box {
+  width: 352px;
+  height: 346px;
+  margin: -80px auto 0; /* top:-80px, 좌우 auto로 정확히 중앙 */
+  background: #fff;
+  border-radius: 30px 30px 30px 0;
+  box-shadow: 4px 4px 16px 0px rgba(0, 0, 0, 0.1);
+  box-sizing: border-box;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+  padding: 16px;
+  z-index: 1;
+}
+.calendar-box input[type='text'] {
+  text-align: center;
+}
+.flatpickr-calendar {
+  position: static !important; /* 절대위치 해제 */
+  transform: none !important; /* translateX 등 해제 */
+  margin: 0 auto !important; /* wrapper 가로 중앙에 */
+  width: 100% !important; /* wrapper(352px)에 맞춰 */
+  height: 100% !important; /* wrapper(346px)에 맞춰 */
+  border: none !important; /* 혹시 남아있는 border */
+  box-shadow: none !important;
+  padding-left: 0 !important;
+  margin-left: 0 !important;
+}
+.icon-dot {
+  display: flex;
+  gap: 2px;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  height: 12px;
+  font-size: 12px;
+  margin-top: -4px;
+  pointer-events: none;
+}
+.icon-dot span {
+  width: 10px;
+  height: 10px;
+  display: block;
+  text-align: center;
+  line-height: 10px;
+}
+.slide-up-panel {
+  position: fixed;
+  bottom: -500px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 393px;
+  height: 327px;
+  border-radius: 40px 40px 0 0;
+  background: #fff;
+  box-shadow: 0px 0px 16px 2px rgba(0, 0, 0, 0.16);
+  transition: bottom 0.3s ease-in-out;
+  z-index: 1000;
+  padding: 1rem;
+  box-sizing: border-box;
+  align-items: center;
+}
+.slide-up-panel.active {
+  bottom: 0px;
+}
+.schedule-item {
+  display: flex;
+  padding: 10px 7px;
+  align-items: center;
+  gap: 5px;
+  align-self: stretch;
+  border-bottom: 1px solid #e2e8f0; /* 구분선 */
+  cursor: pointer;
+  background: #fff;
+}
+.today-info,
+.schedule-info {
+  width: 100%;
+  max-width: 500px;
+  box-sizing: border-box;
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  font-weight: bold;
+  margin-top: 1rem;
+}
+/* flatpickr의 월 드롭다운 셀렉터 완전 숨김 */
+.flatpickr-current-month .flatpickr-monthDropdown-months,
+.flatpickr-current-month .flatpickr-monthDropdown-months + .numInputWrapper {
+  display: none !important;
+}
+.flatpickr-current-month {
+  justify-content: flex-start !important;
+  text-align: left !important;
+  width: 100% !important;
+  font-family: 'Pretendard', Arial, sans-serif !important;
+  font-weight: 600 !important;
+  font-size: 24px !important;
+  line-height: 29px !important;
+  letter-spacing: -1.5%;
+  color: #222;
+  margin-bottom: 6px;
+  box-sizing: border-box;
+  display: flex !important;
+  align-items: center;
+  padding-left: 0 !important;
+  margin-left: 0 !important;
+  justify-content: flex-start !important;
+}
+/* 월 텍스트만 보이도록 처리 */
+.flatpickr-current-month .cur-month {
+  font-size: 1.5rem;
+  font-weight: bold;
+  pointer-events: none;
+  background: none !important;
+  color: #333;
+}
+
+.today-info img {
+  width: 32px;
+  height: 32px;
+  margin-left: 0.5rem;
+}
+.card {
+  background-color: #d1d5db;
+  padding: 0.75rem;
+  border-radius: 0.5rem;
+  margin-bottom: 0.5rem;
+  font-size: 0.95rem;
+  width: 100%;
+  box-sizing: border-box;
+}
+.bottom-nav {
+  width: 393px;
+  height: 49px;
+  background: #b7b7f9;
+  display: flex;
+  justify-content: space-around;
+  align-items: flex-start;
+  position: fixed;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+
+  z-index: 10;
+}
+.nav-item {
+  position: relative;
+}
+.nav-circle {
+  width: 63px;
+  height: 63px;
+  background: #b7b7f9;
+  border-radius: 50%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+
+  position: relative;
+  top: -30px; /* 하단 바 위로 반쯤 올라오게 */
+  z-index: 11;
+}
+.nav-item.active .nav-circle {
+  background: #8b85f9;
+  border: 4px solid white;
+}
+.nav-circle img {
+  width: 24px;
+  height: 24px;
+  margin-bottom: 5px;
+}
+.circle-label {
+  font-size: 9.5px;
+  color: white;
+  line-height: 1;
+}
+.nav-btn {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  font-size: 0.75rem;
+}
+.nav-btn .circle {
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  background-color: #cfcfcf;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-bottom: 0.25rem;
+}
+.nav-btn.active .circle {
+  background-color: #9ca3af;
+}
+.dday-soon {
+  background-color: #fef3c7;
+  border-left: 6px solid #facc15;
+  font-weight: bold;
+}
+.alert-banner {
+  background-color: #fff7ed;
+  color: #b45309;
+  font-weight: bold;
+  padding: 0.75rem 1rem;
+  text-align: left;
+  border-bottom: 1px solid #fcd34d;
+  width: 100%;
+  max-width: 500px;
+  box-sizing: border-box;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.alert-banner button {
+  background: none;
+  border: none;
+  font-size: 1.25rem;
+  cursor: pointer;
+  color: #b45309;
+}
+.card {
+  background-color: #d1d5db;
+  padding: 0.75rem 1rem;
+  border-radius: 0.5rem;
+  margin: 0.5rem auto;
+  font-size: 0.95rem;
+  width: calc(100% - 2rem);
+  max-width: 480px;
+  box-sizing: border-box;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.today-task-card {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 352px;
+  height: 29px;
+  flex-shrink: 0;
+  border-radius: 10px;
+  background: #e6e6f2;
+  padding: 0.75rem 1rem;
+  border-radius: 0.5rem;
+  margin-bottom: 0.5rem;
+  width: 100%;
+  box-sizing: border-box;
+  color: #000;
+  font-family: Pretendard, sans-serif;
+  font-size: 14px;
+  font-style: normal;
+  font-weight: 500;
+  line-height: normal;
+  letter-spacing: -0.21px;
+}
+#todayTasksContainer {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  width: 100%;
+  max-width: 500px;
+  box-sizing: border-box;
+  padding: 1rem;
+  background-color: #ffffff;
+  border-radius: 0.75rem;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+  margin: 1rem auto 100px auto;
+}
+.team-dropdown {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  width: 100%; /* 부모(team-container)의 width를 그대로 따라감 */
+  background-color: #ffffff;
+  border-radius: 0.75rem;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  padding: 0.5rem 0;
+  opacity: 0;
+  transform: translateY(-10px);
+  transition: opacity 0.3s ease, transform 0.3s ease;
+  z-index: 999;
+}
+.team-dropdown button {
+  width: 100%;
+  padding: 0.6rem 1rem;
+  text-align: left;
+  font-size: 0.95rem;
+  font-weight: 500;
+  background-color: transparent;
+  border: none;
+  color: #111827;
+  cursor: pointer;
+}
+
+.team-dropdown button:hover {
+  background-color: #f3f4f6;
+}
+
+.team-dropdown.show {
+  opacity: 1;
+  transform: translateY(0);
+}
+.hidden {
+  display: none;
+}
+.team-container {
+  position: absolute;
+  top: 16px; /* header padding과 일치 */
+  right: 40px;
+  z-index: 100;
+}
+.modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  display: none;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.4);
+  justify-content: center;
+  align-items: center;
+  z-index: 10000;
+}
+.modal-content {
+  background: white;
+  padding: 2rem;
+  border-radius: 16px;
+  text-align: center;
+  max-width: 300px;
+  width: 80%;
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+  animation: fadeIn 0.2s ease-in-out;
+}
+.modal-title {
+  font-size: 1.2rem;
+  font-weight: bold;
+  margin-bottom: 1rem;
+}
+#alertMessage {
+  font-size: 0.95rem;
+  margin-bottom: 1.5rem;
+  color: #111827;
+}
+.user-name {
+  position: absolute;
+  top: 180px;
+  left: 40px;
+  color: #fff;
+  color: #fff;
+  font-family: Pretendard;
+  font-size: 26.899px;
+  font-style: normal;
+  font-weight: 500;
+  line-height: normal;
+  letter-spacing: -0.403px;
+}
+.select-btn {
+  background-color: #3b82f6;
+  color: white;
+  border: none;
+  padding: 0.6rem 1.2rem;
+  font-size: 0.9rem;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: bold;
+}
+
+.select-btn:hover {
+  background-color: #2563eb;
+}
+
+.delete-button:hover {
+  background-color: #dc2626;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+.fixed-container {
+  width: 393px;
+  height: 852px;
+  background: #fff;
+  margin: 0 auto;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.05);
+  overflow: visible;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  overflow-y: auto; /* fixed-container 안에서 스크롤 */
+  scrollbar-width: none; /* Firefox */
+  -ms-overflow-style: none;
+}
+.fixed-container::-webkit-scrollbar {
+  display: none; /* Chrome, Safari, Edge */
+}
+#calendar.flatpickr-input {
+  display: none;
+}
+.schedule-item span:first-child {
+  font-size: 14px; /* 달력 아이콘 기본 크기와 유사하게 */
+  line-height: normal;
+  display: inline-block;
+}
+.schedule-item span:nth-child(2) {
+  color: #757575;
+  text-align: center;
+  font-family: Pretendard, sans-serif;
+  font-size: 16px;
+  font-style: normal;
+  font-weight: 600;
+  line-height: normal;
+  letter-spacing: -0.24px;
+}
+.schedule-item-icon svg {
+  width: 14px;
+  height: 14px;
+  margin-top: 10px;
+}
+.drag-handle {
+  position: absolute;
+  top: 8px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 97px;
+  cursor: pointer;
+}
+
+.drag-handle svg {
+  width: 97px;
+  height: 6px;
+}
+.close-button {
+  position: absolute;
+  top: 8px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: none;
+  border: none;
+  padding: 0;
+  z-index: 1002;
+}
+#scheduleDate {
+  width: 352px;
+  height: 29px;
+  flex-shrink: 0;
+  border-radius: 10px;
+  background: #e6e6f2;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: bold;
+  margin-bottom: 0.5rem;
+}
+#scheduleDate,
+#scheduleList {
+  margin-top: 40px; /* 원하는 만큼만 내려! 40~56px 추천 */
+}
+.flatpickr-prev-month,
+.flatpickr-next-month {
+  display: none !important;
+}
