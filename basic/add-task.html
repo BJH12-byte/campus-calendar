@@ -690,7 +690,13 @@ const scheduleObj = {
   title: "테스트",
   date: "2025-07-09",
   type: "TASK",
-  subject: { id: 213 }, // 실제 id 확인
+  subject: {
+    id: 1,
+    name: "자료구조", // 이거 실제 값으로
+    type: "전공",
+    major: "의료IT학과",
+    grade: 2
+  },
   alertBeforeDays: 1
 };
 console.log("보내는 scheduleObj", scheduleObj);
