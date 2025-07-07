@@ -5,12 +5,47 @@ document.addEventListener('DOMContentLoaded', () => {
   const charCounter = document.querySelector('.char-counter');
   const dateDisplay = document.querySelector('.date-display'); // 날짜 div
 
+  // 첨부파일 상태
+  let attachedFile = null;
+  let fileUrl = null;
+
   // 글자 수 카운터 업데이트
   contentInput.addEventListener('input', () => {
     const length = contentInput.textContent.trim().length;
     charCounter.textContent = `${length}/1000`;
   });
 
+  // 파일 input 이벤트
+  const cameraInput = document.getElementById('camera-input');
+  const fileInput = document.getElementById('file-input');
+
+  // 이미지/파일 첨부(카메라/갤러리)
+  cameraInput.addEventListener('change', handleFileAttach);
+  fileInput.addEventListener('change', handleFileAttach);
+
+  function handleFileAttach(e) {
+    if (e.target.files.length) {
+      attachedFile = e.target.files[0];
+    }
+  }
+
+  document.querySelectorAll('.attach-btn')[0].addEventListener('click', (e) => {
+    e.stopPropagation();
+    document.getElementById('photo-option-popup').style.display = 'block';
+  });
+  document.getElementById('option-gallery').addEventListener('click', () => {
+    document.getElementById('photo-option-popup').style.display = 'none';
+    document.getElementById('file-input').click();
+  });
+  document.getElementById('option-camera').addEventListener('click', () => {
+    document.getElementById('photo-option-popup').style.display = 'none';
+    document.getElementById('camera-input').click();
+  });
+  document.addEventListener('click', () => {
+    document.getElementById('photo-option-popup').style.display = 'none';
+  });
+
+  // “완료” 버튼 클릭
   completeBtn.addEventListener('click', () => {
     const title = titleInput.textContent.trim();
     const content = contentInput.textContent.trim();
@@ -30,7 +65,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     showYesNoPopup(
       window.popupMessages?.writePageConfirm || '일정확인 제대로 하셨나요?',
-      () => {
+      async () => {
         // 날짜 변환: YYYY.MM.DD -> YYYY-MM-DD
         let dateText = dateDisplay ? dateDisplay.textContent.trim() : '';
         let date = '';
@@ -41,20 +76,33 @@ document.addEventListener('DOMContentLoaded', () => {
           date = now.toISOString().slice(0, 10);
         }
 
-        let fileUrl = null;
-        let imageUrl = null;
-
-        const uploadedImage = localStorage.getItem('uploadedImage') || '';
-        if (uploadedImage) {
-          imageUrl = uploadedImage;
+        // *** 파일/이미지 첨부시 서버 업로드 ***
+        if (attachedFile) {
+          try {
+            const uploadForm = new FormData();
+            uploadForm.append('file', attachedFile);
+            const uploadRes = await fetch(
+              'https://unidays-project.com/api/notices/upload',
+              {
+                method: 'POST',
+                credentials: 'include',
+                body: uploadForm,
+              }
+            );
+            if (!uploadRes.ok) throw new Error('파일 업로드 실패');
+            fileUrl = await uploadRes.text(); // 서버가 "/uploads/xxx.pdf" 등 반환
+          } catch (e) {
+            showCustomPopup('파일 업로드 중 오류 발생: ' + e.message);
+            return;
+          }
         }
 
         const payload = {
           title: title,
           content: content,
           date: date,
-          fileUrl: fileUrl,
-          imageUrl: imageUrl,
+          fileUrl: fileUrl, // null이거나 "/uploads/xxx"
+          imageUrl: null, // 필요시 추가 구현
           type: 'SCHOOL',
         };
 
@@ -97,56 +145,11 @@ document.addEventListener('DOMContentLoaded', () => {
             showCustomPopup('공지 등록 중 오류 발생: ' + error.message);
           });
 
-        localStorage.removeItem('uploadedImage');
+        attachedFile = null;
       },
       () => {
         console.log('재확인 버튼 눌림 - 다시 확인!');
       }
     );
-  });
-
-  // 첨부 기능(로컬에 이미지 저장만)
-  const cameraInput = document.getElementById('camera-input');
-  const fileInput = document.getElementById('file-input');
-
-  cameraInput.addEventListener('change', (e) => {
-    if (e.target.files.length) {
-      const file = e.target.files[0];
-      const reader = new FileReader();
-      reader.onload = () => {
-        localStorage.setItem('uploadedImage', reader.result);
-      };
-      reader.readAsDataURL(file);
-    }
-  });
-
-  fileInput.addEventListener('change', (e) => {
-    if (e.target.files.length) {
-      const file = e.target.files[0];
-      const reader = new FileReader();
-      reader.onload = () => {
-        localStorage.setItem('uploadedImage', reader.result);
-      };
-      reader.readAsDataURL(file);
-    }
-  });
-
-  document.querySelectorAll('.attach-btn')[0].addEventListener('click', (e) => {
-    e.stopPropagation();
-    document.getElementById('photo-option-popup').style.display = 'block';
-  });
-
-  document.getElementById('option-gallery').addEventListener('click', () => {
-    document.getElementById('photo-option-popup').style.display = 'none';
-    document.getElementById('file-input').click();
-  });
-
-  document.getElementById('option-camera').addEventListener('click', () => {
-    document.getElementById('photo-option-popup').style.display = 'none';
-    document.getElementById('camera-input').click();
-  });
-
-  document.addEventListener('click', () => {
-    document.getElementById('photo-option-popup').style.display = 'none';
   });
 });
