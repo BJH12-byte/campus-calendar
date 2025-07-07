@@ -654,8 +654,7 @@ const payload = {
   date: selectedDateStr,
   alertBeforeDays: 1, // 또는 선택한 값
   type: selectedType === '과제' ? 'TASK' : selectedType === '시험' ? 'EXAM' : 'ETC',
-  user: user,
-  subject: selectedSubject,
+  subjectId: selectedSubject ? selectedSubject.id : null
 };
 console.log(payload); // 이거 실제로 찍어서 값 확인해
 
