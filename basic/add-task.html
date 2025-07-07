@@ -536,27 +536,27 @@
       });
 
       window.onload = () => {
-    const subjectListDiv = document.getElementById('subject-list');
-  subjectListDiv.innerHTML = "";
-  const etcItem = document.createElement('div');
-  etcItem.className = 'list-item';
-  etcItem.innerText = '없음(기타)';
-  etcItem.onclick = function() { selectSubject(this); };
-  subjectListDiv.appendChild(etcItem);
+const subjectListDiv = document.getElementById('subject-list');
+subjectListDiv.innerHTML = "";
+const etcItem = document.createElement('div');
+etcItem.className = 'list-item';
+etcItem.innerText = '없음(기타)';
+etcItem.onclick = function() { selectSubject(this, null); };
+subjectListDiv.appendChild(etcItem);
 
-  // mySubjects에서 과목 불러오기
-  let mySubjects = [];
-  try {
-    mySubjects = JSON.parse(localStorage.getItem('mySubjects')) || [];
-  } catch(e) {mySubjects = [];}
-  mySubjects.forEach(obj => {
-    if (!obj.subject || !obj.subject.name) return;
-    const item = document.createElement('div');
-    item.className = 'list-item';
-    item.innerText = obj.subject.name;
-    item.setAttribute('data-id', obj.subject.id);
-    item.onclick = function() { selectSubject(this); };
-    subjectListDiv.appendChild(item);
+// 내 과목 목록을 서버에서 가져온다!
+fetch('https://unidays-project.com/api/usersubjects', { credentials: 'include' })
+  .then(res => res.json())
+  .then(subjects => {
+    subjects.forEach(entry => {
+      if (!entry.subject || !entry.subject.name) return;
+      const item = document.createElement('div');
+      item.className = 'list-item';
+      item.innerText = entry.subject.name;
+      item.setAttribute('data-id', entry.subject.id);
+      item.onclick = function() { selectSubject(this, entry.subject); };
+      subjectListDiv.appendChild(item);
+    });
   });
     const user = JSON.parse(localStorage.getItem('user') || '{}');
   if (user && user.name) {
