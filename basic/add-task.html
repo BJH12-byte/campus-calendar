@@ -562,16 +562,10 @@ fetch('https://unidays-project.com/api/usersubjects', { credentials: 'include' }
   if (user && user.name) {
     document.getElementById('userName').innerText = user.name + '님';
   }
-          if (!isEditMode) {
-    document.getElementById('date-picker').setAttribute('disabled', true);
-  } else {
-    document.getElementById('date-picker').removeAttribute('disabled');
-  }
   const dateParam = urlParams.get('date');
   if (dateParam) {
     document.getElementById('date-picker').value = dateParam;
   } else {
-    // 없으면 오늘 날짜
     document.getElementById('date-picker').value = new Date().toISOString().slice(0, 10);
   }
         // === 삭제 버튼 보이기 ===
@@ -655,7 +649,7 @@ fetch('https://unidays-project.com/api/usersubjects', { credentials: 'include' }
     title: title,
     date: selectedDateStr,
     type: selectedType === '과제' ? 'TASK' : selectedType === '시험' ? 'EXAM' : 'ETC',
-    subject: selectedSubject, // 서버가 subject.id만 받아도 상관없음
+    subject: selectedSubject ? selectedSubject.id : null,
   };
 
   fetch('https://unidays-project.com/api/schedules', {
