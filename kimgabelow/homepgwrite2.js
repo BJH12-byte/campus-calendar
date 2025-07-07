@@ -75,8 +75,27 @@ document.addEventListener('DOMContentLoaded', () => {
             return res.json();
           })
           .then((data) => {
-            // 성공 시 상세 페이지 이동
-            window.location.href = `homepg-written.html?id=${data.id}`;
+            // 1. 공지 등록 성공 시, OCR 일정 등록 API 호출
+            fetch(`https://unidays-project.com/api/notices/${data.id}/save`, {
+              method: 'POST',
+              credentials: 'include',
+              headers: {
+                'Content-Type': 'application/json',
+              },
+            })
+              .then((ocrRes) => {
+                if (!ocrRes.ok) throw new Error('OCR 일정 등록 실패');
+                return ocrRes.text();
+              })
+              .then((msg) => {
+                // 필요하면 팝업 안내(선택)
+                // showCustomPopup(msg);
+                window.location.href = `homepg-written.html?id=${data.id}`;
+              })
+              .catch((ocrError) => {
+                showCustomPopup('OCR 일정 등록 중 오류: ' + ocrError.message);
+                window.location.href = `homepg-written.html?id=${data.id}`;
+              });
           })
           .catch((error) => {
             showCustomPopup('공지 등록 중 오류 발생: ' + error.message);
