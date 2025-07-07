@@ -89,7 +89,7 @@ window.onload = () => {
             iconContainer.style.left = '50%';
             iconContainer.style.transform = 'translateX(-50%)';
             iconContainer.style.display = 'flex';
-            iconContainer.style.gap = '2px';
+            iconContainer.style.gap = '0.5px';
             iconContainer.style.pointerEvents = 'none';
             for (let i = 0; i < 3; i++) {
               const span = document.createElement('span');
