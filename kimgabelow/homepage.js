@@ -1,6 +1,6 @@
 document.addEventListener('DOMContentLoaded', () => {
   // ✅ 학교 공지 리스트 fetch해서 렌더링
-  fetch('/api/notices/school', {
+  fetch('https://unidays-project.com/api/notices/school', {
     method: 'GET',
     credentials: 'include', // 인증이 필요한 경우, 필요 없으면 빼도 됨
     headers: {
