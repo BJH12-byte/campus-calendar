@@ -209,51 +209,9 @@
 
     <!-- ... style, body 구조 생략 ... -->
     <script>
-      const MOCK_MAJOR_SUBJECTS = [
-        {
-          id: 1,
-          name: '컴퓨터프로그래밍',
-          time: '월 3-4, 수 2',
-          type: '전공',
-          major: '의료IT학과',
-          grade: 1,
-        },
-        {
-          id: 2,
-          name: '운영체제',
-          time: '수 5-6',
-          type: '전공',
-          major: '의료IT학과',
-          grade: 3,
-        },
-        {
-          id: 3,
-          name: '웹프로그래밍',
-          time: '월 1-2',
-          type: '전공',
-          major: '의료IT학과',
-          grade: 2,
-        },
-        {
-          id: 4,
-          name: '글쓰기',
-          time: '화 1-2',
-          type: '교양',
-          major: '공통',
-          grade: 1,
-        },
-        {
-          id: 5,
-          name: '인공지능입문',
-          time: '금 3-4',
-          type: '교양',
-          major: '공통',
-          grade: 2,
-        },
-      ];
-      let MOCK_MY_SUBJECTS = [];
+      let currentSubjects = [];
+      let mySubjects = [];
 
-      let alertCallback = null;
       function showAlertModal(msg, cb) {
         document.getElementById('alertMessage').textContent = msg;
         document.getElementById('alertModal').style.display = 'flex';
@@ -268,61 +226,99 @@
       }
 
       // 과목 리스트 그리는 함수(필터 적용)
-      function renderSubjects(filterFn) {
-        const list = document.querySelector('.subject-list');
-        list.innerHTML = '';
-        const subjects =
-          typeof filterFn === 'function'
-            ? MOCK_MAJOR_SUBJECTS.filter(filterFn)
-            : MOCK_MAJOR_SUBJECTS;
-
-        subjects.forEach((subject) => {
+      function renderSubjects(list) {
+        const domList = document.querySelector('.subject-list');
+        domList.innerHTML = '';
+        list.forEach((subject) => {
           const div = document.createElement('div');
           div.className = 'subject';
           div.setAttribute('data-id', subject.id);
           div.innerHTML = `
-        <div class="subject-title">${subject.name}</div>
-        <div class="subject-info">${subject.time || ''}</div>
-      `;
+            <div class="subject-title">${subject.name}</div>
+            <div class="subject-info">${subject.time || ''}</div>
+          `;
           div.onclick = function () {
             div.classList.toggle('selected');
           };
-          list.appendChild(div);
+          domList.appendChild(div);
         });
       }
 
-      window.onload = function () {
-        // 1. localStorage에서 user 정보 꺼내서 헤더에 표시
-        const user = JSON.parse(localStorage.getItem('user') || '{}');
-        if (user.name) {
-          document.querySelector('.username').textContent = user.name + '님';
+      async function loadSubjects() {
+        // 전공 과목 목록
+        const res = await fetch(
+          'https://unidays-project.com/api/subjects/major',
+          { credentials: 'include' }
+        );
+        currentSubjects = await res.json();
+        renderSubjects(currentSubjects);
+      }
+
+      async function loadMySubjects() {
+        // 내가 등록한 과목 목록
+        const res = await fetch(
+          'https://unidays-project.com/api/usersubjects',
+          { credentials: 'include' }
+        );
+        mySubjects = await res.json();
+      }
+
+      async function registerSubjects() {
+        const selected = document.querySelectorAll('.subject.selected');
+        if (selected.length === 0) {
+          showAlertModal('과목을 선택해주세요.');
+          return;
         }
-        if (user.major) {
+        for (const subj of selected) {
+          const subjectId = Number(subj.getAttribute('data-id'));
+          // 이미 등록된 과목은 제외
+          if (mySubjects.some((s) => s.subject.id === subjectId)) continue;
+          await fetch('https://unidays-project.com/api/usersubjects', {
+            method: 'POST',
+            credentials: 'include',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ subjectId }),
+          });
+        }
+        showAlertModal('과목 등록 완료!', () => window.location.reload());
+      }
+
+      window.onload = async function () {
+        // 1. 유저 정보 불러와서 헤더에 표시
+        const userRes = await fetch('https://unidays-project.com/api/user/me', {
+          credentials: 'include',
+        });
+        if (userRes.ok) {
+          const user = await userRes.json();
+          document.querySelector('.username').textContent = user.name + '님';
           document.querySelector('.major').textContent = user.major;
         }
 
-        // 2. 과목 리스트 초기 렌더
-        renderSubjects();
+        // 2. 과목 및 내 과목 불러오기
+        await loadSubjects();
+        await loadMySubjects();
 
-        // 3. 메뉴 버튼 클릭 기능 연결
+        // 3. 메뉴 버튼 필터
         document.querySelectorAll('.menu-btn').forEach((btn) => {
           btn.addEventListener('click', () => {
             const label = btn.textContent;
-            if (label === '전공') renderSubjects((s) => s.type === '전공');
-            if (label === '교양') renderSubjects((s) => s.type === '교양');
+            if (label === '전공')
+              renderSubjects(currentSubjects.filter((s) => s.type === '전공'));
+            if (label === '교양')
+              renderSubjects(currentSubjects.filter((s) => s.type === '교양'));
             if (label === '학년') {
               const year = prompt('학년을 숫자로 입력하세요 (예: 1)');
               if (!year || isNaN(year)) return;
-              renderSubjects((s) => s.grade === Number(year));
+              renderSubjects(
+                currentSubjects.filter((s) => s.grade == Number(year))
+              );
             }
             if (label === '검색') {
               const query = prompt('검색할 과목명을 입력하세요:');
               if (!query) return;
-              renderSubjects((s) => s.name.includes(query));
-              const found = MOCK_MAJOR_SUBJECTS.some((s) =>
-                s.name.includes(query)
+              renderSubjects(
+                currentSubjects.filter((s) => s.name.includes(query))
               );
-              if (!found) showAlertModal('해당 과목을 찾을 수 없습니다.');
             }
           });
         });
@@ -330,39 +326,7 @@
         // 4. 과목 등록 버튼
         document
           .querySelector('.register-btn')
-          .addEventListener('click', () => {
-            const selected = document.querySelectorAll('.subject.selected');
-            if (selected.length === 0) {
-              showAlertModal('과목을 선택해주세요.');
-              return;
-            }
-            let mySubjects = JSON.parse(
-              localStorage.getItem('mySubjects') || '[]'
-            );
-
-            selected.forEach((subj) => {
-              const subjectId = Number(subj.getAttribute('data-id'));
-              if (!mySubjects.some((s) => s.subject.id === subjectId)) {
-                const subjectData = MOCK_MAJOR_SUBJECTS.find(
-                  (s) => s.id === subjectId
-                );
-                mySubjects.push({
-                  id: Date.now(),
-                  subject: subjectData,
-                });
-              }
-            });
-            localStorage.setItem('mySubjects', JSON.stringify(mySubjects));
-            const subjectNames = Array.from(selected)
-              .map((el) => el.querySelector('.subject-title').textContent)
-              .join(', ');
-
-            showAlertModal(`${subjectNames} 이(가) 등록되었습니다.`);
-
-            setTimeout(() => {
-              window.location.href = 'auto-event-register.html';
-            }, 1500);
-          });
+          .addEventListener('click', registerSubjects);
       };
     </script>
   </body>
