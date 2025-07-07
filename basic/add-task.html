@@ -603,14 +603,12 @@ fetch('https://unidays-project.com/api/usersubjects', { credentials: 'include' }
         }
       };
 
-      function selectSubject(el) {
-        document
-          .querySelectorAll('#subject-list .list-item')
-          .forEach((item) => item.classList.remove('selected'));
-        el.classList.add('selected');
-        selectedSubject = el.textContent;
-        // 제거: schedule-section을 표시하는 코드
-      }
+      function selectSubject(el, subjectObj = null) {
+  document.querySelectorAll('#subject-list .list-item').forEach(item => item.classList.remove('selected'));
+  el.classList.add('selected');
+  window.selectedSubject = subjectObj;
+  document.getElementById('schedule-section').style.display = 'block';
+}
 
       function selectType(el, type) {
         document
