@@ -85,7 +85,7 @@ window.onload = () => {
             const iconContainer = document.createElement('div');
             iconContainer.className = 'icon-dot';
             iconContainer.style.position = 'absolute';
-            iconContainer.style.bottom = '4px';
+            iconContainer.style.bottom = '-4px';
             iconContainer.style.left = '50%';
             iconContainer.style.transform = 'translateX(-50%)';
             iconContainer.style.display = 'flex';
