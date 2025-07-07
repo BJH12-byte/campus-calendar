@@ -23,6 +23,29 @@ window.onload = () => {
     .then((res) => res.json())
     .then((schedules) => {
       window.allSchedules = schedules;
+      const today = new Date().toISOString().slice(0, 10);
+      const todays = schedules.filter((s) => {
+        let d = s.date;
+        if (d.length > 10) d = d.slice(0, 10);
+        d = d.replace(/\//g, '-');
+        return d === today;
+      });
+      const container = document.getElementById('todayTasksContainer'); // tolist로 바꿔도 됨
+      if (todays.length > 0) {
+        container.innerHTML = todays
+          .map(
+            (s) =>
+              `<div class="today-task-card">
+             <span>${s.title ? '(' + s.title + ') ' : ''}${
+                s.subject?.name || ''
+              } ${s.type}</span>
+           </div>`
+          )
+          .join('');
+      } else {
+        container.innerHTML =
+          '<div class="today-task-card">오늘 일정 없음</div>';
+      }
       renderTodayTasks(schedules);
       renderUpcomingSchedules(schedules);
       flatpickr('#calendar', {
