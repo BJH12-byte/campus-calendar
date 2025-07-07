@@ -686,20 +686,37 @@
           }
         }
 
-        schedules.push({
-          date: selectedDateStr,
-          type: selectedType,
-          subject: selectedSubject,
-          icon,
-          title: title,
-        });
-        localStorage.setItem('schedules', JSON.stringify(schedules));
+      const scheduleObj = {
+  title: title,
+  date: selectedDateStr,
+  type: (selectedType === "시험") ? "EXAM"
+       : (selectedType === "과제" ? "TASK" : "ETC"),
+  subject: selectedSubject ? { id: selectedSubject.id } : null
+};
 
-        showAlertModal(
-          isEditMode ? '일정이 수정되었습니다.' : '일정이 등록되었습니다.',
-          () => (window.location.href = 'home.html')
-        );
-      }
+          fetch('https://unidays-project.com/api/schedules', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json'
+    },
+    credentials: 'include',
+    body: JSON.stringify(scheduleObj)
+  })
+  .then(res => {
+    if (!res.ok) throw new Error('일정 등록 실패');
+    return res.json();
+  })
+  .then(data => {
+    showAlertModal(
+      isEditMode ? '일정이 수정되었습니다.' : '일정이 등록되었습니다.',
+      () => (window.location.href = 'home.html')
+    );
+  })
+  .catch(err => {
+    showWarning('일정 등록 실패! ' + err.message);
+  });
+}
+      
       let alertCallback = null;
 
       function showAlertModal(message, callback) {
