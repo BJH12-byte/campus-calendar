@@ -762,10 +762,6 @@
           .then((res) => res.json())
           .then((schedules) => {
             const daily = schedules.filter((s) => s.date === date);
-            console.log(
-              '일정 타입 체크:',
-              daily.map((s) => s.type)
-            );
             document.getElementById(
               'scheduleDate'
             ).textContent = `${date} 일정 (${daily.length})`;

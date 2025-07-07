@@ -518,6 +518,8 @@
       if (editDate && !isNaN(editIndex)) {
         isEditMode = true;
         originalDate = editDate;
+
+        const schedules = JSON.parse(localStorage.getItem('schedules') || '[]');
         const daily = schedules.filter((s) => s.date === originalDate);
 
         if (daily[editIndex]) {
@@ -544,37 +546,11 @@
 
   // mySubjects에서 과목 불러오기
   let mySubjects = [];
-  try {
-    const res = await fetch('https://unidays-project.com/api/usersubjects', {
-      credentials: 'include'
-    });
-    mySubjects = await res.json(); // [{id, user, subject}, ...]
-  } catch(e) {
-    mySubjects = [];
-  }
-  // 2. 리스트 뿌리기
-  mySubjects.forEach(obj => {
-    if (!obj.subject || !obj.subject.name) return;
-    const item = document.createElement('div');
-    item.className = 'list-item';
-    item.innerText = obj.subject.name;
-    item.setAttribute('data-id', obj.subject.id);
-    item.onclick = function() { selectSubject(obj.subject, this); }; // subject 객체 자체 저장
-    subjectListDiv.appendChild(item);
-  });
-   try {
-    const userRes = await fetch('https://unidays-project.com/api/user/me', {
-      credentials: 'include'
-    });
-    const user = await userRes.json();
-    if (user && user.name) {
-      document.getElementById('userName').innerText = user.name + '님';
-    }
-  } catch(e) {}
-  // 날짜 설정 등 나머지 기존 코드도 유지
-};
-    
   
+    const user = JSON.parse(localStorage.getItem('user') || '{}');
+  if (user && user.name) {
+    document.getElementById('userName').innerText = user.name + '님';
+  }
           if (!isEditMode) {
     document.getElementById('date-picker').setAttribute('disabled', true);
   } else {
@@ -614,15 +590,16 @@
               }
             });
         }
-      
+      };
 
-      function selectSubject(subjectObj, el) {
-  document
-    .querySelectorAll('#subject-list .list-item')
-    .forEach((item) => item.classList.remove('selected'));
-  el.classList.add('selected');
-  selectedSubject = subjectObj; // subject 객체 자체 저장
-}
+      function selectSubject(el) {
+        document
+          .querySelectorAll('#subject-list .list-item')
+          .forEach((item) => item.classList.remove('selected'));
+        el.classList.add('selected');
+        selectedSubject = el.textContent;
+        // 제거: schedule-section을 표시하는 코드
+      }
 
       function selectType(el, type) {
         document
@@ -668,6 +645,7 @@
         }
 
         const icon = selectedType === '시험' ? '★' : '●';
+        let schedules = JSON.parse(localStorage.getItem('schedules') || '[]');
 
         if (isEditMode && originalSchedule) {
           const matchList = schedules.filter((s) => s.date === originalDate);
@@ -683,30 +661,19 @@
           }
         }
 
-      const scheduleObj = {
-  title: title,
-  date: selectedDateStr,
-  type: (selectedType === "시험") ? "EXAM"
-       : (selectedType === "과제" ? "TASK" : "ETC"),
-};
+        schedules.push({
+          date: selectedDateStr,
+          type: selectedType,
+          subject: selectedSubject,
+          icon,
+          title: title,
+        });
+        localStorage.setItem('schedules', JSON.stringify(schedules));
 
-         fetch('https://unidays-project.com/api/schedules', {
-    method: 'POST',
-    credentials: 'include',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify(scheduleObj)
-  })
-  .then(res => {
-    if (res.ok) {
-      showAlertModal(
-        isEditMode ? '일정이 수정되었습니다.' : '일정이 등록되었습니다.',
-        () => (window.location.href = 'home.html')
-      );
-    } else {
-      showWarning('일정 등록 실패. 서버 확인!');
-    }
-  })
-  .catch(() => showWarning('네트워크 오류!'));
+        showAlertModal(
+          isEditMode ? '일정이 수정되었습니다.' : '일정이 등록되었습니다.',
+          () => (window.location.href = 'home.html')
+        );
       }
       let alertCallback = null;
 
@@ -735,6 +702,7 @@
       // ③ 네: 실제 삭제 로직 실행
       document.getElementById('confirmDeleteBtn').onclick = () => {
         // schedules 불러오고 target 찾아서 삭제
+        let schedules = JSON.parse(localStorage.getItem('schedules') || '[]');
         const matchList = schedules.filter((s) => s.date === originalDate);
         const target = matchList[editIndex];
         const idx = schedules.findIndex(
@@ -744,6 +712,7 @@
             s.type === target.type
         );
         if (idx > -1) schedules.splice(idx, 1);
+        localStorage.setItem('schedules', JSON.stringify(schedules));
 
         // modal 닫고 alertModal 대신 기존 모달로 피드백
         document.getElementById('deleteModal').style.display = 'none';
