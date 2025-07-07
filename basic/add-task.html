@@ -693,7 +693,11 @@
        : (selectedType === "과제" ? "TASK" : "ETC"),
   subject: selectedSubject ? { id: selectedSubject.id } : null
 };
+    if (selectedSubject && selectedSubject.id) {
+  scheduleObj.subject = { id: selectedSubject.id };
+}
 
+console.log('보내는 scheduleObj:', scheduleObj);
           fetch('https://unidays-project.com/api/schedules', {
     method: 'POST',
     headers: {
