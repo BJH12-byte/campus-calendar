@@ -84,6 +84,7 @@
       </button>
     </div>
     <script>
+      // 1. 구글 로그인 버튼
       document
         .querySelector('.google-button')
         .addEventListener('click', function () {
@@ -91,20 +92,21 @@
             'https://unidays-project.com/oauth2/authorization/google';
         });
 
+      // 2. 구글 OAuth 인증 후 (code 파라미터 있을 때) - JSON 방식 수동 리다이렉트
       window.onload = function () {
         const urlParams = new URLSearchParams(window.location.search);
         if (urlParams.has('code')) {
-          // 1. 백엔드에서 JSON으로 redirectUrl 줌
           fetch(window.location.href)
             .then((res) => res.json())
             .then((data) => {
               if (data.redirectUrl) {
-                // 2. redirectUrl로 이동시켜줌
                 window.location.href = data.redirectUrl;
+              } else {
+                throw new Error('No redirectUrl');
               }
             })
             .catch(() => {
-              // 혹시 실패하면 원래 flow로 fallback
+              // Fallback: 기존 방식
               fetch('https://unidays-project.com/api/user/me', {
                 credentials: 'include',
               })
