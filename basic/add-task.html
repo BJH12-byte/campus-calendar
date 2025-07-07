@@ -648,32 +648,34 @@ fetch('https://unidays-project.com/api/usersubjects', { credentials: 'include' }
     showWarning('지난 날짜에는 일정을 등록할 수 없습니다.');
     return;
   }
-  const payload = {
-    title: title,
-    date: selectedDateStr,
-    type: window.selectedType === '과제' ? 'TASK'
-        : window.selectedType === '시험' ? 'EXAM'
-        : 'ETC',
-    subject: window.selectedSubject ? window.selectedSubject.id : null,
-  };
-  console.log('payload:', payload);
+const user = JSON.parse(localStorage.getItem('user')); // 이미 localStorage에 있음
+const payload = {
+  title: title || "",
+  date: selectedDateStr,
+  alertBeforeDays: 1, // 또는 선택한 값
+  type: selectedType === '과제' ? 'TASK' : selectedType === '시험' ? 'EXAM' : 'ETC',
+  user: user,
+  subject: selectedSubject,
+};
+console.log(payload); // 이거 실제로 찍어서 값 확인해
 
-  fetch('https://unidays-project.com/api/schedules', {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    credentials: 'include',
-    body: JSON.stringify(payload)
+fetch('https://unidays-project.com/api/schedules', {
+  method: 'POST',
+  headers: { 'Content-Type': 'application/json' },
+  credentials: 'include',
+  body: JSON.stringify(payload)
+})
+  .then(res => {
+    if (!res.ok) throw new Error('일정 등록 실패');
+    return res.json();
   })
-    .then(res => {
-      if (!res.ok) throw new Error('일정 등록 실패');
-      return res.json();
-    })
-    .then(() => {
-      showAlertModal('일정이 등록되었습니다.', () => (window.location.href = 'home.html'));
-    })
-    .catch(() => {
-      showWarning('일정 등록에 실패했습니다.');
-    });
+  .then(() => {
+    showAlertModal('일정이 등록되었습니다.', () => (window.location.href = 'home.html'));
+  })
+  .catch((e) => {
+    showWarning('일정 등록에 실패했습니다.');
+    console.error(e);
+  });
       }
       let alertCallback = null;
 
