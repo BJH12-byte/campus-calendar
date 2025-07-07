@@ -101,17 +101,19 @@
         }
       });
 
+      // 자동 세션 체크
       window.onload = function () {
         fetch('https://unidays-project.com/api/user/me', {
           credentials: 'include',
         })
           .then((res) => {
             if (res.status === 401) {
-              window.location.href = 'startwithgoogle.html';
+              // 로그인 안 한 상태 → 로그인 페이지
               return;
             }
             if (res.status === 403) {
-              window.location.href = 'signup.html'; // 추가정보 입력
+              // 구글 로그인은 했지만 추가정보 미입력 → 추가정보 입력
+              window.location.href = 'signup.html';
               return;
             }
             return res.json();
@@ -119,7 +121,7 @@
           .then((user) => {
             if (!user) return;
             if (!user.hasSubjects) {
-              window.location.href = 'subject-register.html'; // 과목 등록
+              window.location.href = 'subject-register.html';
             } else {
               window.location.href = 'mainboard.html'; // 메인
             }
