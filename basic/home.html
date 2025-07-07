@@ -891,6 +891,10 @@
           monthSelectorType: 'static',
           onDayCreate: function (_, __, fp, dayElem) {
             const date = fp.formatDate(dayElem.dateObj, 'Y-m-d');
+            dayElem.addEventListener('click', function (e) {
+              e.stopPropagation();
+              window.location.href = `add-task.html?date=${date}`;
+            });
             const daySchedules = schedules.filter((s) => s.date === date);
             if (daySchedules.length > 0) {
               dayElem.style.position = 'relative';
