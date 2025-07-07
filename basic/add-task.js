@@ -1,6 +1,5 @@
 window.selectedType = null;
 window.selectedSubject = null;
-
 const urlParams = new URLSearchParams(window.location.search);
 const editId = urlParams.get('edit');
 let isEditMode = !!editId;
@@ -125,7 +124,8 @@ function showWarning(message) {
   }, 3000);
 }
 
-function registerSchedule() {
+// 등록/수정 통합 (수정 불가 시 "삭제 후 등록" 방식)
+async function registerSchedule() {
   const title = document.getElementById('schedule-title').value.trim();
   const date = document.getElementById('date-picker').value.trim();
 
@@ -156,42 +156,57 @@ function registerSchedule() {
     subjectId: window.selectedSubject ? window.selectedSubject.id : null,
   };
 
-  const method = isEditMode ? 'PUT' : 'POST';
-  const url = isEditMode
-    ? `https://unidays-project.com/api/schedules/${editId}`
-    : 'https://unidays-project.com/api/schedules';
+  try {
+    if (isEditMode) {
+      // 1. 기존 일정 삭제
+      const deleteRes = await fetch(
+        `https://unidays-project.com/api/schedules/${editId}`,
+        {
+          method: 'DELETE',
+          credentials: 'include',
+        }
+      );
+      if (!deleteRes.ok) throw new Error('일정 삭제 실패');
 
-  fetch(url, {
-    method: method,
-    headers: { 'Content-Type': 'application/json' },
-    credentials: 'include',
-    body: JSON.stringify(payload),
-  })
-    .then((res) => {
-      if (!res.ok)
-        throw new Error(isEditMode ? '일정 수정 실패' : '일정 등록 실패');
-      return res.json();
-    })
-    .then(() => {
-      showAlertModal(
-        isEditMode ? '일정이 수정되었습니다.' : '일정이 등록되었습니다.',
-        () => (window.location.href = 'home.html')
-      );
-    })
-    .catch((e) => {
-      showWarning(
-        isEditMode ? '일정 수정에 실패했습니다.' : '일정 등록에 실패했습니다.'
-      );
-      console.error(e);
-    });
+      // 2. 새 일정 등록
+      const postRes = await fetch('https://unidays-project.com/api/schedules', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        credentials: 'include',
+        body: JSON.stringify(payload),
+      });
+      if (!postRes.ok) throw new Error('일정 등록 실패');
+
+      showAlertModal('일정이 수정되었습니다.', () => {
+        window.location.href = 'home.html';
+      });
+    } else {
+      // 등록 모드
+      const postRes = await fetch('https://unidays-project.com/api/schedules', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        credentials: 'include',
+        body: JSON.stringify(payload),
+      });
+      if (!postRes.ok) throw new Error('일정 등록 실패');
+
+      showAlertModal('일정이 등록되었습니다.', () => {
+        window.location.href = 'home.html';
+      });
+    }
+  } catch (e) {
+    showWarning('수정 또는 등록에 실패했습니다.');
+    console.error(e);
+  }
 }
-
 let alertCallback = null;
+
 function showAlertModal(message, callback) {
   document.getElementById('alertMessage').textContent = message;
   document.getElementById('alertModal').style.display = 'flex';
   alertCallback = typeof callback === 'function' ? callback : null;
 }
+
 function closeAlertModal() {
   document.getElementById('alertModal').style.display = 'none';
   if (alertCallback) {
