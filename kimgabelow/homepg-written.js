@@ -1,12 +1,20 @@
 document.addEventListener('DOMContentLoaded', () => {
+  // 게시글 id를 URL에서 받음
+  const urlParams = new URLSearchParams(window.location.search);
+  const postId = urlParams.get('id');
+
+  if (!postId) {
+    alert('잘못된 접근입니다. 게시글 ID가 없습니다.');
+    window.location.href = 'subjectboard.html';
+    return;
+  }
+
   // header-top 로드
   fetch('header-top.html')
     .then((res) => res.text())
     .then((html) => {
       const headerPlaceholder = document.getElementById('header-placeholder');
       headerPlaceholder.innerHTML = html;
-
-      // header-controls 로드
       return fetch('header-home.html');
     })
     .then((res) => res.text())
@@ -22,6 +30,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
       if (saveBtn) {
         saveBtn.addEventListener('click', () => {
+          // 현재 상세 데이터를 localStorage로 스크랩
           const post = {
             title: document.getElementById('post-title').innerText,
             content: document.getElementById('post-body').innerText,
@@ -69,64 +78,50 @@ document.addEventListener('DOMContentLoaded', () => {
 
       if (optionDelete) {
         optionDelete.addEventListener('click', () => {
-          const latestPostStr = localStorage.getItem('latestSchoolPost');
-          if (!latestPostStr) {
-            alert('삭제할 게시글이 없습니다.');
-            return;
-          }
-
-          const post = JSON.parse(latestPostStr);
-
-          let posts = JSON.parse(localStorage.getItem('posts_school')) || [];
-          posts = posts.filter(
-            (p) => !(p.title === post.title && p.date === post.date)
-          );
-
-          localStorage.setItem('posts_school', JSON.stringify(posts));
-          localStorage.removeItem('latestSchoolPost');
-
-          alert('게시글이 삭제되었습니다.');
-          location.href = 'homepage2.html';
+          if (!confirm('정말 삭제하시겠습니까?')) return;
+          // 실제 API로 삭제 요청(백엔드와 약속된 방식이어야 함)
+          fetch(`https://unidays-project.com/api/notices/${postId}`, {
+            method: 'DELETE',
+            credentials: 'include',
+          })
+            .then((res) => {
+              if (!res.ok) throw new Error('삭제 실패');
+              alert('게시글이 삭제되었습니다.');
+              location.href = 'subjectboard.html';
+            })
+            .catch((e) => {
+              alert('삭제 중 오류: ' + e.message);
+            });
         });
       }
 
-      // 수정팝업 저장 버튼
+      // 수정팝업 저장/취소(여기는 실제 DB 수정과 연동하려면 추가 API 필요)
       document.getElementById('save-edit').addEventListener('click', () => {
         const titleEl = document.getElementById('post-title');
         const bodyEl = document.getElementById('post-body');
         const updatedTitle = titleEl.innerText;
         const updatedBody = bodyEl.innerText;
 
-        const latestPostStr = localStorage.getItem('latestSchoolPost');
-        if (!latestPostStr) {
-          alert('저장할 게시글이 없습니다.');
-          return;
-        }
-        const latestPost = JSON.parse(latestPostStr);
-
-        let posts = JSON.parse(localStorage.getItem('posts_school')) || [];
-        const index = posts.findIndex(
-          (p) => p.title === latestPost.title && p.date === latestPost.date
-        );
-
-        if (index !== -1) {
-          posts[index].title = updatedTitle;
-          posts[index].content = updatedBody;
-          localStorage.setItem('posts_school', JSON.stringify(posts));
-        }
-
-        latestPost.title = updatedTitle;
-        latestPost.content = updatedBody;
-        localStorage.setItem('latestSchoolPost', JSON.stringify(latestPost));
-
-        titleEl.setAttribute('contenteditable', 'false');
-        bodyEl.setAttribute('contenteditable', 'false');
-        document.getElementById('edit-popup').style.display = 'none';
-
-        alert('게시글이 수정되었습니다.');
+        // 실제 API로 수정 요청 필요(백엔드와 약속된 방식이어야 함)
+        fetch(`https://unidays-project.com/api/notices/${postId}`, {
+          method: 'PATCH',
+          credentials: 'include',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ title: updatedTitle, content: updatedBody }),
+        })
+          .then((res) => {
+            if (!res.ok) throw new Error('수정 실패');
+            alert('게시글이 수정되었습니다.');
+            // 수정모드 종료
+            titleEl.setAttribute('contenteditable', 'false');
+            bodyEl.setAttribute('contenteditable', 'false');
+            document.getElementById('edit-popup').style.display = 'none';
+          })
+          .catch((e) => {
+            alert('수정 중 오류: ' + e.message);
+          });
       });
 
-      // 수정팝업 취소 버튼
       document.getElementById('cancel-edit').addEventListener('click', () => {
         const titleEl = document.getElementById('post-title');
         const bodyEl = document.getElementById('post-body');
@@ -151,22 +146,48 @@ document.addEventListener('DOMContentLoaded', () => {
     })
     .catch((err) => console.error('footer-nav 로드 실패:', err));
 
-  // ✅ 로컬스토리지에서 게시글 표시 + 이미지 표시 로직 수정
-  const latestPostStr = localStorage.getItem('latestSchoolPost');
-  if (latestPostStr) {
-    const post = JSON.parse(latestPostStr);
-    document.getElementById('post-title').innerText = post.title;
-    document.getElementById('post-body').innerText = post.content;
-    document.getElementById('post-date').innerText = post.date.split('T')[0];
+  // ✅ 2. 서버에서 상세 게시글 API로 불러옴!
+  fetch(`https://unidays-project.com/api/notices/${postId}`, {
+    credentials: 'include',
+  })
+    .then((res) => {
+      if (!res.ok) throw new Error('게시글 상세 불러오기 실패');
+      return res.json();
+    })
+    .then((post) => {
+      // 제목, 본문, 날짜, 과목명 뿌리기
+      document.getElementById('post-title').innerText = post.title;
+      document.getElementById('post-body').innerText = post.content;
+      document.getElementById('post-date').innerText =
+        post.date?.split('T')[0] || post.date;
 
-    const imageContainer = document.querySelector('.image-container');
-    const postImage = document.getElementById('post-image');
+      // 과목명 분기
+      if (post.subject && post.subject.name) {
+        document.getElementById('post-subject').innerText = post.subject.name;
+      } else {
+        document.getElementById('post-subject').innerText =
+          post.subjectName || '과목 없음';
+      }
 
-    if (post.image) {
-      postImage.src = post.image;
-      imageContainer.style.display = 'block'; // ✅ 이미지 있을 때 컨테이너 표시
-    } else {
-      imageContainer.style.display = 'none'; // ✅ 이미지 없으면 컨테이너 숨김
-    }
-  }
+      // 이미지 뿌리기 (서버 주소 붙이기)
+      const imageContainer = document.querySelector('.image-container');
+      const postImage = document.getElementById('post-image');
+      if (post.imageUrl) {
+        // 만약 imageUrl이 상대경로면 절대경로로 만들어야 함
+        let url = post.imageUrl.startsWith('/')
+          ? 'https://unidays-project.com' + post.imageUrl
+          : post.imageUrl;
+        postImage.src = url;
+        imageContainer.style.display = 'block';
+      } else if (post.image) {
+        postImage.src = post.image;
+        imageContainer.style.display = 'block';
+      } else {
+        imageContainer.style.display = 'none';
+      }
+    })
+    .catch((e) => {
+      document.getElementById('post-title').innerText = '오류 발생';
+      document.getElementById('post-body').innerText = e.message;
+    });
 });
