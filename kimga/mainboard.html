@@ -195,6 +195,7 @@
     </div>
 
     <script>
+      let CULTURE_SUBJECTS = [];
       let ALL_SUBJECTS = [];
       let FILTERED_SUBJECTS = [];
       let MY_SUBJECTS = [];
@@ -249,6 +250,13 @@
           }
         );
         ALL_SUBJECTS = await subjRes.json();
+        const cultureRes = await fetch(
+          'https://unidays-project.com/api/subjects/culture',
+          {
+            credentials: 'include',
+          }
+        );
+        CULTURE_SUBJECTS = await cultureRes.json();
 
         FILTERED_SUBJECTS = ALL_SUBJECTS;
         renderSubjects(FILTERED_SUBJECTS);
@@ -288,8 +296,7 @@
             const label = btn.textContent;
             if (label === '전공')
               renderSubjects(ALL_SUBJECTS.filter((s) => s.type === '전공'));
-            if (label === '교양')
-              renderSubjects(ALL_SUBJECTS.filter((s) => s.type === '교양'));
+            if (label === '교양') renderSubjects(CULTURE_SUBJECTS);
             if (label === '학년') {
               const year = prompt('학년을 숫자로 입력하세요 (예: 1)');
               if (!year || isNaN(year)) return;
