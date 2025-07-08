@@ -1,136 +1,137 @@
 <!DOCTYPE html>
 <html lang="ko">
-	<head>
-		<meta charset="UTF-8" />
-		<meta name="viewport" content="width=393, height=852, initial-scale=1.0" />
-		<title>과목 선택 - 캠퍼스 캘린더</title>
-		<link rel="stylesheet" href="subject.css" />
-		<link
-			rel="stylesheet"
-			href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/variable/pretendardvariable.css"
-		/>
-	</head>
-	<body>
-		<div id="app-container">
-			<header class="header">
-				<div class="header-top">
-					<div class="logo-container">
-						<img src="lefttop-logo-white.svg" alt="로고" class="logo" />
-					</div>
-				</div>
-				<div class="header-title">과목선택</div>
-			</header>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=393, height=852, initial-scale=1.0" />
+    <title>과목 선택 - 캠퍼스 캘린더</title>
+    <link rel="stylesheet" href="subject.css" />
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/variable/pretendardvariable.css"
+    />
+  </head>
+  <body>
+    <div id="app-container">
+      <header class="header">
+        <div class="header-top">
+          <div class="logo-container">
+            <img src="lefttop-logo-white.svg" alt="로고" class="logo" />
+          </div>
+        </div>
+        <div class="header-title">과목선택</div>
+      </header>
 
-			<main class="subject-list" id="subject-list">
-				<!-- JS로 과목 리스트 생성 -->
-			</main>
-		</div>
+      <main class="subject-list" id="subject-list">
+        <!-- JS로 과목 리스트 생성 -->
+      </main>
+    </div>
 
-		<script>
-			document.addEventListener('DOMContentLoaded', () => {
-				const subjects = [
-					'전체',
-					'전공or교양 1',
-					'창의적 사고와 코딩',
-					'이름순',
-					'과목5',
-					'과목2',
-					'과목3',
-				];
-				const listContainer = document.getElementById('subject-list');
-				subjects.forEach((subject) => {
-					if (subject === '전체') return; // 과목선택에 '전체' 제외
-					const item = document.createElement('div');
-					item.className = 'subject-item';
-					item.textContent = subject;
-					item.addEventListener('click', () => {
-						localStorage.setItem('selectedSubject', subject);
-						window.location.href = 'subject-topic.html';
-					});
-					listContainer.appendChild(item);
-				});
-			});
-		</script>
+    <script>
+      document.addEventListener('DOMContentLoaded', () => {
+        // 👉 id, name 필드가 있는 과목 객체 리스트로 구성
+        const subjects = [
+          { id: 211, name: '컴퓨터프로그래밍' },
+          { id: 212, name: '자료구조' },
+          { id: 213, name: '창의적 사고와 코딩' },
+          { id: 214, name: '과목5' },
+          { id: 215, name: '과목2' },
+          { id: 216, name: '과목3' },
+          // 필요한 만큼 추가
+        ];
+        const listContainer = document.getElementById('subject-list');
+        subjects.forEach((subject) => {
+          const item = document.createElement('div');
+          item.className = 'subject-item';
+          item.textContent = subject.name;
+          item.addEventListener('click', () => {
+            // 👉 객체 전체를 JSON 문자열로 저장
+            localStorage.setItem('selectedSubjectObj', JSON.stringify(subject));
+            window.location.href = 'subject-topic.html';
+          });
+          listContainer.appendChild(item);
+        });
+      });
+    </script>
 
-		<style>
-			html,
-			body {
-				margin: 0;
-				padding: 0;
-				width: 100%;
-				height: 100%;
-			}
-			body {
-				display: flex;
-				justify-content: center;
-				align-items: center;
-				background: #eee;
-				font-family: 'Pretendard Variable', sans-serif;
-			}
-			#app-container {
-				width: 393px;
-				height: 852px;
-				background: white;
-				overflow: hidden;
-				border-radius: 30px;
-				box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
-				display: flex;
-				flex-direction: column;
-				position: relative;
-			}
-			.header {
-				position: relative;
-				height: 64px;
-				background: #b7b7f9;
-			}
-			.header-top {
-				display: flex;
-				align-items: center;
-				height: 64px;
-			}
-			.logo-container {
-				margin-left: 20px;
-			}
-			.logo {
-				width: 100px;
-			}
-			.header-title {
-				position: absolute;
-				top: 90px;
-				width: 100%;
-				text-align: center;
-				font-size: 20px;
-				font-weight: 600;
-				color: black;
-			}
-			.subject-list {
-				position: absolute;
-				top: 138px;
-				left: 0;
-				width: 100%;
-				height: calc(100% - 138px);
-				background: #e6e6f2;
-				padding: 30px 0;
-				display: flex;
-				flex-direction: column;
-				align-items: center;
-				gap: 53px;
-				overflow-y: auto;
-			}
-			.subject-list::-webkit-scrollbar {
-				display: none;
-			}
-			.subject-item {
-				font-size: 20px;
-				font-weight: 600;
-				color: black;
-				text-align: center;
-				width: 100%;
-				cursor: pointer;
-			}
-			.subject-item:hover {
-				color: #8b85f9;
-			}
-		</style>
-	</body>
+    <style>
+      html,
+      body {
+        margin: 0;
+        padding: 0;
+        width: 100%;
+        height: 100%;
+      }
+      body {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        background: #eee;
+        font-family: 'Pretendard Variable', sans-serif;
+      }
+      #app-container {
+        width: 393px;
+        height: 852px;
+        background: white;
+        overflow: hidden;
+        border-radius: 30px;
+        box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+        display: flex;
+        flex-direction: column;
+        position: relative;
+      }
+      .header {
+        position: relative;
+        height: 64px;
+        background: #b7b7f9;
+      }
+      .header-top {
+        display: flex;
+        align-items: center;
+        height: 64px;
+      }
+      .logo-container {
+        margin-left: 20px;
+      }
+      .logo {
+        width: 100px;
+      }
+      .header-title {
+        position: absolute;
+        top: 90px;
+        width: 100%;
+        text-align: center;
+        font-size: 20px;
+        font-weight: 600;
+        color: black;
+      }
+      .subject-list {
+        position: absolute;
+        top: 138px;
+        left: 0;
+        width: 100%;
+        height: calc(100% - 138px);
+        background: #e6e6f2;
+        padding: 30px 0;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 53px;
+        overflow-y: auto;
+      }
+      .subject-list::-webkit-scrollbar {
+        display: none;
+      }
+      .subject-item {
+        font-size: 20px;
+        font-weight: 600;
+        color: black;
+        text-align: center;
+        width: 100%;
+        cursor: pointer;
+      }
+      .subject-item:hover {
+        color: #8b85f9;
+      }
+    </style>
+  </body>
 </html>
