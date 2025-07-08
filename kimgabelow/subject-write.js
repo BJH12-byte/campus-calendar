@@ -24,7 +24,6 @@ document.addEventListener('DOMContentLoaded', () => {
   // URL subjectId가 있으면 무조건 덮어쓴다(우선순위)
   if (urlSubjectId) {
     subjectId = String(urlSubjectId);
-    // subjectName도 localStorage에서 id가 일치할 때만 사용
     try {
       const subjectObj = JSON.parse(
         localStorage.getItem('selectedSubjectObj') || '{}'
@@ -131,7 +130,8 @@ document.addEventListener('DOMContentLoaded', () => {
         fileUrl,
         imageUrl,
         type: 'SUBJECT',
-        subject: { id: subjectId, name: subjectName },
+        isAssignment: false,
+        subjectId: Number(subjectId),
       };
       fetch('https://unidays-project.com/api/notices', {
         method: 'POST',
