@@ -1,221 +1,100 @@
 <!DOCTYPE html>
 <html lang="ko">
-	<head>
-		<meta charset="UTF-8" />
-		<meta name="viewport" content="width=393, height=852, initial-scale=1.0" />
-		<title>과목별 일정 작성 - 캠퍼스 캘린더</title>
-		<link rel="stylesheet" href="homepgwrite2.css" />
-		<link
-			rel="stylesheet"
-			href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/variable/pretendardvariable.css"
-		/>
-	</head>
-	<body>
-		<div id="app-container">
-			<!-- 상단 헤더: 뒤로가기 + 과목명 + 완료 -->
-			<div class="logo-bar">
-				<img src="lefttop-logo-white.svg" alt="로고" class="logo" />
-			</div>
-			<div class="header-actions">
-				<a href="subjectselect.html" class="back-button">
-					<img src="goback.svg" alt="뒤로가기" />
-				</a>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=393, height=852, initial-scale=1.0" />
+    <title>과목별 일정 작성 - 캠퍼스 캘린더</title>
+    <link rel="stylesheet" href="homepgwrite2.css" />
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/variable/pretendardvariable.css"
+    />
+  </head>
+  <body>
+    <div id="app-container">
+      <!-- 상단 헤더: 뒤로가기 + 과목명 + 완료 -->
+      <div class="logo-bar">
+        <img src="lefttop-logo-white.svg" alt="로고" class="logo" />
+      </div>
+      <div class="header-actions">
+        <a href="subjectselect.html" class="back-button">
+          <img src="goback.svg" alt="뒤로가기" />
+        </a>
+        <div class="page-title">과목명 불러오는 중...</div>
+        <span class="complete-button">완료</span>
+      </div>
 
-				<div class="page-title">과목명 불러오는 중...</div>
-				<span class="complete-button">완료</span>
-			</div>
+      <!-- 작성 영역 -->
+      <div class="page-content">
+        <div
+          class="title-input"
+          contenteditable="true"
+          data-placeholder="제목을 입력해주세요."
+        ></div>
+        <div class="date-display">2025.07.04</div>
+        <div class="line-separator"></div>
+        <div
+          class="content-input"
+          contenteditable="true"
+          data-placeholder="과목의 일정을 작성해보세요."
+        ></div>
+        <div class="char-counter">0/1000</div>
+      </div>
 
-			<!-- 작성 영역 -->
-			<div class="page-content">
-				<div
-					class="title-input"
-					contenteditable="true"
-					data-placeholder="제목을 입력해주세요."
-				></div>
-				<div class="date-display">2025.07.04</div>
-				<div class="line-separator"></div>
-				<div
-					class="content-input"
-					contenteditable="true"
-					data-placeholder="학교의 일정을 작성해보세요."
-				></div>
-				<div class="char-counter">0/1000</div>
-			</div>
+      <!-- 파일/사진 선택 팝업 -->
+      <div
+        id="photo-option-popup"
+        style="
+          display: none;
+          position: absolute;
+          bottom: 70px;
+          left: 20px;
+          background: white;
+          border-radius: 12px;
+          overflow: hidden;
+          box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+          z-index: 9999;
+        "
+      >
+        <div class="photo-option" id="option-gallery">사진/파일 선택</div>
+        <div style="height: 1px; background: #ddd"></div>
+        <div class="photo-option" id="option-camera">촬영</div>
+      </div>
 
-			<!-- 사진 선택 팝업 -->
-			<div
-				id="photo-option-popup"
-				style="
-					display: none;
-					position: absolute;
-					bottom: 70px;
-					left: 20px;
-					background: white;
-					border-radius: 12px;
-					overflow: hidden;
-					box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
-					z-index: 9999;
-				"
-			>
-				<div class="photo-option" id="option-gallery">사진첩</div>
-				<div style="height: 1px; background: #ddd"></div>
-				<div class="photo-option" id="option-camera">촬영</div>
-			</div>
+      <!-- 하단 첨부 버튼 -->
+      <footer class="footer-bar">
+        <button class="attach-btn">
+          <img src="camera-icon.svg" alt="사진첨부" />
+        </button>
+        <button
+          class="attach-btn"
+          onclick="document.getElementById('file-input').click()"
+        >
+          <img src="clip-icon.svg" alt="파일첨부" />
+        </button>
+      </footer>
 
-			<!-- 하단 첨부 버튼 -->
-			<footer class="footer-bar">
-				<button class="attach-btn">
-					<img src="camera-icon.svg" alt="사진첨부" />
-				</button>
-				<button
-					class="attach-btn"
-					onclick="document.getElementById('file-input').click()"
-				>
-					<img src="clip-icon.svg" alt="파일첨부" />
-				</button>
-			</footer>
+      <!-- 숨겨진 파일 입력창 -->
+      <input
+        type="file"
+        accept="image/*,.pdf"
+        capture="environment"
+        id="camera-input"
+        style="display: none"
+      />
+      <input type="file" id="file-input" style="display: none" />
+    </div>
 
-			<!-- 숨겨진 파일 입력창 -->
-			<input
-				type="file"
-				accept="image/*"
-				capture="environment"
-				id="camera-input"
-				style="display: none"
-			/>
-			<input type="file" id="file-input" style="display: none" />
-		</div>
-
-		<script>
-			window.popupMessages = {
-				titleRequired: '제목을 입력해주세요.',
-				contentRequired: '내용을 작성해주세요.',
-				writePageConfirm: '일정확인 제대로 하셨나요?',
-			};
-
-			document.addEventListener('DOMContentLoaded', () => {
-				// ✅ 선택된 과목명을 로컬스토리지에서 불러와 표시
-				const selectedSubject = localStorage.getItem('selectedSubject');
-				if (selectedSubject) {
-					document.querySelector('.page-title').textContent = selectedSubject;
-				} else {
-					document.querySelector('.page-title').textContent = '과목 선택 필요';
-				}
-
-				// ✅ 완료 버튼 클릭 시 데이터 저장 후 subject-written으로 이동
-				document
-					.querySelector('.complete-button')
-					.addEventListener('click', () => {
-						const title = document
-							.querySelector('.title-input')
-							.innerText.trim();
-						const content = document
-							.querySelector('.content-input')
-							.innerText.trim();
-						const date = document
-							.querySelector('.date-display')
-							.innerText.trim();
-						const subject = selectedSubject || '과목 정보 없음';
-
-						if (!title) {
-							showCustomPopup(window.popupMessages.titleRequired);
-							return;
-						}
-						if (!content) {
-							showCustomPopup(window.popupMessages.contentRequired);
-							return;
-						}
-
-						const image = localStorage.getItem('uploadedImage') || '';
-
-						const postData = {
-							title,
-							content,
-							date,
-							subject,
-							image, // ✅ 업로드 이미지 포함
-						};
-
-						// ✅ 과목별 게시글 배열에 누적 저장
-						let posts =
-							JSON.parse(localStorage.getItem(`posts_${subject}`)) || [];
-						posts.push(postData);
-						localStorage.setItem(`posts_${subject}`, JSON.stringify(posts));
-
-						// ✅ 최신 글을 과목별 키로 저장
-						localStorage.setItem(
-							`latestPost_${subject}`,
-							JSON.stringify(postData)
-						);
-
-						// ✅ 팝업 닫힌 후 이동
-						showCustomPopup('일정이 저장되었습니다.', () => {
-							window.location.href = 'subject-written.html';
-						});
-					});
-
-				// ✅ 첨부버튼(첫번째 버튼) 클릭 시 팝업 열기
-				document
-					.querySelectorAll('.attach-btn')[0]
-					.addEventListener('click', (e) => {
-						e.stopPropagation();
-						document.getElementById('photo-option-popup').style.display =
-							'block';
-					});
-
-				// ✅ 사진첩 옵션 클릭 → 파일 선택창 열기
-				document
-					.getElementById('option-gallery')
-					.addEventListener('click', () => {
-						document.getElementById('photo-option-popup').style.display =
-							'none';
-						document.getElementById('file-input').click();
-					});
-
-				// ✅ 촬영 옵션 클릭 → 카메라 열기
-				document
-					.getElementById('option-camera')
-					.addEventListener('click', () => {
-						document.getElementById('photo-option-popup').style.display =
-							'none';
-						document.getElementById('camera-input').click();
-					});
-
-				// ✅ 바깥 클릭 시 팝업 닫기
-				document.addEventListener('click', () => {
-					document.getElementById('photo-option-popup').style.display = 'none';
-				});
-
-				// ✅ 카메라 업로드 처리
-				document
-					.getElementById('camera-input')
-					.addEventListener('change', (e) => {
-						if (e.target.files.length) {
-							const file = e.target.files[0];
-							const reader = new FileReader();
-							reader.onload = () => {
-								localStorage.setItem('uploadedImage', reader.result);
-							};
-							reader.readAsDataURL(file);
-						}
-					});
-
-				// ✅ 파일 업로드 처리
-				document
-					.getElementById('file-input')
-					.addEventListener('change', (e) => {
-						if (e.target.files.length) {
-							const file = e.target.files[0];
-							const reader = new FileReader();
-							reader.onload = () => {
-								localStorage.setItem('uploadedImage', reader.result);
-							};
-							reader.readAsDataURL(file);
-						}
-					});
-			});
-		</script>
-
-		<script src="popup.js"></script>
-	</body>
+    <script>
+      // 팝업 메시지 정의
+      window.popupMessages = {
+        titleRequired: '제목을 입력해주세요.',
+        contentRequired: '내용을 작성해주세요.',
+        fileRequired: '첨부파일을 선택해주세요.',
+        writePageConfirm: '일정확인 제대로 하셨나요?',
+      };
+    </script>
+    <script src="popup.js"></script>
+    <script src="subject-write.js"></script>
+  </body>
 </html>
