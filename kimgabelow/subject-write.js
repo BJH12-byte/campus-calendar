@@ -1,4 +1,8 @@
 document.addEventListener('DOMContentLoaded', () => {
+  // URL 파라미터에서 subjectId 읽기
+  const urlParams = new URLSearchParams(window.location.search);
+  const urlSubjectId = urlParams.get('subjectId');
+
   const titleInput = document.querySelector('.title-input');
   const contentInput = document.querySelector('.content-input');
   const completeBtn = document.querySelector('.complete-button');
@@ -6,17 +10,40 @@ document.addEventListener('DOMContentLoaded', () => {
   const dateDisplay = document.querySelector('.date-display');
   const pageTitle = document.querySelector('.page-title');
 
-  // 1. 과목 정보 localStorage에서만 불러오기 (API 콜 없음)
+  // 1. 과목 정보 localStorage + URL 파라미터 모두에서 읽기
   let subjectId = null;
   let subjectName = null;
   try {
     const subjectObj = JSON.parse(localStorage.getItem('selectedSubjectObj'));
-    if (subjectObj && subjectObj.id && subjectObj.name) {
-      subjectId = subjectObj.id;
-      subjectName = subjectObj.name;
+    if (subjectObj && subjectObj.id) {
+      subjectId = String(subjectObj.id);
+      subjectName = subjectObj.name || '';
     }
   } catch {}
+
+  // URL subjectId가 있으면 무조건 덮어쓴다(우선순위)
+  if (urlSubjectId) {
+    subjectId = String(urlSubjectId);
+    // subjectName도 localStorage에서 id가 일치할 때만 사용
+    try {
+      const subjectObj = JSON.parse(
+        localStorage.getItem('selectedSubjectObj') || '{}'
+      );
+      if (subjectObj && String(subjectObj.id) === subjectId) {
+        subjectName = subjectObj.name || '';
+      }
+    } catch {}
+  }
+
+  // 과목명 표시
   pageTitle.textContent = subjectName ? subjectName : '과목 선택 필요';
+
+  // subjectId 없는 경우, 강제 복귀
+  if (!subjectId) {
+    alert('과목 정보가 올바르지 않습니다. 다시 과목을 선택하세요.');
+    window.location.href = 'subject-choose.html';
+    return;
+  }
 
   // 2. 글자수 카운터
   contentInput.addEventListener('input', () => {
@@ -51,7 +78,7 @@ document.addEventListener('DOMContentLoaded', () => {
       date = dateText.replace(/\./g, '-');
     } else {
       const now = new Date();
-      now.setHours(now.getHours() + 9); // KST로 맞춤
+      now.setHours(now.getHours() + 9); // KST
       date = now.toISOString().slice(0, 10);
     }
     if (!title) {

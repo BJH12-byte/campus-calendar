@@ -52,11 +52,15 @@
               item.className = 'subject-item';
               item.textContent = subject.name;
               item.addEventListener('click', () => {
+                // 1. localStorage에 전체 저장(기존대로)
                 localStorage.setItem(
                   'selectedSubjectObj',
                   JSON.stringify(subject)
                 );
-                window.location.href = 'subject-topic.html';
+                // 2. URL 파라미터로 subjectId 명시적으로 넘김
+                window.location.href =
+                  'subject-topic.html?subjectId=' +
+                  encodeURIComponent(subject.id);
               });
               listContainer.appendChild(item);
             });
