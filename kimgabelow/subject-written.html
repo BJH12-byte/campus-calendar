@@ -32,8 +32,8 @@
     </div>
 
     <script>
+      // subject-written.html <script> 영역 전체
       document.addEventListener('DOMContentLoaded', async () => {
-        // 1) URL 파라미터에서 postId(id)만 읽는다
         const urlParams = new URLSearchParams(window.location.search);
         const postId = urlParams.get('id');
         if (!postId) {
@@ -42,9 +42,9 @@
           return;
         }
 
+        // 1. 공지 상세 조회 (API)
         let post;
         try {
-          // 2) API 호출로 단일 게시글 상세 조회
           const res = await fetch(
             `https://unidays-project.com/api/notices/${postId}`,
             {
@@ -53,14 +53,14 @@
           );
           if (!res.ok) throw new Error('게시글 불러오기 실패');
           post = await res.json();
-        } catch (err) {
+        } catch (e) {
           document.getElementById('post-body').innerText =
             '불러오는 중 오류 발생';
-          console.error(err);
+          console.error(e);
           return;
         }
 
-        // 3) 데이터 렌더링
+        // 2. 제목/본문/날짜/과목명 렌더링
         document.getElementById('post-title').innerText =
           post.title || '제목 없음';
         document.getElementById('post-body').innerText =
@@ -71,6 +71,7 @@
         document.getElementById('post-subject').innerText =
           post.subject?.name || '과목명 없음';
 
+        // 3. 이미지 또는 파일 썸네일
         const imgEl = document.getElementById('post-image');
         if (post.imageUrl || post.fileUrl) {
           imgEl.src = post.imageUrl || post.fileUrl;
@@ -79,13 +80,13 @@
           imgEl.style.display = 'none';
         }
 
-        // 4) 저장 버튼
+        // 4. 저장 버튼
         document.querySelector('.save-button').addEventListener('click', () => {
           localStorage.setItem('myProfilePost', JSON.stringify(post));
           alert('게시글이 내 프로필에 저장되었습니다!');
         });
 
-        // 5) 더보기 팝업 열고 닫기
+        // 5. 더보기 팝업 토글
         const moreBtn = document.querySelector('.more-button');
         const morePopup = document.getElementById('more-option-popup');
         moreBtn.addEventListener('click', (e) => {
@@ -103,14 +104,12 @@
           }
         });
 
-        // 6) 수정 버튼 → id만 넘겨
+        // 6. 수정/삭제 버튼 핸들러
         morePopup
           .querySelector('#option-edit')
           .addEventListener('click', () => {
             window.location.href = `subject-write.html?id=${postId}`;
           });
-
-        // 7) 삭제 버튼 → API 호출
         morePopup
           .querySelector('#option-delete')
           .addEventListener('click', async () => {
@@ -126,9 +125,9 @@
               if (!res.ok) throw new Error('삭제 실패');
               alert('게시글이 삭제되었습니다.');
               window.location.href = 'subjectboard.html';
-            } catch (err) {
+            } catch (e) {
               alert('삭제 중 오류 발생');
-              console.error(err);
+              console.error(e);
             }
           });
       });
