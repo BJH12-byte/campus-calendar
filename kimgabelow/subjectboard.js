@@ -82,7 +82,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 
       postDiv.onclick = () => {
         // 상세페이지에 id만 넘김
-        window.location.href = `homepg-written.html?id=${post.id}`;
+        window.location.href = `subject-written.html?id=${post.id}`;
       };
 
       postDiv.innerHTML = `
