@@ -1,313 +1,313 @@
 html,
 body {
-	margin: 0;
-	padding: 0;
-	width: 100%;
-	height: 100%;
-	overflow: hidden;
+  margin: 0;
+  padding: 0;
+  width: 100%;
+  height: 100%;
+  overflow: auto;
 }
 
 body {
-	display: flex;
-	justify-content: center;
-	align-items: center;
-	background: #eee;
-	font-family: 'Pretendard Variable', sans-serif;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: #eee;
+  font-family: 'Pretendard Variable', sans-serif;
 }
 
 #app-container {
-	width: 393px;
-	height: 852px;
-	background: white;
-	overflow: hidden;
-	border-radius: 30px;
-	box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
-	display: flex;
-	flex-direction: column;
-	position: relative;
+  width: 393px;
+  height: 852px;
+  background: white;
+  overflow: hidden;
+  border-radius: 30px;
+  box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+  display: flex;
+  flex-direction: column;
+  position: relative;
 }
 
 /* 헤더 */
 .header {
-	position: relative;
-	height: 236px;
-	background: #b7b7f9;
+  position: relative;
+  height: 236px;
+  background: #b7b7f9;
 }
 
 .header-top {
-	position: relative;
-	height: 64px;
+  position: relative;
+  height: 64px;
 }
 
 .logo-container {
-	position: absolute;
-	top: 20px;
-	left: 20px;
+  position: absolute;
+  top: 20px;
+  left: 20px;
 }
 
 .logo {
-	width: 100px;
+  width: 100px;
 }
 
 .write-button {
-	position: absolute;
-	top: 64px;
-	right: 19px;
+  position: absolute;
+  top: 64px;
+  right: 19px;
 }
 
 .write-container {
-	display: flex;
-	align-items: center;
-	gap: 8px; /* 버튼 간격 */
+  display: flex;
+  align-items: center;
+  gap: 8px; /* 버튼 간격 */
 }
 
 .write-btn {
-	width: 91px;
-	height: 31px;
-	flex-shrink: 0;
-	border-radius: 30px;
-	border: 2px solid #fff;
-	background: #b7b7f9;
+  width: 91px;
+  height: 31px;
+  flex-shrink: 0;
+  border-radius: 30px;
+  border: 2px solid #fff;
+  background: #b7b7f9;
 
-	display: flex;
-	align-items: center;
-	justify-content: center;
-	color: #fff;
-	font-family: Pretendard;
-	font-size: 15px;
-	font-style: normal;
-	font-weight: 600;
-	line-height: normal;
-	letter-spacing: -0.225px;
-	cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #fff;
+  font-family: Pretendard;
+  font-size: 15px;
+  font-style: normal;
+  font-weight: 600;
+  line-height: normal;
+  letter-spacing: -0.225px;
+  cursor: pointer;
 }
 
 .more-button {
-	width: 31px;
-	height: 31px;
-	background: transparent;
-	border: none;
-	display: flex;
-	align-items: center;
-	justify-content: center;
-	cursor: pointer;
+  width: 31px;
+  height: 31px;
+  background: transparent;
+  border: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
 }
 
 .more-button svg {
-	width: 5px;
-	height: 21px;
+  width: 5px;
+  height: 21px;
 }
 
 /* 검색창 */
 .search-section {
-	position: absolute;
-	top: 114px;
-	left: 19px;
-	width: calc(393px - 19px - 22px);
+  position: absolute;
+  top: 114px;
+  left: 19px;
+  width: calc(393px - 19px - 22px);
 }
 
 .search-input {
-	width: 100%;
-	height: 51px;
-	border-radius: 50px;
-	border: none;
-	padding-left: 50px;
-	font-size: 20px;
-	background: white;
-	color: #333;
-	box-sizing: border-box;
+  width: 100%;
+  height: 51px;
+  border-radius: 50px;
+  border: none;
+  padding-left: 50px;
+  font-size: 20px;
+  background: white;
+  color: #333;
+  box-sizing: border-box;
 }
 
 .search-input:focus {
-	outline: none;
+  outline: none;
 }
 
 /* 탭 */
 .tabs-section {
-	position: absolute;
-	top: 187px;
-	left: 0;
-	width: 393px;
-	height: 50px;
-	background: white;
+  position: absolute;
+  top: 187px;
+  left: 0;
+  width: 393px;
+  height: 50px;
+  background: white;
 }
 
 .tab-container {
-	position: relative;
-	width: 393px;
-	height: 50px;
+  position: relative;
+  width: 393px;
+  height: 50px;
 }
 
 .tab-indicator {
-	position: absolute;
-	bottom: 0;
-	left: 0;
-	width: 50%;
-	height: 5px;
-	background: #8b85f9;
-	transition: left 0.3s;
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 50%;
+  height: 5px;
+  background: #8b85f9;
+  transition: left 0.3s;
 }
 
 .tab {
-	position: absolute;
-	top: 50%;
-	transform: translate(-50%, -50%);
-	font-size: 13px;
-	font-weight: 600;
-	color: #505050;
-	border: none;
-	background: none;
-	cursor: pointer;
+  position: absolute;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  font-size: 13px;
+  font-weight: 600;
+  color: #505050;
+  border: none;
+  background: none;
+  cursor: pointer;
 }
 
 .tab[data-tab='school-schedule'] {
-	left: 25%;
+  left: 25%;
 }
 .tab[data-tab='subject-board'] {
-	left: 75%;
+  left: 75%;
 }
 .tab.active {
-	color: #8b85f9;
+  color: #8b85f9;
 }
 
 /* 게시판 */
 .notice-main {
-	position: absolute;
-	top: calc(187px + 50px + 25px);
-	height: calc(852px - (187px + 50px + 25px + 83px));
-	overflow-y: auto;
-	width: calc(393px - 19px - 22px);
-	left: 19px;
+  position: absolute;
+  top: calc(187px + 50px + 25px);
+  height: calc(852px - (187px + 50px + 25px + 83px));
+  overflow-y: auto;
+  width: calc(393px - 19px - 22px);
+  left: 19px;
 }
 
 .notice-main::-webkit-scrollbar {
-	display: none;
+  display: none;
 }
 
 .board-list {
-	display: flex;
-	flex-direction: column;
-	gap: 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
 }
 
 .board-item {
-	display: flex;
-	justify-content: space-between;
-	align-items: center;
-	background: #e6e6f2;
-	border-radius: 30px;
-	height: 112px;
-	padding: 0 20px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: #e6e6f2;
+  border-radius: 30px;
+  height: 112px;
+  padding: 0 20px;
 }
 
 .board-content .board-title {
-	font-size: 16px;
-	color: black;
-	white-space: nowrap;
-	overflow: hidden;
-	text-overflow: ellipsis;
+  font-size: 16px;
+  color: black;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .thumbnail {
-	width: 88px;
-	height: 83px;
-	background: white;
-	border-radius: 21px;
-	display: flex;
-	align-items: center;
-	justify-content: center;
+  width: 88px;
+  height: 83px;
+  background: white;
+  border-radius: 21px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .thumbnail img {
-	width: 100%;
-	height: 100%;
-	object-fit: cover;
-	border-radius: 21px;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 21px;
 }
 
 /* 하단바 */
 .notice-footer {
-	position: absolute;
-	bottom: 0;
-	left: 0;
-	width: 393px;
-	height: 83px;
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 393px;
+  height: 83px;
 }
 
 .bottom-bar {
-	position: absolute;
-	bottom: 0;
-	left: 0;
-	width: 393px;
-	height: 49px;
-	background: #b7b7f9;
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 393px;
+  height: 49px;
+  background: #b7b7f9;
 }
 
 .bottom-nav {
-	/* position: absolute; */
-	bottom: 0;
-	left: 0;
-	width: 393px;
-	height: 98px;
-	display: flex;
-	justify-content: space-around;
-	align-items: center;
+  /* position: absolute; */
+  bottom: 0;
+  left: 0;
+  width: 393px;
+  height: 98px;
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
 }
 
 .nav-circle {
-	width: 63px;
-	height: 63px;
-	background: #b7b7f9;
-	border-radius: 50%;
-	display: flex;
-	flex-direction: column;
-	justify-content: center;
-	align-items: center;
-	position: relative;
-	top: -15px;
+  width: 63px;
+  height: 63px;
+  background: #b7b7f9;
+  border-radius: 50%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+  top: -15px;
 }
 
 .nav-item.active .nav-circle {
-	background: #8b85f9;
-	border: 4px solid white;
+  background: #8b85f9;
+  border: 4px solid white;
 }
 
 .nav-circle img {
-	width: 24px;
-	height: 24px;
+  width: 24px;
+  height: 24px;
 }
 
 .circle-label {
-	font-size: 10px;
-	color: white;
-	margin-top: 2px;
+  font-size: 10px;
+  color: white;
+  margin-top: 2px;
 }
 
 .hidden {
-	display: none;
+  display: none;
 }
 .subject-list {
-	display: flex;
-	flex-direction: column;
-	gap: 10px;
-	overflow-y: auto;
-	height: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  overflow-y: auto;
+  height: 100%;
 }
 
 .subject-list::-webkit-scrollbar {
-	display: none;
+  display: none;
 }
 
 .subject-item {
-	height: 63px;
-	background: #e6e6f2;
-	border-radius: 30px;
-	display: flex;
-	align-items: center;
-	padding-left: 20px;
-	font-size: 16px;
-	font-weight: 500;
-	font-family: Pretendard, sans-serif;
-	color: black;
-	cursor: pointer;
+  height: 63px;
+  background: #e6e6f2;
+  border-radius: 30px;
+  display: flex;
+  align-items: center;
+  padding-left: 20px;
+  font-size: 16px;
+  font-weight: 500;
+  font-family: Pretendard, sans-serif;
+  color: black;
+  cursor: pointer;
 }
