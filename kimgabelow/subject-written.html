@@ -28,67 +28,169 @@
   </head>
   <body>
     <div id="app-container">
-      <!-- ... header & markup unchanged ... -->
+      <!-- 헤더 -->
+      <div class="header-top">
+        <div class="logo-container">
+          <img src="lefttop-logo-white.svg" alt="로고" class="logo" />
+        </div>
+      </div>
+      <div class="header-controls">
+        <button class="back-btn" onclick="location.href='subjectboard.html'">
+          <img src="goback.svg" alt="뒤로가기" />
+        </button>
+        <div class="page-title">과목명 불러오는 중...</div>
+        <div class="header-actions">
+          <button class="save-button">
+            <img src="savebtn.svg" alt="저장" />
+          </button>
+          <button class="more-button">
+            <img src="morebtn.svg" alt="더보기" />
+          </button>
+        </div>
+      </div>
+
+      <!-- 수정/삭제 팝업 -->
+      <div
+        id="more-option-popup"
+        style="
+          display: none;
+          position: absolute;
+          top: 100px;
+          right: 20px;
+          background: white;
+          border-radius: 12px;
+          overflow: hidden;
+          box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+          z-index: 9999;
+        "
+      >
+        <div class="edit-delete-option" id="option-edit">수정</div>
+        <div style="height: 1px; background: #ddd"></div>
+        <div class="edit-delete-option" id="option-delete">삭제</div>
+      </div>
+
+      <!-- 본문 -->
+      <main class="post-content">
+        <h2 id="post-title">게시글 제목</h2>
+        <div class="post-meta">
+          <span id="post-date">YYYY.MM.DD</span>
+          <span class="divider">|</span>
+          <span id="post-subject">과목명/카테고리</span>
+        </div>
+        <p id="post-body">게시글 내용이 여기에 표시됩니다.</p>
+        <div class="image-container">
+          <img id="post-image" src="" alt="게시글 이미지" />
+        </div>
+      </main>
+
+      <!-- 하단탭 -->
+      <footer class="notice-footer">
+        <div class="bottom-bar"></div>
+        <div class="bottom-nav">
+          <div class="nav-item" onclick="location.href='../basic/home.html'">
+            <div class="nav-circle">
+              <img
+                src="https://img.icons8.com/ios-filled/50/ffffff/home.png"
+                alt="피드"
+              />
+              <span class="circle-label">피드</span>
+            </div>
+          </div>
+          <div class="nav-item active" onclick="location.href='homepage2.html'">
+            <div class="nav-circle">
+              <img
+                src="https://img.icons8.com/ios-filled/50/ffffff/compass--v1.png"
+                alt="공지"
+              />
+              <span class="circle-label">공지</span>
+            </div>
+          </div>
+          <div
+            class="nav-item"
+            onclick="location.href='../notification/notification.html'"
+          >
+            <div class="nav-circle">
+              <img
+                src="https://img.icons8.com/ios-filled/50/ffffff/appointment-reminders.png"
+                alt="알림"
+              />
+              <span class="circle-label">알림</span>
+            </div>
+          </div>
+          <div class="nav-item" onclick="location.href='../Mypage/mypage.html'">
+            <div class="nav-circle">
+              <img
+                src="https://img.icons8.com/ios-filled/50/ffffff/user.png"
+                alt="MY"
+              />
+              <span class="circle-label">MY</span>
+            </div>
+          </div>
+        </div>
+      </footer>
     </div>
 
     <script>
-      document.addEventListener('DOMContentLoaded', async () => {
-        // URL에서 postId만 받는다 (id)
+      document.addEventListener('DOMContentLoaded', () => {
+        // subjectId, postIdx 파라미터로 받음
         const urlParams = new URLSearchParams(window.location.search);
-        const postId = urlParams.get('id');
-        if (!postId) {
+        const subjectId = urlParams.get('subjectId');
+        const postIdx = Number(urlParams.get('postIdx'));
+
+        if (!subjectId || isNaN(postIdx)) {
           document.getElementById('post-body').innerText =
             '글 정보를 찾을 수 없습니다.';
           return;
         }
 
-        let post = null;
+        // 과목명도 로컬에서 받아오기
+        let subjectName = '';
         try {
-          // API로 단일 공지 데이터 받아오기
-          const res = await fetch(
-            `https://unidays-project.com/api/notices/${postId}`,
-            {
-              credentials: 'include',
-            }
+          const subjectObj = JSON.parse(
+            localStorage.getItem('selectedSubjectObj') || '{}'
           );
-          if (!res.ok) throw new Error('게시글 불러오기 실패');
-          post = await res.json();
-        } catch (e) {
+          if (subjectObj.id == subjectId) {
+            subjectName = subjectObj.name;
+          }
+        } catch {}
+
+        // 글 배열 가져오기
+        const postsStr = localStorage.getItem(`posts_${subjectId}`);
+        const posts = postsStr ? JSON.parse(postsStr) : [];
+        const post = posts[postIdx];
+
+        if (!post) {
           document.getElementById('post-body').innerText =
-            '게시글 정보를 불러올 수 없습니다.';
+            '작성된 게시글이 없습니다.';
           return;
         }
 
-        // 과목명 렌더
-        document.querySelector('.page-title').innerText =
-          post.subject?.name || '과목 없음';
-
-        // 본문/날짜/제목/이미지 표시
+        // 본문 표시
         document.getElementById('post-title').innerText =
           post.title || '제목 없음';
         document.getElementById('post-body').innerText =
           post.content || '내용 없음';
         document.getElementById('post-date').innerText =
-          post.date?.replace(/-/g, '.') || 'YYYY.MM.DD';
+          post.date || 'YYYY.MM.DD';
         document.getElementById('post-subject').innerText =
-          post.subject?.name || '과목명 없음';
+          subjectName || post.subjectName || '과목명 없음';
 
-        // 이미지 표시 (imageUrl, fileUrl 우선순)
-        const imageUrl = post.imageUrl || post.fileUrl;
-        if (imageUrl) {
-          document.getElementById('post-image').src = imageUrl;
+        // 이미지 (imageUrl 또는 image)
+        if (post.imageUrl || post.image) {
+          document.getElementById('post-image').src =
+            post.imageUrl || post.image;
           document.getElementById('post-image').style.display = 'block';
         } else {
           document.getElementById('post-image').style.display = 'none';
         }
 
-        // 저장 버튼 (API 기반에선 내보내기용)
+        // 저장 버튼
         document.querySelector('.save-button').addEventListener('click', () => {
           localStorage.setItem('myProfilePost', JSON.stringify(post));
           alert('게시글이 내 프로필에 저장되었습니다!');
         });
 
-        // 더보기/수정/삭제 팝업
+        // 더보기/수정/삭제
         const moreBtn = document.querySelector('.more-button');
         const morePopup = document.getElementById('more-option-popup');
         moreBtn.addEventListener('click', (e) => {
@@ -105,29 +207,19 @@
             morePopup.style.display = 'none';
           }
         });
-
-        // 수정 버튼: 글쓰기 페이지로 이동 (id만 넘김)
+        // 수정 버튼(글쓰기 페이지로 이동)
         document.getElementById('option-edit').addEventListener('click', () => {
-          location.href = `subject-write.html?id=${postId}`;
+          location.href = `subject-write.html?subjectId=${subjectId}&postIdx=${postIdx}`;
         });
-
-        // 삭제 버튼: API로 삭제 후 목록 페이지로 이동
+        // 삭제 버튼
         document
           .getElementById('option-delete')
-          .addEventListener('click', async () => {
+          .addEventListener('click', () => {
             if (!confirm('정말 삭제할까요?')) return;
-            try {
-              const delRes = await fetch(
-                `https://unidays-project.com/api/notices/${postId}`,
-                { method: 'DELETE', credentials: 'include' }
-              );
-              if (!delRes.ok) throw new Error('삭제 실패');
-              alert('게시글이 삭제되었습니다.');
-              location.href =
-                'subjectboard.html?subjectId=' + (post.subject?.id || '');
-            } catch (e) {
-              alert('삭제 중 오류: ' + (e.message || ''));
-            }
+            posts.splice(postIdx, 1);
+            localStorage.setItem(`posts_${subjectId}`, JSON.stringify(posts));
+            alert('게시글이 삭제되었습니다.');
+            location.href = 'subjectboard.html?subjectId=' + subjectId;
           });
       });
     </script>
