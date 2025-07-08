@@ -1,5 +1,5 @@
 document.addEventListener('DOMContentLoaded', async () => {
-  // 쿼리 파싱 함수
+  // URL 파라미터 파싱
   function getQueryParam(key) {
     const params = new URLSearchParams(window.location.search);
     return params.get(key);
@@ -10,15 +10,13 @@ document.addEventListener('DOMContentLoaded', async () => {
 
   const subjectId = getQueryParam('subjectId');
 
-  // 게시글 불러오는 함수
+  // 게시글 불러오는 함수 (API 기반)
   async function loadPosts() {
     boardList.innerHTML = `<div style="color:#bbb;text-align:center;padding:12px 0;">게시글을 불러오는 중...</div>`;
-
     let posts = [];
     try {
       if (!subjectId || subjectId === 'all') {
-        // 전체 게시글: 내가 등록한 모든 과목의 게시글 불러오기
-        // 1. 내가 등록한 과목 조회
+        // 1. 내가 등록한 과목 목록 조회
         const res = await fetch(
           'https://unidays-project.com/api/usersubjects',
           {
@@ -34,7 +32,7 @@ document.addEventListener('DOMContentLoaded', async () => {
           return;
         }
 
-        // 2. 각 과목별 게시글 다 불러오기
+        // 2. 각 과목별 공지 불러오기 (동시 요청)
         const postPromises = subjects.map((subject) =>
           fetch(
             `https://unidays-project.com/api/notices/subject/${subject.id}`,
@@ -48,7 +46,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         const postsArr = await Promise.all(postPromises);
         posts = postsArr.flat();
       } else {
-        // 특정 과목 게시글만
+        // 특정 과목만
         const res = await fetch(
           `https://unidays-project.com/api/notices/subject/${subjectId}`,
           {
@@ -69,7 +67,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     }
 
     // 최신순 정렬(내림차순)
-    posts.sort((a, b) => (b.date > a.date ? 1 : -1));
+    posts.sort((a, b) => (b.date < a.date ? 1 : -1));
 
     // 게시글 렌더링
     boardList.innerHTML = '';
@@ -83,13 +81,13 @@ document.addEventListener('DOMContentLoaded', async () => {
       postDiv.style.cursor = 'pointer';
 
       postDiv.onclick = () => {
-        localStorage.setItem('latestSubjectPost', JSON.stringify(post));
+        // 상세페이지에 id만 넘김
         window.location.href = `homepg-written.html?id=${post.id}`;
       };
 
       postDiv.innerHTML = `
         <div class="board-title" style="font-weight:600;font-size:16px;">${
-          post.title
+          post.title || ''
         }</div>
         <div class="board-meta" style="font-size:13px;color:#888;margin:4px 0 2px 0;">
           ${(post.subject && post.subject.name) || ''} | ${post.date || ''}
@@ -97,8 +95,9 @@ document.addEventListener('DOMContentLoaded', async () => {
         <div class="board-content" style="font-size:14px;color:#444;">
           ${
             post.content
-              ? post.content.slice(0, 38) +
-                (post.content.length > 38 ? '...' : '')
+              ? post.content.length > 38
+                ? post.content.slice(0, 38) + '...'
+                : post.content
               : ''
           }
         </div>
@@ -110,6 +109,5 @@ document.addEventListener('DOMContentLoaded', async () => {
   // 페이지 진입 시 게시글 목록 로드
   loadPosts();
 
-  // 탭/글쓰기 버튼(혹시 커스텀 필요하면 여기서 추가)
-  // ... 네가 원래 쓰던 부분 건드리지 않음
+  // ▷ 기타 탭, 글쓰기 등은 네 기존 코드 그대로.
 });

@@ -51,6 +51,7 @@ document.addEventListener('DOMContentLoaded', () => {
       date = dateText.replace(/\./g, '-');
     } else {
       const now = new Date();
+      now.setHours(now.getHours() + 9); // KST로 맞춤
       date = now.toISOString().slice(0, 10);
     }
     if (!title) {

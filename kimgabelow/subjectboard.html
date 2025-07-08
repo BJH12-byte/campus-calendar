@@ -1,131 +1,131 @@
 <!DOCTYPE html>
 <html lang="ko">
-	<head>
-		<meta charset="UTF-8" />
-		<meta name="viewport" content="width=393, height=852, initial-scale=1.0" />
-		<title>과목 별로 - 캠퍼스 캘린더</title>
-		<link rel="stylesheet" href="homepage2.css" />
-	</head>
-	<body>
-		<div id="app-container">
-			<header class="header">
-				<div class="header-top">
-					<div class="logo-container">
-						<img src="lefttop-logo-white.svg" alt="로고" class="logo" />
-					</div>
-					<div class="write-button">
-						<div class="write-container">
-							<button
-								class="write-btn"
-								onclick="location.href='subject-choose.html'"
-							>
-								글쓰기
-								<div class="write-icon">
-									<svg
-										width="13"
-										height="13"
-										viewBox="0 0 13 13"
-										fill="none"
-										xmlns="http://www.w3.org/2000/svg"
-									>
-										<path
-											d="M0 13.0004V7.31291L5.27312 2.03978L10.9606 7.72728L5.6875 13.0004H0ZM11.8219 6.86603C12.2015 6.49396 12.5037 6.05032 12.7108 5.56077C12.918 5.07121 13.026 4.54544 13.0287 4.01387C13.0314 3.4823 12.9286 2.95546 12.7265 2.46384C12.5243 1.97221 12.2266 1.52554 11.8507 1.14966C11.4749 0.773777 11.0282 0.476137 10.5366 0.273952C10.0449 0.0717664 9.51811 -0.0309538 8.98654 -0.028269C8.45497 -0.0255842 7.9292 0.0824522 7.43964 0.289593C6.95008 0.496734 6.50644 0.79887 6.13438 1.17853L11.8219 6.86603Z"
-											fill="white"
-										/>
-									</svg>
-								</div>
-							</button>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=393, height=852, initial-scale=1.0" />
+    <title>과목 별로 - 캠퍼스 캘린더</title>
+    <link rel="stylesheet" href="homepage2.css" />
+  </head>
+  <body>
+    <div id="app-container">
+      <header class="header">
+        <div class="header-top">
+          <div class="logo-container">
+            <img src="lefttop-logo-white.svg" alt="로고" class="logo" />
+          </div>
+          <div class="write-button">
+            <div class="write-container">
+              <button
+                class="write-btn"
+                onclick="location.href='subject-choose.html'"
+              >
+                글쓰기
+                <div class="write-icon">
+                  <svg
+                    width="13"
+                    height="13"
+                    viewBox="0 0 13 13"
+                    fill="none"
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
+                    <path
+                      d="M0 13.0004V7.31291L5.27312 2.03978L10.9606 7.72728L5.6875 13.0004H0ZM11.8219 6.86603C12.2015 6.49396 12.5037 6.05032 12.7108 5.56077C12.918 5.07121 13.026 4.54544 13.0287 4.01387C13.0314 3.4823 12.9286 2.95546 12.7265 2.46384C12.5243 1.97221 12.2266 1.52554 11.8507 1.14966C11.4749 0.773777 11.0282 0.476137 10.5366 0.273952C10.0449 0.0717664 9.51811 -0.0309538 8.98654 -0.028269C8.45497 -0.0255842 7.9292 0.0824522 7.43964 0.289593C6.95008 0.496734 6.50644 0.79887 6.13438 1.17853L11.8219 6.86603Z"
+                      fill="white"
+                    />
+                  </svg>
+                </div>
+              </button>
 
-							<button class="more-button">
-								<svg
-									xmlns="http://www.w3.org/2000/svg"
-									width="5"
-									height="21"
-									viewBox="0 0 5 21"
-									fill="none"
-								>
-									<circle cx="2.5" cy="2.5" r="2.5" fill="white" />
-									<circle cx="2.5" cy="10.5" r="2.5" fill="white" />
-									<circle cx="2.5" cy="18.5" r="2.5" fill="white" />
-								</svg>
-							</button>
-						</div>
-					</div>
-				</div>
+              <button class="more-button">
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="5"
+                  height="21"
+                  viewBox="0 0 5 21"
+                  fill="none"
+                >
+                  <circle cx="2.5" cy="2.5" r="2.5" fill="white" />
+                  <circle cx="2.5" cy="10.5" r="2.5" fill="white" />
+                  <circle cx="2.5" cy="18.5" r="2.5" fill="white" />
+                </svg>
+              </button>
+            </div>
+          </div>
+        </div>
 
-				<section class="search-section">
-					<input type="text" placeholder="공지 검색..." class="search-input" />
-				</section>
+        <section class="search-section">
+          <input type="text" placeholder="공지 검색..." class="search-input" />
+        </section>
 
-				<section class="tabs-section">
-					<div class="tab-container">
-						<button
-							class="tab"
-							data-tab="school-schedule"
-							onclick="location.href='homepage2.html'"
-						>
-							학교 일정
-						</button>
-						<button class="tab active" data-tab="subject-board">
-							과목 별로
-						</button>
-					</div>
-					<div class="tab-indicator" style="left: 50%"></div>
-				</section>
-			</header>
+        <section class="tabs-section">
+          <div class="tab-container">
+            <button
+              class="tab"
+              data-tab="school-schedule"
+              onclick="location.href='homepage2.html'"
+            >
+              학교 일정
+            </button>
+            <button class="tab active" data-tab="subject-board">
+              과목 별로
+            </button>
+          </div>
+          <div class="tab-indicator" style="left: 50%"></div>
+        </section>
+      </header>
 
-			<main class="notice-main">
-				<div class="board-list" id="subject-board">
-					<!-- JS에서 동적으로 불러온 게시글만 표시됩니다 -->
-				</div>
-			</main>
+      <main class="notice-main">
+        <div class="board-list" id="subject-board">
+          <!-- JS에서 동적으로 불러온 게시글만 표시됩니다 -->
+        </div>
+      </main>
 
-			<footer class="notice-footer">
-				<div class="bottom-bar"></div>
-				<div class="bottom-nav">
-					<div class="nav-item" onclick="location.href='../basic/home.html'">
-						<div class="nav-circle">
-							<img
-								src="https://img.icons8.com/ios-filled/50/ffffff/home.png"
-								alt="피드"
-							/>
-							<span class="circle-label">피드</span>
-						</div>
-					</div>
-					<div class="nav-item active" onclick="location.href='homepage2.html'">
-						<div class="nav-circle">
-							<img
-								src="https://img.icons8.com/ios-filled/50/ffffff/compass--v1.png"
-								alt="공지"
-							/>
-							<span class="circle-label">공지</span>
-						</div>
-					</div>
-					<div
-						class="nav-item"
-						onclick="location.href='../notification/notification.html'"
-					>
-						<div class="nav-circle">
-							<img
-								src="https://img.icons8.com/ios-filled/50/ffffff/appointment-reminders.png"
-								alt="알림"
-							/>
-							<span class="circle-label">알림</span>
-						</div>
-					</div>
-					<div class="nav-item" onclick="location.href='../Mypage/mypage.html'">
-						<div class="nav-circle">
-							<img
-								src="https://img.icons8.com/ios-filled/50/ffffff/user.png"
-								alt="MY"
-							/>
-							<span class="circle-label">MY</span>
-						</div>
-					</div>
-				</div>
-			</footer>
-		</div>
+      <footer class="notice-footer">
+        <div class="bottom-bar"></div>
+        <div class="bottom-nav">
+          <div class="nav-item" onclick="location.href='../basic/home.html'">
+            <div class="nav-circle">
+              <img
+                src="https://img.icons8.com/ios-filled/50/ffffff/home.png"
+                alt="피드"
+              />
+              <span class="circle-label">피드</span>
+            </div>
+          </div>
+          <div class="nav-item active" onclick="location.href='homepage2.html'">
+            <div class="nav-circle">
+              <img
+                src="https://img.icons8.com/ios-filled/50/ffffff/compass--v1.png"
+                alt="공지"
+              />
+              <span class="circle-label">공지</span>
+            </div>
+          </div>
+          <div
+            class="nav-item"
+            onclick="location.href='../notification/notification.html'"
+          >
+            <div class="nav-circle">
+              <img
+                src="https://img.icons8.com/ios-filled/50/ffffff/appointment-reminders.png"
+                alt="알림"
+              />
+              <span class="circle-label">알림</span>
+            </div>
+          </div>
+          <div class="nav-item" onclick="location.href='../Mypage/mypage.html'">
+            <div class="nav-circle">
+              <img
+                src="https://img.icons8.com/ios-filled/50/ffffff/user.png"
+                alt="MY"
+              />
+              <span class="circle-label">MY</span>
+            </div>
+          </div>
+        </div>
+      </footer>
+    </div>
 
-		<script src="subjectboard.js"></script>
-	</body>
+    <script src="subjectboard.js"></script>
+  </body>
 </html>
