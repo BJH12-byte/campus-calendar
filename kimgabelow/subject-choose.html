@@ -27,29 +27,45 @@
     </div>
 
     <script>
-      document.addEventListener('DOMContentLoaded', () => {
-        // 👉 id, name 필드가 있는 과목 객체 리스트로 구성
-        const subjects = [
-          { id: 211, name: '컴퓨터프로그래밍' },
-          { id: 212, name: '자료구조' },
-          { id: 213, name: '창의적 사고와 코딩' },
-          { id: 214, name: '과목5' },
-          { id: 215, name: '과목2' },
-          { id: 216, name: '과목3' },
-          // 필요한 만큼 추가
-        ];
+      document.addEventListener('DOMContentLoaded', async () => {
         const listContainer = document.getElementById('subject-list');
-        subjects.forEach((subject) => {
-          const item = document.createElement('div');
-          item.className = 'subject-item';
-          item.textContent = subject.name;
-          item.addEventListener('click', () => {
-            // 👉 객체 전체를 JSON 문자열로 저장
-            localStorage.setItem('selectedSubjectObj', JSON.stringify(subject));
-            window.location.href = 'subject-topic.html';
-          });
-          listContainer.appendChild(item);
-        });
+        listContainer.innerHTML =
+          '<div style="color:#bbb;text-align:center;">과목 불러오는 중...</div>';
+
+        try {
+          const res = await fetch(
+            'https://unidays-project.com/api/usersubjects',
+            {
+              credentials: 'include',
+            }
+          );
+          if (!res.ok) throw new Error('과목 목록 불러오기 실패');
+          const data = await res.json();
+          const subjects = data.map((x) => x.subject);
+
+          listContainer.innerHTML = '';
+          if (subjects.length === 0) {
+            listContainer.innerHTML =
+              '<div style="color:#aaa;text-align:center;">등록한 과목이 없습니다.</div>';
+          } else {
+            subjects.forEach((subject) => {
+              const item = document.createElement('div');
+              item.className = 'subject-item';
+              item.textContent = subject.name;
+              item.addEventListener('click', () => {
+                localStorage.setItem(
+                  'selectedSubjectObj',
+                  JSON.stringify(subject)
+                );
+                window.location.href = 'subject-topic.html';
+              });
+              listContainer.appendChild(item);
+            });
+          }
+        } catch (e) {
+          listContainer.innerHTML =
+            '<div style="color:red;text-align:center;">과목 불러오기 실패</div>';
+        }
       });
     </script>
 

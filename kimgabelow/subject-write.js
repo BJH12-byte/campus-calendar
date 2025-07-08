@@ -6,22 +6,16 @@ document.addEventListener('DOMContentLoaded', () => {
   const dateDisplay = document.querySelector('.date-display');
   const pageTitle = document.querySelector('.page-title');
 
-  // 1. 과목 정보 불러오기 (id, name)
+  // 1. 과목 정보 localStorage에서만 불러오기 (API 콜 없음)
   let subjectId = null;
   let subjectName = null;
-  const urlParams = new URLSearchParams(window.location.search);
-  if (urlParams.get('subjectId') && urlParams.get('subjectName')) {
-    subjectId = urlParams.get('subjectId');
-    subjectName = urlParams.get('subjectName');
-  } else {
-    try {
-      const subjectObj = JSON.parse(localStorage.getItem('selectedSubjectObj'));
-      if (subjectObj && subjectObj.id && subjectObj.name) {
-        subjectId = subjectObj.id;
-        subjectName = subjectObj.name;
-      }
-    } catch {}
-  }
+  try {
+    const subjectObj = JSON.parse(localStorage.getItem('selectedSubjectObj'));
+    if (subjectObj && subjectObj.id && subjectObj.name) {
+      subjectId = subjectObj.id;
+      subjectName = subjectObj.name;
+    }
+  } catch {}
   pageTitle.textContent = subjectName ? subjectName : '과목 선택 필요';
 
   // 2. 글자수 카운터
@@ -136,17 +130,22 @@ document.addEventListener('DOMContentLoaded', () => {
               return ocrRes.text();
             })
             .then((msg) => {
+              // 등록 끝나면 과목정보/이미지 클린업
+              localStorage.removeItem('selectedSubjectObj');
+              localStorage.removeItem('uploadedImage');
               window.location.href = `subject-written.html?id=${data.id}`;
             })
             .catch((ocrError) => {
               showCustomPopup('OCR 일정 등록 중 오류: ' + ocrError.message);
+              // 등록 실패 시에도 정보는 지움
+              localStorage.removeItem('selectedSubjectObj');
+              localStorage.removeItem('uploadedImage');
               window.location.href = `subject-written.html?id=${data.id}`;
             });
         })
         .catch((error) => {
           showCustomPopup('공지 등록 중 오류 발생: ' + error.message);
         });
-      localStorage.removeItem('uploadedImage');
     }
   });
 
