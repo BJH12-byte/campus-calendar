@@ -6,11 +6,9 @@ document.addEventListener('DOMContentLoaded', () => {
   const dateDisplay = document.querySelector('.date-display');
   const pageTitle = document.querySelector('.page-title');
 
-  // === 1. 과목 정보 불러오기 (id, name 통일) ===
+  // 1. 과목 정보 불러오기 (id, name)
   let subjectId = null;
   let subjectName = null;
-
-  // URL 파라미터 최우선
   const urlParams = new URLSearchParams(window.location.search);
   if (urlParams.get('subjectId') && urlParams.get('subjectName')) {
     subjectId = urlParams.get('subjectId');
@@ -24,19 +22,15 @@ document.addEventListener('DOMContentLoaded', () => {
       }
     } catch {}
   }
-  if (subjectName) {
-    pageTitle.textContent = subjectName;
-  } else {
-    pageTitle.textContent = '과목 선택 필요';
-  }
+  pageTitle.textContent = subjectName ? subjectName : '과목 선택 필요';
 
-  // === 2. 글자수 카운터 ===
+  // 2. 글자수 카운터
   contentInput.addEventListener('input', () => {
     const length = contentInput.textContent.trim().length;
     charCounter.textContent = `${length}/1000`;
   });
 
-  // === 3. 파일 업로드 함수 (PDF/이미지/엑셀 모두 POST) ===
+  // 3. 파일 업로드 함수 (PDF/이미지/엑셀 POST)
   function uploadFileToServer(file, cb) {
     const formData = new FormData();
     formData.append('file', file);
@@ -49,15 +43,11 @@ document.addEventListener('DOMContentLoaded', () => {
         if (!res.ok) throw new Error('파일 업로드 실패');
         return res.text();
       })
-      .then((url) => {
-        cb(null, url);
-      })
-      .catch((err) => {
-        cb(err);
-      });
+      .then((url) => cb(null, url))
+      .catch((err) => cb(err));
   }
 
-  // === 4. 완료 버튼: 첨부파일 업로드 → 공지 등록 → OCR 등록 ===
+  // 4. 완료 버튼: 첨부파일 업로드 → 공지 등록 → OCR 등록
   completeBtn.addEventListener('click', () => {
     const title = titleInput.textContent.trim();
     const content = contentInput.textContent.trim();
@@ -103,22 +93,21 @@ document.addEventListener('DOMContentLoaded', () => {
         }
       },
       () => {
-        console.log('재확인 버튼 눌림 - 다시 확인!');
+        // NO 클릭 시
       }
     );
 
-    // === 5. 공지(과목) 등록 후 OCR ===
+    // 5. 공지(과목) 등록 후 OCR
     function registerNotice(fileUrl) {
       let imageUrl = null;
       const uploadedImage = localStorage.getItem('uploadedImage') || '';
       if (uploadedImage) imageUrl = uploadedImage;
-
       const payload = {
-        title: title,
-        content: content,
-        date: date,
-        fileUrl: fileUrl,
-        imageUrl: imageUrl,
+        title,
+        content,
+        date,
+        fileUrl,
+        imageUrl,
         type: 'SUBJECT',
         subject: { id: subjectId, name: subjectName },
       };
@@ -161,7 +150,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   });
 
-  // === 6. 첨부/카메라 팝업 ===
+  // 6. 첨부/카메라 팝업
   document.querySelectorAll('.attach-btn')[0].addEventListener('click', (e) => {
     e.stopPropagation();
     document.getElementById('photo-option-popup').style.display = 'block';
@@ -178,7 +167,7 @@ document.addEventListener('DOMContentLoaded', () => {
     document.getElementById('photo-option-popup').style.display = 'none';
   });
 
-  // === 7. 이미지 첨부(카메라/갤러리) ===
+  // 7. 이미지 첨부(카메라/갤러리)
   document.getElementById('camera-input').addEventListener('change', (e) => {
     if (e.target.files.length) {
       const file = e.target.files[0];
